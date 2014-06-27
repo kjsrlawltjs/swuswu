@@ -107,10 +107,6 @@ public class EnergyReader {
 			}
 		}
 		
-		// Reading results from PowerTutor
-		e.senderEnergy = PowerTutorReceiver.getSenderEnergy();
-		e.receiverEnergy = PowerTutorReceiver.getReceiverEnergy();
-
 		recordEnergy(e);
 	}
 	
