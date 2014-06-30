@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -64,8 +65,11 @@ public class JFLApp extends Activity {
 				//intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
 				//intent.putExtra(Const.EXTRA_MESSAGE, "message to transmit");
 				
+				int message_size = 5;
+				ScenarioService.setCCDataScheduled(message_size);
 				intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
-				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
+				// Nb numbers sent
+				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, message_size);
 				
 				// Prepare receiver response
 				IntentFilter mIntentFilter = new IntentFilter();
@@ -73,7 +77,7 @@ public class JFLApp extends Activity {
 				CCResultReceiver mResultReceiver = new CCResultReceiver();
 				registerReceiver(mResultReceiver, mIntentFilter);
 				
-				System.out.println("JFL: starting CC transmission !");
+				Log.w("JFL","Starting CC transmission !");
 				sendBroadcast(intent);
 			}
 		});

@@ -93,8 +93,8 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 				int power = Integer.parseInt(st2.nextToken());
 				String name = st2.nextToken();
 				
-				if (name.contains("Stegano"))
-	        	  	  Log.w("JFL", "STEGANO: " + uid + "=" +  name);
+				//if (name.contains("Stegano"))
+	        	//  	  Log.w("JFL", "STEGANO: " + uid + "=" +  name);
 								
 				Integer oldPower = allUIDPower.get(uid);
 				if (oldPower == null)

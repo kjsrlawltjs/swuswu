@@ -76,7 +76,7 @@ public class EnergyLoggerService extends Service {
 				
 				out.write(dateFormat.format(new Date()) + ";");
 				String values = e.current_now + ";" + e.capacity + ";" + e.voltage_now + 
-						";" + e.charge_now + ";";
+						";" + e.charge_now + ";" + ScenarioService.getCCDataScheduled() + ";";
 				
 				String uidEnergies = "";
 				HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
@@ -142,7 +142,7 @@ public class EnergyLoggerService extends Service {
 		try {
 			FileWriter filewriter = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(filewriter);
-			out.write(";;;;UIDs;");
+			out.write(";;;;;UIDs;");
 			// We search for power of already known UIDs
 			String uids="";
 			for(int uidKnown : uidIndex)
@@ -153,7 +153,7 @@ public class EnergyLoggerService extends Service {
 			
 			out.write(uids + "\n");
 			
-			out.write("Date;Current now;Level%;Voltage;Charging;");
+			out.write("Date;Current now;Level%;Voltage;Charging;HiddenDataSent;");
 			String uidsnames="";
 			for(String uidNameKnown : uidNames)
 			{

@@ -1,5 +1,7 @@
 package jf.andro;
 
+import java.util.Random;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -7,12 +9,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 public class ScenarioService extends Service {
-
-	private Handler mHandler = new Handler();
-	private int mProgressStatus = 0;
+	
+	private static int getCCDataScheduled = 0;
+	
+	public synchronized static int getCCDataScheduled() {
+		int tmp = getCCDataScheduled;
+		getCCDataScheduled = 0;
+		return tmp;
+	}
+	
+	public synchronized static void setCCDataScheduled(int nbdata) {
+		getCCDataScheduled = nbdata;
+	}
 
 	@Override
 	public void onCreate() {
@@ -46,7 +58,8 @@ public class ScenarioService extends Service {
 						Intent service = new Intent("jf.andro.energyservice");
 						startService(service);
 
-						sleep(60*1000);
+						sleep(2*60*1000);
+						
 						// Stop
 						service = new Intent("jf.andro.energyservice");
 						stopService(service);
@@ -69,6 +82,10 @@ public class ScenarioService extends Service {
 				@Override
 				public void run() {
 					try {
+						Random r = new Random();
+						int nb_messages_max = 1 + r.nextInt(3); // Max nb messages
+						int message_size_max = 1000; // Size max 1000 bytes
+						int nb_second_sleep_random_max = 60; // Max sleeping time 
 
 						sleep(10*1000);
 
@@ -76,24 +93,33 @@ public class ScenarioService extends Service {
 						Intent service = new Intent("jf.andro.energyservice");
 						startService(service);
 
-						sleep(10*1000);
+						sleep(r.nextInt(nb_second_sleep_random_max)*1000);
 
-						Intent intent = new Intent();
-						intent.setAction(Const.ACTION_START_STEGANO);
-						intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
+						int nb_message = 3 + r.nextInt(nb_messages_max);
+						
+						while (nb_message > 0)
+						{
+							Intent intent = new Intent();
+							intent.setAction(Const.ACTION_START_STEGANO);
+							intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
 
-						intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
-						intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 100);
+							int size_message = r.nextInt(message_size_max);
+							Log.w("JFL: ", "Sending message " + nb_message + " of size " + size_message);
+							setCCDataScheduled(size_message);
+							intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
+							intent.putExtra(Const.EXTRA_TEST_ITERATIONS, size_message);
 
-						// Prepare receiver response
-						/*IntentFilter mIntentFilter = new IntentFilter();
+							// Prepare receiver response
+							/*IntentFilter mIntentFilter = new IntentFilter();
 			mIntentFilter.addAction(Const.ACTION_FINISH_STEGANO);
 			CCResultReceiver mResultReceiver = new CCResultReceiver();
 			registerReceiver(mResultReceiver, mIntentFilter);*/
 
-						sendBroadcast(intent);
+							sendBroadcast(intent);
 
-						sleep(120*1000);
+							sleep(30*1000 + r.nextInt(nb_second_sleep_random_max));
+							nb_message--;
+						}
 						
 						// Stop
 						service = new Intent("jf.andro.energyservice");
@@ -110,7 +136,7 @@ public class ScenarioService extends Service {
 			break;
 		}
 
-		return Service.START_STICKY;
+		return Service.START_REDELIVER_INTENT;
 	}
 
 	
@@ -149,5 +175,16 @@ public class ScenarioService extends Service {
     nm.notify(LED_NOTIFICATION_ID, notif);
     }
 
+	public String generate(int length)
+	{
+		    String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // Tu supprimes les lettres dont tu ne veux pas
+		    String pass = "";
+		    for(int x=0;x<length;x++)
+		    {
+		       int i = (int)Math.floor(Math.random() * 62); // Si tu supprimes des lettres tu diminues ce nb
+		       pass += chars.charAt(i);
+		    }
+		    return pass;
+	}
 
 }
