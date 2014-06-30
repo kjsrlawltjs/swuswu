@@ -7,13 +7,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class PowerTutorReceiver extends BroadcastReceiver {
 
 	private static int senderEnergy = 0;
 	private static int receiverEnergy = 0;
 	private static HashMap<Integer,Integer> allUIDPower = new HashMap<Integer,Integer>();
+	private static HashMap<Integer,String> allUIDNames = new HashMap<Integer,String>();
 	
+	public static synchronized void resetEnergy(){
+		senderEnergy = 0;
+		receiverEnergy = 0;
+		allUIDPower = new HashMap<Integer,Integer>();
+	}
 	private static synchronized void addSenderEnergy(int energy)
 	{
 		senderEnergy = senderEnergy + energy;
@@ -45,6 +52,13 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 		return tmp;
 	}
 	
+	public static synchronized HashMap<Integer,String> getUIDNames()
+	{
+		HashMap<Integer,String> tmp = allUIDNames;
+		allUIDNames = new HashMap<Integer,String>();
+		return tmp;
+	}
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
@@ -52,7 +66,7 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 		
 		if (extra == null)
 		{
-			System.err.println("JFL ERROR: extra is null !");
+			Log.e("JFL", "ERROR: extra is null !");
 			return ;
 		}
 		if (extra.containsKey("sender"))
@@ -73,16 +87,34 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 		{
 			String token = st.nextToken();
 			StringTokenizer st2 = new StringTokenizer(token, "=");
-			if (st2.countTokens() == 2)
+			if (st2.countTokens() == 3)
 			{
 				int uid = Integer.parseInt(st2.nextToken());
 				int power = Integer.parseInt(st2.nextToken());
+				String name = st2.nextToken();
+				
+				if (name.contains("Stegano"))
+	        	  	  Log.w("JFL", "STEGANO: " + uid + "=" +  name);
 								
 				Integer oldPower = allUIDPower.get(uid);
 				if (oldPower == null)
+				{
 					allUIDPower.put(uid, Integer.valueOf(power));
+					allUIDNames.put(uid, name);
+				}
 				else
+				{
 					allUIDPower.put(uid, Integer.valueOf(power+oldPower.intValue()));
+					if (!allUIDNames.get(uid).equals(name))
+					{
+						Log.e("JFL", "This uid " + uid + " changed of name from " + allUIDNames.get(uid) + " to " + name);
+						allUIDNames.put(uid,  name);
+					}
+				}
+			}
+			else
+			{
+				Log.e("JFL", "Error of received format ! should be uid=45=Machin instead of " + token);
 			}
 		}
 		

@@ -1,14 +1,11 @@
 package jf.andro;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +18,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 public class EnergyLoggerService extends Service {
@@ -30,6 +28,7 @@ public class EnergyLoggerService extends Service {
 	private final String filename = new String("energy.tmp");
 	private final String filenameFinal = new String("energy.csv");
 	private final Vector<Integer> uidIndex = new Vector<Integer>();
+	private final Vector<String> uidNames = new Vector<String>();
 	
 	@Override
 	public void onCreate() {
@@ -42,16 +41,18 @@ public class EnergyLoggerService extends Service {
 		// Tell the user we stopped.
         Toast.makeText(this, "START !", Toast.LENGTH_SHORT).show();
         
+        // Reset energy collected
+        PowerTutorReceiver.resetEnergy();
+        
 		// Cancel old tasks
 		if (timer != null)
 			timer.cancel();
 				
-		System.out.println("JFL: Service STARTED !");
+		Log.w("JFL", "Service STARTED !");
 		
 		File root = Environment.getExternalStorageDirectory();
 		File file = new File(root, filename);
 		file.delete();
-		
 		
 		timer = new Timer();
 		
@@ -79,6 +80,7 @@ public class EnergyLoggerService extends Service {
 				
 				String uidEnergies = "";
 				HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
+				HashMap<Integer, String> hname = PowerTutorReceiver.getUIDNames();
 				
 				// We search for power of already known UIDs
 				for(int uidKnown : uidIndex)
@@ -100,7 +102,7 @@ public class EnergyLoggerService extends Service {
 				{
 					Integer energy = h.get(uid);
 					uidIndex.add(uid);
-					System.out.println("Adding uid + " + uid);
+					uidNames.add(hname.get(uid));
 					uidEnergies += energy.toString() + ";";				
 				}
 				uidEnergies += "\n";
@@ -111,7 +113,7 @@ public class EnergyLoggerService extends Service {
 				
 				// WRITTING
 				out.write(values);
-				System.out.println(values);
+				//System.out.println(values);
 				
 				out.close();
 				} catch (IOException e1) {
@@ -140,16 +142,24 @@ public class EnergyLoggerService extends Service {
 		try {
 			FileWriter filewriter = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(filewriter);
-			out.write("Date;Current now;Level%;Voltage;Charging;");
-			
+			out.write(";;;;UIDs;");
 			// We search for power of already known UIDs
 			String uids="";
 			for(int uidKnown : uidIndex)
 			{
 				uids += uidKnown + ";";
+				
 			}
 			
 			out.write(uids + "\n");
+			
+			out.write("Date;Current now;Level%;Voltage;Charging;");
+			String uidsnames="";
+			for(String uidNameKnown : uidNames)
+			{
+				uidsnames += uidNameKnown + ";";
+			}
+			out.write(uidsnames + "\n");
 			
 			FileReader filetmp = new FileReader(root + "/" +  filename);
 			BufferedReader in = new BufferedReader(filetmp);

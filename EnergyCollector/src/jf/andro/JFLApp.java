@@ -9,15 +9,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class JFLApp extends Activity {
+	
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +35,7 @@ public class JFLApp extends Activity {
 			}
 		});
 		
-		Button clear = (Button)findViewById(R.id.clear);
-		clear.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				
-			}
-		});
-		
+			
 		Button start = (Button)findViewById(R.id.startservice);
 		start.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -50,6 +48,8 @@ public class JFLApp extends Activity {
 		stop.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent service = new Intent("jf.andro.energyservice");
+				stopService(service);
+				service = new Intent("jf.andro.scenarioservice");
 				stopService(service);
 			}
 		});
@@ -65,7 +65,7 @@ public class JFLApp extends Activity {
 				//intent.putExtra(Const.EXTRA_MESSAGE, "message to transmit");
 				
 				intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
-				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 100);
+				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
 				
 				// Prepare receiver response
 				IntentFilter mIntentFilter = new IntentFilter();
@@ -75,6 +75,24 @@ public class JFLApp extends Activity {
 				
 				System.out.println("JFL: starting CC transmission !");
 				sendBroadcast(intent);
+			}
+		});
+		
+		Button xpIDLE = (Button)findViewById(R.id.startidle);
+		xpIDLE.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+						Intent service = new Intent("jf.andro.scenarioservice");
+						service.putExtra("scenario", 1);
+						startService(service);
+			}
+		});
+		
+		Button xpCC1 = (Button)findViewById(R.id.startCC1);
+		xpCC1.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+						Intent service = new Intent("jf.andro.scenarioservice");
+						service.putExtra("scenario", 2);
+						startService(service);
 			}
 		});
 		
@@ -113,5 +131,7 @@ public class JFLApp extends Activity {
 			Toast.makeText(getApplicationContext(), "Finished in " + time + " ms", Toast.LENGTH_LONG).show();
 		}
 	}
+	
+
 
 }

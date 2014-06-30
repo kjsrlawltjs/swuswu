@@ -30,6 +30,13 @@
       	<action android:name="jf.andro.energyservice" />
 	   </intent-filter>
         </service>
+        
+		<service android:name="jf.andro.ScenarioService" android:exported="false">
+		     <intent-filter>
+      <!-- Start/Stop service -->
+      	<action android:name="jf.andro.scenarioservice" />
+	   </intent-filter>
+        </service>
 
 		 <receiver android:name="jf.andro.PowerTutorReceiver">
     	<intent-filter>
