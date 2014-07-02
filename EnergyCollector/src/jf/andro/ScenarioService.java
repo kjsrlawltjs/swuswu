@@ -8,10 +8,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 public class ScenarioService extends Service {
-	
+
+	private PowerManager.WakeLock wl;
+
 	private static int getCCDataScheduled = 0;
 	
 	public synchronized static int getCCDataScheduled() {
@@ -32,6 +35,11 @@ public class ScenarioService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
+		// KEEP CPU RUNNING !
+		PowerManager pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JFL");
+		wl.acquire();
+		
 		// Tell the user we start
 		Toast.makeText(this, "START SCENARIO: Switch off the SCREEN !", Toast.LENGTH_SHORT).show();
 		Bundle extras = intent.getExtras();
@@ -81,9 +89,9 @@ public class ScenarioService extends Service {
 				public void run() {
 					try {
 						Random r = new Random();
-						int nb_messages_max = 1 + r.nextInt(3); // Max nb messages
-						int message_size_max = 1000; // Size max 1000 bytes
-						int nb_second_sleep_random_max = 60; // Max sleeping time 
+						int nb_messages_max = 5 + r.nextInt(10); // Max nb messages
+						int message_size_max = 10000; // Size max 1000 bytes
+						int nb_second_sleep_random_max = 120; // Max sleeping time 
 
 						sleep(10*1000);
 
@@ -142,6 +150,8 @@ public class ScenarioService extends Service {
 	public void onDestroy() {
 		
 		super.onDestroy();
+		
+		wl.release();
 	}
 
 	@Override

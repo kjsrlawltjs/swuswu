@@ -3,9 +3,15 @@ package jf.andro;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.util.Locale;
+import java.util.StringTokenizer;
+
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -16,6 +22,8 @@ public class EnergyReader {
 	static final String BUILD_MODEL = Build.MODEL.toLowerCase(Locale.ENGLISH);
 	
 	static Energy lastRecorded = new Energy();
+	
+	static int oldCpu = 0;
 
 	public static long getValue(File _f, boolean _convertToMillis) {
 
@@ -106,6 +114,24 @@ public class EnergyReader {
 				e.capacity = (int)EnergyReader.getValue(f, false);
 			}
 		}
+		
+		   try
+		    {
+		        RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
+		        String load = reader.readLine();
+		        StringTokenizer st = new StringTokenizer(load);
+		        st.nextToken();
+		        int readCpu = Integer.parseInt(st.nextToken());
+		        if (oldCpu == 0)
+		        	oldCpu = readCpu;
+		        e.deltaCpu = readCpu - oldCpu;
+		        oldCpu = readCpu;
+		        reader.close();
+		    }
+		    catch (IOException ex)
+		    {
+		        ex.printStackTrace();
+		    }
 		
 		recordEnergy(e);
 	}

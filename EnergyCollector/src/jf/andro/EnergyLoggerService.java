@@ -68,6 +68,9 @@ public class EnergyLoggerService extends Service {
 			timer.cancel();
 
 		Log.w("JFL", "Service STARTED !");
+		
+		// Read one time for purging energies
+		EnergyReader.readEnergyValues();
 
 		File root = Environment.getExternalStorageDirectory();
 		File file = new File(root, filename);
@@ -90,7 +93,7 @@ public class EnergyLoggerService extends Service {
 
 
 				String values = e.current_now + ";" + e.capacity + ";" + e.voltage_now + 
-						";" + e.charge_now + ";" + memory + ";" + ScenarioService.getCCDataScheduled() + ";";
+						";" + e.charge_now + ";" + memory + ";" + e.deltaCpu + ";" + ScenarioService.getCCDataScheduled() + ";";
 
 				String uidEnergies = "";
 				HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
@@ -151,7 +154,7 @@ public class EnergyLoggerService extends Service {
 			}
 		};
 
-		timer.scheduleAtFixedRate(t, 0, 5000);
+		timer.scheduleAtFixedRate(t, 1000, 1000);
 
 		return Service.START_STICKY;
 	}
@@ -168,7 +171,7 @@ public class EnergyLoggerService extends Service {
 		try {
 			FileWriter filewriter = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(filewriter);
-			out.write(";;;;;;UIDs;");
+			out.write(";;;;;;;UIDs;");
 			// We search for power of already known UIDs
 			String uids="";
 			for(int uidKnown : uidIndex)
@@ -179,7 +182,7 @@ public class EnergyLoggerService extends Service {
 
 			out.write(uids + "\n");
 
-			out.write("Date;Current now;Level%;Voltage;Charging;Memory;HiddenDataSent;");
+			out.write("Date;Current now;Level%;Voltage;Charging;Memory;DeltaCPU;HiddenDataSent;");
 			String uidsnames="";
 			for(String uidNameKnown : uidNames)
 			{

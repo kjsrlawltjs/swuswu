@@ -8,5 +8,6 @@ public class Energy {
 	public int capacity;
 	public int senderEnergy;
 	public int receiverEnergy;
+	public int deltaCpu;
 
 }
