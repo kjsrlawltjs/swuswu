@@ -40,19 +40,23 @@ public class ScenarioService extends Service {
 		wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JFL");
 		wl.acquire();
 		
+		// Reset somes values
+		setCCDataScheduled(0);
+		
 		// Tell the user we start
 		Toast.makeText(this, "START SCENARIO: Switch off the SCREEN !", Toast.LENGTH_SHORT).show();
 		Bundle extras = intent.getExtras();
 		int scenario = extras.getInt("scenario");
 		RedFlashLight();
 		
+		Thread t = null;
 		
 		// SCENARIOS
 		// *********
 		switch (scenario) {
 		case 1:
 
-			Thread t = new Thread() {
+			t = new Thread() {
 
 				@Override
 				public void run() {
@@ -64,7 +68,7 @@ public class ScenarioService extends Service {
 						Intent service = new Intent("jf.andro.energyservice");
 						startService(service);
 
-						sleep(2*60*1000);
+						sleep(20*60*1000);
 						
 						// Stop
 						service = new Intent("jf.andro.energyservice");
@@ -83,7 +87,7 @@ public class ScenarioService extends Service {
 
 		case 2:
 
-			Thread t2 = new Thread() {
+			t = new Thread() {
 
 				@Override
 				public void run() {
@@ -123,7 +127,7 @@ public class ScenarioService extends Service {
 
 							sendBroadcast(intent);
 
-							sleep(30*1000 + r.nextInt(nb_second_sleep_random_max));
+							sleep((30 + r.nextInt(nb_second_sleep_random_max))*1000 );
 							nb_message--;
 						}
 						
@@ -137,7 +141,7 @@ public class ScenarioService extends Service {
 					}
 				}
 			};
-			t2.start();
+			t.start();
 			
 			break;
 		}

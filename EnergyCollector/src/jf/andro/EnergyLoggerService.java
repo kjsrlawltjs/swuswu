@@ -40,8 +40,8 @@ public class EnergyLoggerService extends Service {
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
 	private final String filename = new String("energy.tmp");
 	private final String filenameFinal = new String("energy.csv");
-	private final Vector<Integer> uidIndex = new Vector<Integer>();
-	private final Vector<String> uidNames = new Vector<String>();
+	private Vector<Integer> uidIndex = null;
+	private Vector<String> uidNames = null;
 	PowerTutorReceiver mResultReceiver;
 
 	@Override
@@ -62,6 +62,10 @@ public class EnergyLoggerService extends Service {
 
 		// Reset energy collected
 		PowerTutorReceiver.resetEnergy();
+		
+		// Reset tables
+		uidIndex = new Vector<Integer>();
+		uidNames = new Vector<String>();
 
 		// Cancel old tasks
 		if (timer != null)
