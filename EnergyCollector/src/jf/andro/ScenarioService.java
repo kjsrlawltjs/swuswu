@@ -92,27 +92,32 @@ public class ScenarioService extends Service {
 				@Override
 				public void run() {
 					try {
+						// Parameters for randomness
 						Random r = new Random();
 						int nb_messages_max = 5 + r.nextInt(10); // Max nb messages
 						int message_size_max = 10000; // Size max 1000 bytes
 						int nb_second_sleep_random_max = 120; // Max sleeping time 
 
-						sleep(10*1000);
+						sleep(10*1000); // Sleep a little before starting
 
-						// Starting Energy Collector Service
+						// Starting Energy Collector Service for logging
 						Intent service = new Intent("jf.andro.energyservice");
 						startService(service);
 
+						// Random sleep before the first CC message sending
 						sleep(r.nextInt(nb_second_sleep_random_max)*1000);
 
+						// Choose a random number of messages to send 
 						int nb_message = 3 + r.nextInt(nb_messages_max);
 						
-						while (nb_message > 0)
+						while (nb_message > 0) // while we have some messages to send
 						{
 							Intent intent = new Intent();
 							intent.setAction(Const.ACTION_START_STEGANO);
+							// Choose the CC method to use
 							intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
 
+							// Pick a random size for the message to transmit
 							int size_message = r.nextInt(message_size_max);
 							Log.w("JFL: ", "Sending message " + nb_message + " of size " + size_message);
 							setCCDataScheduled(size_message);
@@ -125,13 +130,15 @@ public class ScenarioService extends Service {
 			CCResultReceiver mResultReceiver = new CCResultReceiver();
 			registerReceiver(mResultReceiver, mIntentFilter);*/
 
+							// Send the intent that asks the Stegano sender to transmit !
 							sendBroadcast(intent);
 
+							// Random sleep before sending the next messages
 							sleep((30 + r.nextInt(nb_second_sleep_random_max))*1000 );
 							nb_message--;
 						}
 						
-						// Stop
+						// Stop logging service
 						service = new Intent("jf.andro.energyservice");
 						stopService(service);
 						
