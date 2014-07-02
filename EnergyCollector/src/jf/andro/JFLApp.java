@@ -100,6 +100,14 @@ public class JFLApp extends Activity {
 			}
 		});
 		
+		Button stopScenario = (Button)findViewById(R.id.stopscenarios);
+		stopScenario.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+						Intent service = new Intent("jf.andro.scenarioservice");
+						stopService(service);
+			}
+		});
+		
 		updateReport();
 	}
 	

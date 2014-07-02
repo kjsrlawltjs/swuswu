@@ -7,11 +7,9 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
-
 public class ScenarioService extends Service {
 	
 	private static int getCCDataScheduled = 0;
@@ -142,7 +140,7 @@ public class ScenarioService extends Service {
 	
 	@Override
 	public void onDestroy() {
-
+		
 		super.onDestroy();
 	}
 
@@ -174,6 +172,8 @@ public class ScenarioService extends Service {
     int LED_NOTIFICATION_ID = 0;
     nm.notify(LED_NOTIFICATION_ID, notif);
     }
+	
+	
 
 	public String generate(int length)
 	{

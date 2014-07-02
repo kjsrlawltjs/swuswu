@@ -7,7 +7,8 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="19" />
     
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />  
 
     <application
         android:allowBackup="true"
@@ -38,11 +39,11 @@
 	   </intent-filter>
         </service>
 
-		 <receiver android:name="jf.andro.PowerTutorReceiver">
+	<receiver android:name="jf.andro.PowerTutorReceiver">
     	<intent-filter>
              <action android:name="jf.andro.SteganoSender" />
              <category android:name="android.intent.category.DEFAULT" />
-    	</intent-filter>
+    	</intent-filter> 
   </receiver>
 
 		

@@ -78,6 +78,8 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 
 
 	}
+	
+
 
 	private void addAllUIDEnergy(String s) {
 		// TODO Auto-generated method stub
@@ -119,5 +121,4 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 		}
 		
 	}
-
 }

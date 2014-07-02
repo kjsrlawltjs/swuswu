@@ -94,7 +94,12 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="XP CC1" />
-       
+                    <Button
+           android:id="@+id/stopscenarios"
+           style="?android:attr/buttonStyleSmall"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Stop scenario service" />
   
 </LinearLayout>
 
