@@ -61,6 +61,9 @@ public class ScenarioService extends Service {
 				@Override
 				public void run() {
 					try {
+						// Parameters for randomness
+						Random r = new Random();
+						int nb_second_sleep_random_max = 120; // Max sleeping time 
 
 						sleep(10*1000);
 
@@ -68,7 +71,8 @@ public class ScenarioService extends Service {
 						Intent service = new Intent("jf.andro.energyservice");
 						startService(service);
 
-						sleep(20*60*1000);
+						// Random sleep
+						sleep((30 + r.nextInt(nb_second_sleep_random_max))*1000 );
 						
 						// Stop
 						service = new Intent("jf.andro.energyservice");
@@ -95,7 +99,7 @@ public class ScenarioService extends Service {
 						// Parameters for randomness
 						Random r = new Random();
 						int nb_messages_max = 5 + r.nextInt(10); // Max nb messages
-						int message_size_max = 10000; // Size max 1000 bytes
+						int message_size_max = 100; // Size max 100 Bytes
 						int nb_second_sleep_random_max = 120; // Max sleeping time 
 
 						sleep(10*1000); // Sleep a little before starting
@@ -108,7 +112,7 @@ public class ScenarioService extends Service {
 						sleep(r.nextInt(nb_second_sleep_random_max)*1000);
 
 						// Choose a random number of messages to send 
-						int nb_message = 3 + r.nextInt(nb_messages_max);
+						int nb_message = 1; // + r.nextInt(nb_messages_max);
 						
 						while (nb_message > 0) // while we have some messages to send
 						{
@@ -118,11 +122,15 @@ public class ScenarioService extends Service {
 							intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
 
 							// Pick a random size for the message to transmit
-							int size_message = r.nextInt(message_size_max);
-							Log.w("JFL: ", "Sending message " + nb_message + " of size " + size_message);
+							int size_message_B = (1 + r.nextInt(message_size_max)); // Bytes
+							int size_message = size_message_B * 8; // bits
+							Log.w("JFL", "Sending message " + nb_message + " of size " + size_message_B + " Bytes (" + size_message + " bits)");
 							setCCDataScheduled(size_message);
-							intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
-							intent.putExtra(Const.EXTRA_TEST_ITERATIONS, size_message);
+							//intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
+							//intent.putExtra(Const.EXTRA_TEST_ITERATIONS, size_message);
+							intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
+							intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
+							intent.putExtra(Const.EXTRA_MESSAGE, generate(size_message_B));
 
 							// Prepare receiver response
 							/*IntentFilter mIntentFilter = new IntentFilter();

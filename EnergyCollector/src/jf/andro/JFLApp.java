@@ -65,11 +65,15 @@ public class JFLApp extends Activity {
 				//intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
 				//intent.putExtra(Const.EXTRA_MESSAGE, "message to transmit");
 				
-				int message_size = 5;
-				ScenarioService.setCCDataScheduled(message_size);
-				intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
-				// Nb numbers sent
-				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, message_size);
+//				int message_size = 5;
+//				ScenarioService.setCCDataScheduled(message_size);
+//				intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
+//				// Nb numbers sent
+//				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, message_size);
+				
+				intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
+				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
+				intent.putExtra(Const.EXTRA_MESSAGE, "JFL");
 				
 				// Prepare receiver response
 				IntentFilter mIntentFilter = new IntentFilter();
