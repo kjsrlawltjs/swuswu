@@ -9,5 +9,6 @@ public class Energy {
 	public int senderEnergy;
 	public int receiverEnergy;
 	public int deltaCpu;
+	public int readCpu;
 
 }
