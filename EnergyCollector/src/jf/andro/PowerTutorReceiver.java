@@ -81,7 +81,7 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 	
 
 
-	private void addAllUIDEnergy(String s) {
+	private synchronized void addAllUIDEnergy(String s) {
 		// TODO Auto-generated method stub
 		
 		StringTokenizer st = new StringTokenizer(s, ";");
@@ -99,7 +99,8 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 	        	//  	  Log.w("JFL", "STEGANO: " + uid + "=" +  name);
 								
 				Integer oldPower = allUIDPower.get(uid);
-				if (oldPower == null)
+				String oldName = allUIDNames.get(uid);
+				if (oldPower == null || oldName == null) // May happen if interrupted between storing actions
 				{
 					allUIDPower.put(uid, Integer.valueOf(power));
 					allUIDNames.put(uid, name);
@@ -107,7 +108,7 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 				else
 				{
 					allUIDPower.put(uid, Integer.valueOf(power+oldPower.intValue()));
-					if (!allUIDNames.get(uid).equals(name))
+					if (!oldName.equals(name))
 					{
 						Log.e("JFL", "This uid " + uid + " changed of name from " + allUIDNames.get(uid) + " to " + name);
 						allUIDNames.put(uid,  name);

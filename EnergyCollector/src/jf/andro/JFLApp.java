@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.CheckBox;
 
 
 public class JFLApp extends Activity {
@@ -100,6 +101,17 @@ public class JFLApp extends Activity {
 			public void onClick(View v) {
 						Intent service = new Intent("jf.andro.scenarioservice");
 						service.putExtra("scenario", 2);
+						startService(service);
+			}
+		});
+		
+		Button xpCC100 = (Button)findViewById(R.id.startCC100);
+		xpCC100.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+						Intent service = new Intent("jf.andro.scenarioservice");
+						service.putExtra("scenario", 3);
+						CheckBox b = (CheckBox)findViewById(R.id.activateCC);
+						service.putExtra("idleCC", ! b.isChecked());
 						startService(service);
 			}
 		});
