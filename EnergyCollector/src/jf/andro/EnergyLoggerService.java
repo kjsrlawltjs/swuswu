@@ -21,6 +21,7 @@ import android.app.ActivityManager.MemoryInfo;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -39,7 +40,8 @@ public class EnergyLoggerService extends Service {
 	private Timer timer = null;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
 	private final String filename = new String("energy.tmp");
-	private final String filenameFinal = new String("energy.csv");
+	public final static String filenameFinal = new String("energy.csv");
+	private String numberOfTests = "000";
 	private Vector<Integer> uidIndex = null;
 	private Vector<String> uidNames = null;
 	PowerTutorReceiver mResultReceiver;
@@ -59,7 +61,15 @@ public class EnergyLoggerService extends Service {
 		PowerManager pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JFL");
 		wl.acquire();
-
+		
+		// Getting the numbering of the current test if any
+		Bundle extras = intent.getExtras();
+		if (extras != null)
+		{
+			int nbTest = extras.getInt("nbTest");
+			numberOfTests =	String.format("%03d", nbTest);
+		}
+		
 		// Reset energy collected
 		PowerTutorReceiver.resetEnergy();
 		
@@ -165,11 +175,14 @@ public class EnergyLoggerService extends Service {
 
 	@Override
 	public void onDestroy() {
+		
+		Log.w("JFL", "Service STOPPED !");
+		
 		timer.cancel();
 		wl.release();
 
 		File root = Environment.getExternalStorageDirectory();
-		File file = new File(root, filenameFinal);
+		File file = new File(root, "" + numberOfTests + "_" + filenameFinal);
 		file.delete();
 
 		try {
