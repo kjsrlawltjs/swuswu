@@ -81,7 +81,8 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 	
 
 
-	private void addAllUIDEnergy(String s) {
+	private synchronized void addAllUIDEnergy(String s) {
+		// TODO Auto-generated method stub
 		
 		StringTokenizer st = new StringTokenizer(s, ";");
 		while (st.hasMoreElements())

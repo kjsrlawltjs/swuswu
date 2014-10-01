@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -20,11 +19,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -46,7 +43,7 @@ public class EnergyLoggerService extends Service {
 	public final static String filenameFinal = new String("energy.csv");
 	private String numberOfTests = "000";
 	private Vector<Integer> uidIndex = null;
-	//private Vector<String> uidNames = null;
+	private Vector<String> uidNames = null;
 	PowerTutorReceiver mResultReceiver;
 
 	@Override
@@ -78,7 +75,7 @@ public class EnergyLoggerService extends Service {
 		
 		// Reset tables
 		uidIndex = new Vector<Integer>();
-//		uidNames = new Vector<String>();
+		uidNames = new Vector<String>();
 
 		// Cancel old tasks
 		if (timer != null)
@@ -110,92 +107,38 @@ public class EnergyLoggerService extends Service {
 
 
 				String values = e.current_now + ";" + e.capacity + ";" + e.voltage_now + 
-						";" + e.charge_now + ";" + memory + ";" + e.readCpu + ";" + e.deltaCpu + ";";
-				values += ScenarioService.getCCDataScheduled()>0?"1":"0" + ";";
-				values += SteganoReceiver.isTrue() + ";";
-				values += ScenarioService.getCCDataScheduled() + ";";
+						";" + e.charge_now + ";" + memory + ";" + e.deltaCpu + ";" + ScenarioService.getCCDataScheduled() + ";";
 
-				
+				String uidEnergies = "";
 				HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
 				HashMap<Integer, String> hname = PowerTutorReceiver.getUIDNames();
 
-				// Scanning all uids
-				SharedPreferences seenApps = getApplicationContext().getSharedPreferences("apps", Context.MODE_PRIVATE);
-				int nbAppTotal = seenApps.getInt("nbAppTotal", 0);
-				SharedPreferences.Editor seenAppsEditor = null;
-				HashMap<Integer, String> nbToNameApp = new HashMap<Integer, String>();
-				for(int uid : h.keySet())
+				// We search for power of already known UIDs
+				for(int uidKnown : uidIndex)
 				{
-					String nameApp = hname.get(uid);
-					if (seenApps.contains(nameApp))
-					{
-						int assignedNbApp = seenApps.getInt(nameApp, -1);
-						nbToNameApp.put(assignedNbApp, nameApp);
-						Log.w("JFL", "Seen: " + nameApp + " and numbered: " + assignedNbApp);
+					Integer energyUID = h.get(uidKnown);
+					if (energyUID != null)
+					{ // This already seen uid process has some value
+						uidEnergies += energyUID.toString() + ";";
+						h.remove(uidKnown);
 					}
 					else
 					{
-						nbAppTotal++;
-						if (seenAppsEditor == null)
-							seenAppsEditor = seenApps.edit();
-						seenAppsEditor.putInt("nbAppTotal", nbAppTotal);
-						seenAppsEditor.putInt(nameApp, nbAppTotal);
-						nbToNameApp.put(nbAppTotal, nameApp);
-						//Log.w("JFL", "Creating " + nameApp + " and numbered: " + nbAppTotal);
+						uidEnergies += ";";
 					}
-					
 				}
-				
-				if (seenAppsEditor != null)
-					seenAppsEditor.commit();
-				
-				String uidEnergies = "";
-				nbAppTotal = seenApps.getInt("nbAppTotal", 0);
-				for(int eachApp = 1; eachApp <= nbAppTotal; eachApp++)
+
+				// Here we deal with not known UIDs that remains in h
+				for(int uid : h.keySet())
 				{
-					int appEnergyValue = 0;
-					for(int uid : h.keySet())
-					{
-						if (hname.get(uid).equals(nbToNameApp.get(eachApp))) // this process is for app with name of app nb eachapp
-						{
-							Integer energy = h.get(uid);
-							appEnergyValue += energy;
-						}
-					}
-					
-					uidEnergies += appEnergyValue + ";";
+					Integer energy = h.get(uid);
+					uidIndex.add(uid);
+					uidNames.add(hname.get(uid));
+					uidEnergies += energy.toString() + ";";				
 				}
-				
 				uidEnergies += "\n";
+
 				values += uidEnergies;
-				
-//				String uidEnergies = "";
-//				// We search for power of already known UIDs
-//				for(int uidKnown : uidIndex)
-//				{
-//					Integer energyUID = h.get(uidKnown);
-//					if (energyUID != null)
-//					{ // This already seen uid process has some value
-//						uidEnergies += energyUID.toString() + ";";
-//						h.remove(uidKnown);
-//					}
-//					else
-//					{
-//						uidEnergies += ";";
-//					}
-//				}
-//
-//				// Here we deal with not known UIDs that remains in h
-//				for(int uid : h.keySet())
-//				{
-//					Integer energy = h.get(uid);
-//					uidIndex.add(uid);
-//					uidNames.add(hname.get(uid));
-//					uidEnergies += energy.toString() + ";";				
-//				}
-//				uidEnergies += "\n";
-//
-//				values += uidEnergies;
 
 				// WRITTING
 				if (toggleLED)
@@ -245,43 +188,25 @@ public class EnergyLoggerService extends Service {
 		try {
 			FileWriter filewriter = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(filewriter);
-//			out.write(";;;;;;;UIDs;");
-//			// We search for power of already known UIDs
-//			String uids="";
-//			for(int uidKnown : uidIndex)
-//			{
-//				uids += uidKnown + ";";
-//
-//			}
-//
-//			out.write(uids + "\n");
+			out.write(";;;;;;;UIDs;");
+			// We search for power of already known UIDs
+			String uids="";
+			for(int uidKnown : uidIndex)
+			{
+				uids += uidKnown + ";";
 
-			out.write("Date;Current now;Level%;Voltage;Charging;Memory;ReadCPU;DeltaCPU;StartCC;EndCC;HiddenDataSent");
-//			String uidsnames="";
-//			for(String uidNameKnown : uidNames)
-//			{
-//				uidsnames += uidNameKnown + ";";
-//			}
-//			out.write(uidsnames + "\n");
-			
-			SharedPreferences seenApps = getApplicationContext().getSharedPreferences("apps", Context.MODE_PRIVATE);
-			int nbAppTotal = seenApps.getInt("nbAppTotal", 0);
-			
-			Map<String, Integer> map = (Map<String, Integer>) seenApps.getAll();
-			HashMap<Integer, String> nbToNameApp = new HashMap<Integer, String>();
-			for (String eachApp : map.keySet())
-			{
-				if (!eachApp.equals("nbAppTotal"))
-					nbToNameApp.put(map.get(eachApp), eachApp);
 			}
-			
-			for(int eachApp = 1; eachApp <= nbAppTotal; eachApp++)
+
+			out.write(uids + "\n");
+
+			out.write("Date;Current now;Level%;Voltage;Charging;Memory;DeltaCPU;HiddenDataSent;");
+			String uidsnames="";
+			for(String uidNameKnown : uidNames)
 			{
-				out.write(";" + nbToNameApp.get(eachApp));
+				uidsnames += uidNameKnown + ";";
 			}
-			out.write("\n");
-			
-			
+			out.write(uidsnames + "\n");
+
 			FileReader filetmp = new FileReader(root + "/" +  filename);
 			BufferedReader in = new BufferedReader(filetmp);
 

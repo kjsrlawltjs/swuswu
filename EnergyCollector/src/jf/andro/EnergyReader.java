@@ -125,7 +125,6 @@ public class EnergyReader {
 		        if (oldCpu == 0)
 		        	oldCpu = readCpu;
 		        e.deltaCpu = readCpu - oldCpu;
-		        e.readCpu = readCpu;
 		        oldCpu = readCpu;
 		        reader.close();
 		    }
