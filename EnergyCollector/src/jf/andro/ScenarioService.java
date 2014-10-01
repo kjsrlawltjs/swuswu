@@ -183,9 +183,9 @@ public class ScenarioService extends Service {
 						// Parameters for randomness
 						Random r = new Random();
 						int nb_messages_max = 100; // Max nb messages
-						int message_size_max = 100; // Size max 100 Bytes
-						int nb_first_sleep_random_max = 10; // Max sleeping time 
-						int nb_second_sleep_random_max = 20; // Max sleeping time 
+						int message_size_max = 2000; // Size max 1000 Bytes
+						int nb_first_sleep_random_max = 60; // Max sleeping time 
+						int nb_second_sleep_random_max = 60; // Max sleeping time 
 
 						sleep(3*1000); // Sleep a little before starting
 
@@ -201,7 +201,7 @@ public class ScenarioService extends Service {
 							startService(service);
 
 							// Random sleep before the first CC message sending
-							sleep((1 + r.nextInt(nb_first_sleep_random_max))*1000);
+							sleep((10 + r.nextInt(nb_first_sleep_random_max))*1000);
 
 							if (!idleCC) // IDLE the stegano transmission
 							{
@@ -212,7 +212,7 @@ public class ScenarioService extends Service {
 							intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
 
 							// Pick a random size for the message to transmit
-							int size_message_B = (1 + r.nextInt(message_size_max)); // Bytes
+							int size_message_B = (100 + r.nextInt(message_size_max)); // Bytes
 							int size_message = size_message_B * 8; // bits
 							Log.w("JFL", "Sending message " + nb_message + " of size " + size_message_B + " Bytes (" + size_message + " bits)");
 							setCCDataScheduled(size_message);
@@ -222,18 +222,12 @@ public class ScenarioService extends Service {
 							intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
 							intent.putExtra(Const.EXTRA_MESSAGE, generate(size_message_B));
 
-							// Prepare receiver response
-							/*IntentFilter mIntentFilter = new IntentFilter();
-			mIntentFilter.addAction(Const.ACTION_FINISH_STEGANO);
-			CCResultReceiver mResultReceiver = new CCResultReceiver();
-			registerReceiver(mResultReceiver, mIntentFilter);*/
-
 							// Send the intent that asks the Stegano sender to transmit !
 							sendBroadcast(intent);
 								
 							}
 							// Random sleep before the first CC message sending
-							sleep((10 + r.nextInt(nb_second_sleep_random_max))*1000);
+							sleep((60 + r.nextInt(nb_second_sleep_random_max))*1000);
 							
 							// Stop logging service
 							service = new Intent("jf.andro.energyservice");

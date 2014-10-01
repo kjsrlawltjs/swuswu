@@ -88,7 +88,11 @@ public class EnergyLoggerService extends Service {
 		
 		// Read one time for purging energies
 		EnergyReader.readEnergyValues();
-
+		ScenarioService.getCCDataScheduled();
+		SteganoReceiver.isTrue();
+		PowerTutorReceiver.getUIDEnergy();
+		PowerTutorReceiver.getUIDNames();
+		
 		File root = Environment.getExternalStorageDirectory();
 		File file = new File(root, filename);
 		file.delete();
@@ -111,9 +115,14 @@ public class EnergyLoggerService extends Service {
 
 				String values = e.current_now + ";" + e.capacity + ";" + e.voltage_now + 
 						";" + e.charge_now + ";" + memory + ";" + e.readCpu + ";" + e.deltaCpu + ";";
-				values += ScenarioService.getCCDataScheduled()>0?"1":"0" + ";";
+				int hiddenDataSend = ScenarioService.getCCDataScheduled();
+				if (hiddenDataSend > 0)
+					values += "1" + ";";
+				else
+					values += "0" + ";";
+				
 				values += SteganoReceiver.isTrue() + ";";
-				values += ScenarioService.getCCDataScheduled() + ";";
+				values += hiddenDataSend;
 
 				
 				HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
@@ -131,7 +140,7 @@ public class EnergyLoggerService extends Service {
 					{
 						int assignedNbApp = seenApps.getInt(nameApp, -1);
 						nbToNameApp.put(assignedNbApp, nameApp);
-						Log.w("JFL", "Seen: " + nameApp + " and numbered: " + assignedNbApp);
+						//Log.w("JFL", "Seen: " + nameApp + " and numbered: " + assignedNbApp);
 					}
 					else
 					{
@@ -163,7 +172,7 @@ public class EnergyLoggerService extends Service {
 						}
 					}
 					
-					uidEnergies += appEnergyValue + ";";
+					uidEnergies += ";" + appEnergyValue;
 				}
 				
 				uidEnergies += "\n";

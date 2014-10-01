@@ -45,14 +45,7 @@
              <category android:name="android.intent.category.DEFAULT" />
     	</intent-filter>
   </receiver>
-  
-	<receiver android:name="finish_stegano">
-    	<intent-filter>
-             <action android:name="jf.andro.SteganoReceiver" />
-             <category android:name="android.intent.category.DEFAULT" />
-    	</intent-filter>
-  </receiver>
-		
+  		
     </application>
 
 </manifest>

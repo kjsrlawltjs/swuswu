@@ -76,11 +76,7 @@ public class JFLApp extends Activity {
 				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
 				intent.putExtra(Const.EXTRA_MESSAGE, "JFL");
 				
-				// Prepare receiver response
-				IntentFilter mIntentFilter = new IntentFilter();
-				mIntentFilter.addAction(Const.ACTION_FINISH_STEGANO);
-				CCResultReceiver mResultReceiver = new CCResultReceiver();
-				registerReceiver(mResultReceiver, mIntentFilter);
+				
 				
 				Log.w("JFL","Starting CC transmission !");
 				sendBroadcast(intent);
@@ -125,6 +121,11 @@ public class JFLApp extends Activity {
 		});
 		
 		updateReport();
+		
+		// Prepare receiver response
+		IntentFilter mIntentFilter = new IntentFilter();
+		mIntentFilter.addAction(Const.ACTION_FINISH_STEGANO);
+		registerReceiver(new SteganoReceiver(), mIntentFilter);
 	}
 	
 	public void updateReport()
@@ -150,16 +151,5 @@ public class JFLApp extends Activity {
 		super.onDestroy();
 	}
 	
-	public class CCResultReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			System.out.println("JFL: end of CC transmission !");
-			Long time = intent.getLongExtra(Const.EXTRA_TIME, -1);
-			Toast.makeText(getApplicationContext(), "Finished in " + time + " ms", Toast.LENGTH_LONG).show();
-		}
-	}
 	
-
-
 }
