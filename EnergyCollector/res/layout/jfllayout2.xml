@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+ 
+     <Button
+         android:id="@+id/startservice"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Start Record service" />
+     
+     <Button
+         android:id="@+id/stopservice"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Stop Record service" />
+     
+       <Button
+         android:id="@+id/starttransmission"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Start Stegano Transmission" />
+       
+
+     
+              
+                    <Button
+           android:id="@+id/stopscenarios"
+           style="?android:attr/buttonStyleSmall"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Stop scenario service" />
+                    
+                    
+
+                    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <EditText
+        android:id="@+id/nbXP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:inputType="number" 
+        android:text="100">
+
+    </EditText>
+         
+          <Button
+           android:id="@+id/startCC100"
+           style="?android:attr/buttonStyleSmall"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="XP CC100" />
+
+          <CheckBox
+              android:id="@+id/activateCC"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Activate CC"
+              android:checked="true" />
+    
+</LinearLayout>
+
+<TextView
+    android:id="@+id/startDate"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Start"
+    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+<TextView
+    android:id="@+id/endDate"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="End"
+    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>

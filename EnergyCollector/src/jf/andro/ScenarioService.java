@@ -1,21 +1,29 @@
 package jf.andro;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
+import jf.andro.energycollector.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 public class ScenarioService extends Service {
 
 	private PowerManager.WakeLock wl;
+
+	private int nbXP;
 
 	private static int getCCDataScheduled = 0;
 	private static boolean idleCC = false;
@@ -51,6 +59,7 @@ public class ScenarioService extends Service {
 		Bundle extras = intent.getExtras();
 		int scenario = extras.getInt("scenario");
 		idleCC = extras.getBoolean("idleCC");
+		nbXP  = extras.getInt("nbXP");
 		RedFlashLight();
 		
 		Thread t = null;
@@ -182,7 +191,7 @@ public class ScenarioService extends Service {
 					try {
 						// Parameters for randomness
 						Random r = new Random();
-						int nb_messages_max = 100; // Max nb messages
+						int nb_messages_max = nbXP; // Max nb messages
 						int message_size_max = 2000; // Size max 1000 Bytes
 						int nb_first_sleep_random_max = 60; // Max sleeping time 
 						int nb_second_sleep_random_max = 60; // Max sleeping time 
@@ -227,7 +236,7 @@ public class ScenarioService extends Service {
 								
 							}
 							// Random sleep before the first CC message sending
-							sleep((60 + r.nextInt(nb_second_sleep_random_max))*1000);
+							sleep((90 + r.nextInt(nb_second_sleep_random_max))*1000);
 							
 							// Stop logging service
 							service = new Intent("jf.andro.energyservice");
@@ -240,6 +249,10 @@ public class ScenarioService extends Service {
 						}
 						
 						GreenFlashLight();
+						Intent intent = new Intent();
+						intent.setAction("jf.andro.endScenario");
+						sendBroadcast(intent);
+						
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

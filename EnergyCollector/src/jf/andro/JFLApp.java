@@ -1,6 +1,9 @@
 package jf.andro;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import jf.andro.energycollector.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -11,10 +14,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,18 +31,14 @@ public class JFLApp extends Activity {
 	
 
 	
+	protected BroadcastReceiver endReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.jfllayout);
+		setContentView(R.layout.jfllayout2);
 		
-		Button refresh = (Button)findViewById(R.id.refresh);
-		refresh.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				updateReport();
-			}
-		});
-		
+				
 			
 		Button start = (Button)findViewById(R.id.startservice);
 		start.setOnClickListener(new OnClickListener() {
@@ -83,32 +85,57 @@ public class JFLApp extends Activity {
 			}
 		});
 		
-		Button xpIDLE = (Button)findViewById(R.id.startidle);
-		xpIDLE.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-						Intent service = new Intent("jf.andro.scenarioservice");
-						service.putExtra("scenario", 1);
-						startService(service);
-			}
-		});
-		
-		Button xpCC1 = (Button)findViewById(R.id.startCC1);
-		xpCC1.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-						Intent service = new Intent("jf.andro.scenarioservice");
-						service.putExtra("scenario", 2);
-						startService(service);
-			}
-		});
+//		Button xpIDLE = (Button)findViewById(R.id.startidle);
+//		xpIDLE.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//						Intent service = new Intent("jf.andro.scenarioservice");
+//						service.putExtra("scenario", 1);
+//						startService(service);
+//			}
+//		});
+//		
+//		Button xpCC1 = (Button)findViewById(R.id.startCC1);
+//		xpCC1.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//						Intent service = new Intent("jf.andro.scenarioservice");
+//						service.putExtra("scenario", 2);
+//						startService(service);
+//			}
+//		});
 		
 		Button xpCC100 = (Button)findViewById(R.id.startCC100);
 		xpCC100.setOnClickListener(new OnClickListener() {
+			
 			public void onClick(View v) {
-						Intent service = new Intent("jf.andro.scenarioservice");
-						service.putExtra("scenario", 3);
-						CheckBox b = (CheckBox)findViewById(R.id.activateCC);
-						service.putExtra("idleCC", ! b.isChecked());
-						startService(service);
+
+				// Updating UI for end/start dates
+				TextView startDate = (TextView)findViewById(R.id.startDate);
+				TextView endDate = (TextView)findViewById(R.id.endDate);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				Date date = new Date();
+				startDate.setText(dateFormat.format(date));
+				endDate.setText("***");
+
+				// Register new receiver for the end
+				endReceiver = new BroadcastReceiver() {
+
+					@Override
+					public void onReceive(Context context, Intent intent) {
+						TextView endDate = (TextView)findViewById(R.id.endDate);
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+						Date date = new Date();
+						endDate.setText(dateFormat.format(date));
+					}
+				};
+				registerReceiver(endReceiver, new IntentFilter("jf.andro.endScenario"));
+
+				Intent service = new Intent("jf.andro.scenarioservice");
+				service.putExtra("scenario", 3);
+				CheckBox b = (CheckBox)findViewById(R.id.activateCC);
+				EditText nbXP = (EditText)findViewById(R.id.nbXP);
+				service.putExtra("idleCC", ! b.isChecked());
+				service.putExtra("nbXP", Integer.parseInt(nbXP.getText().toString()));
+				startService(service);
 			}
 		});
 		
@@ -120,7 +147,7 @@ public class JFLApp extends Activity {
 			}
 		});
 		
-		updateReport();
+		//updateReport();
 		
 		// Prepare receiver response
 		IntentFilter mIntentFilter = new IntentFilter();
@@ -144,11 +171,14 @@ public class JFLApp extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		unregisterReceiver(endReceiver);
+		
 	}
 	
 	
