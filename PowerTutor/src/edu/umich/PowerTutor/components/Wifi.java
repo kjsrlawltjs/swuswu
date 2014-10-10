@@ -166,7 +166,7 @@ public class Wifi extends PowerComponent {
     if(transmitPackets == -1 || receivePackets == -1 ||
        transmitBytes == -1 || receiveBytes == -1) {
       /* Couldn't read interface data files. */
-      Log.w(TAG, "Failed to read packet and byte counts from wifi interface");
+      Log.v(TAG, "Failed to read packet and byte counts from wifi interface");
       return result;
     }
 

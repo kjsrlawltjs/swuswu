@@ -240,6 +240,9 @@ public class PowerEstimator implements Runnable {
         	  }
           }
           
+          //if (power > 0)
+        //	  Log.w("JFL", "uid=" + uid + " power=" + power);
+          
           //JFL: HERE WE CAN PATCH FOR LOGGING POWER
           // **************************
            
@@ -262,6 +265,7 @@ public class PowerEstimator implements Runnable {
           histories.get(i).add(uid, iter, power);
           if(uid == SystemInfo.AID_ALL) {
             totalPower += power;
+            //Log.w("JFL", " component "+ powerComponents.get(i).getComponentName() + " has a -1 request of " + power + "with name " + uidNameJFL.get(uid) );
           }
           
          
