@@ -1,6 +1,9 @@
 package jf.andro;
 
 import java.io.File;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -26,6 +29,7 @@ public class ScenarioService extends Service {
 	private int nbXP;
 
 	private static int getCCDataScheduled = 0;
+	private static String md5Message = "";
 	private static boolean idleCC = false;
 	
 	public synchronized static int getCCDataScheduled() {
@@ -34,8 +38,9 @@ public class ScenarioService extends Service {
 		return tmp;
 	}
 	
-	public synchronized static void setCCDataScheduled(int nbdata) {
+	public synchronized static void setCCDataScheduled(int nbdata, String md5) {
 		getCCDataScheduled = nbdata;
+		md5Message = md5;
 	}
 
 	@Override
@@ -52,7 +57,7 @@ public class ScenarioService extends Service {
 		wl.acquire();
 		
 		// Reset somes values
-		setCCDataScheduled(0);
+		setCCDataScheduled(0, "");
 		
 		// Tell the user we start
 		Toast.makeText(this, "START SCENARIO: Switch off the SCREEN !", Toast.LENGTH_SHORT).show();
@@ -138,12 +143,12 @@ public class ScenarioService extends Service {
 							int size_message_B = (1 + r.nextInt(message_size_max)); // Bytes
 							int size_message = size_message_B * 8; // bits
 							Log.w("JFL", "Sending message " + nb_message + " of size " + size_message_B + " Bytes (" + size_message + " bits)");
-							setCCDataScheduled(size_message);
+							setCCDataScheduled(size_message, "");
 							//intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
 							//intent.putExtra(Const.EXTRA_TEST_ITERATIONS, size_message);
 							intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
 							intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
-							intent.putExtra(Const.EXTRA_MESSAGE, generate(size_message_B));
+							intent.putExtra(Const.EXTRA_MESSAGE, generate(size_message_B, 0));
 
 							// Prepare receiver response
 							/*IntentFilter mIntentFilter = new IntentFilter();
@@ -192,16 +197,16 @@ public class ScenarioService extends Service {
 						// Parameters for randomness
 						Random r = new Random();
 						int nb_messages_max = nbXP; // Max nb messages
-						int message_size_max = 2000; // Size max 1000 Bytes
+						int message_size_max = 1500; // Size max 1000 Bytes
 						int nb_first_sleep_random_max = 60; // Max sleeping time 
-						int nb_second_sleep_random_max = 60; // Max sleeping time 
+						int nb_second_sleep_random_max = 30; // Max sleeping time 
 
 						sleep(3*1000); // Sleep a little before starting
 
 						// Choose a random number of messages to send 
-						int nb_message = nb_messages_max; // + r.nextInt(nb_messages_max);
+						int nb_message = 1; // + r.nextInt(nb_messages_max);
 						
-						while (nb_message > 0) // while we have some messages to send
+						while (nb_message <= nb_messages_max) // while we have some messages to send
 						{
 							
 							// Starting Energy Collector Service for logging
@@ -214,35 +219,46 @@ public class ScenarioService extends Service {
 
 							if (!idleCC) // IDLE the stegano transmission
 							{
-								
-							Intent intent = new Intent();
-							intent.setAction(Const.ACTION_START_STEGANO);
-							// Choose the CC method to use
-							intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
 
-							// Pick a random size for the message to transmit
-							int size_message_B = (100 + r.nextInt(message_size_max)); // Bytes
-							int size_message = size_message_B * 8; // bits
-							Log.w("JFL", "Sending message " + nb_message + " of size " + size_message_B + " Bytes (" + size_message + " bits)");
-							setCCDataScheduled(size_message);
-							//intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
-							//intent.putExtra(Const.EXTRA_TEST_ITERATIONS, size_message);
-							intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
-							intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
-							intent.putExtra(Const.EXTRA_MESSAGE, generate(size_message_B));
+								Intent intent = new Intent();
+								intent.setAction(Const.ACTION_START_STEGANO);
+								// Choose the CC method to use
+								intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
 
-							// Send the intent that asks the Stegano sender to transmit !
-							sendBroadcast(intent);
 								
+								//intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
+								//intent.putExtra(Const.EXTRA_TEST_ITERATIONS, size_message);
+								intent.putExtra(Const.EXTRA_TEST_ITERATIONS, 1);
+								
+								intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_MESSAGE);
+								String my_message = generate(message_size_max, nb_message);
+								// Pick a random size for the message to transmit
+								int size_message = my_message.length() * 8; // bits
+								
+								intent.putExtra(Const.EXTRA_MESSAGE, my_message);
+								String md5 = null;
+								try {
+									MessageDigest md = MessageDigest.getInstance("MD5");
+									md.update(my_message.getBytes(), 0, my_message.length());
+									md5 = new BigInteger(1, md.digest()).toString(16); // Hashed 
+								} catch (NoSuchAlgorithmException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								Log.i("JFL", "Sending message " + nb_message + " of size " + size_message/8 + " Bytes (" + size_message + " bits): " + md5);
+								setCCDataScheduled(size_message, md5);
+								// Send the intent that asks the Stegano sender to transmit !
+								sendBroadcast(intent);
+
 							}
 							// Random sleep before the first CC message sending
-							sleep((90 + r.nextInt(nb_second_sleep_random_max))*1000);
+							sleep((60 + r.nextInt(nb_second_sleep_random_max))*1000);
 							
 							// Stop logging service
 							service = new Intent("jf.andro.energyservice");
 							stopService(service);
 							
-							nb_message--;
+							nb_message++;
 							
 							// wait a little bit
 							sleep(1000);
@@ -306,16 +322,22 @@ public class ScenarioService extends Service {
 	
 	
 
-	public String generate(int length)
+	public String generate(int message_size_max, int seed)
 	{
 		    String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // Tu supprimes les lettres dont tu ne veux pas
 		    String pass = "";
+		    Random r = new Random(seed);
+		    int length = (100 + r.nextInt(message_size_max));
 		    for(int x=0;x<length;x++)
 		    {
-		       int i = (int)Math.floor(Math.random() * 62); // Si tu supprimes des lettres tu diminues ce nb
+		       int i = r.nextInt(62); // Si tu supprimes des lettres tu diminues ce nb
 		       pass += chars.charAt(i);
 		    }
 		    return pass;
+	}
+
+	public static String getCCDataScheduledMd5() {
+		return md5Message;
 	}
 
 }

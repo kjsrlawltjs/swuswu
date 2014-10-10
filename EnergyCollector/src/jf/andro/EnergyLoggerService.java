@@ -38,8 +38,6 @@ public class EnergyLoggerService extends Service {
 
 	private PowerManager.WakeLock wl;
 
-	private boolean toggleLED = true;
-	
 	private Timer timer = null;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
 	private final String filename = new String("energy.tmp");
@@ -98,6 +96,8 @@ public class EnergyLoggerService extends Service {
 		file.delete();
 
 		timer = new Timer();
+		
+		BlueLightOn();
 
 		TimerTask t = new TimerTask() {
 
@@ -122,8 +122,15 @@ public class EnergyLoggerService extends Service {
 					values += "0" + ";";
 				
 				values += SteganoReceiver.isTrue() + ";";
-				values += hiddenDataSend;
+				values += hiddenDataSend + ";";
 
+				if (hiddenDataSend > 0)
+				{
+					String md5 = ScenarioService.getCCDataScheduledMd5();
+					values += md5;
+				}
+				else
+					values += "";
 				
 				HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
 				HashMap<Integer, String> hname = PowerTutorReceiver.getUIDNames();
@@ -206,17 +213,6 @@ public class EnergyLoggerService extends Service {
 //
 //				values += uidEnergies;
 
-				// WRITTING
-				if (toggleLED)
-				{
-					BlueLightOn();
-					toggleLED = false;
-				}
-				else
-				{
-					BlueLightOff();
-					toggleLED = true;
-				}
 				
 				File root = Environment.getExternalStorageDirectory();
 					File file = new File(root, filename);
@@ -265,7 +261,7 @@ public class EnergyLoggerService extends Service {
 //
 //			out.write(uids + "\n");
 
-			out.write("Date;Current now;Level%;Voltage;Charging;Memory;ReadCPU;DeltaCPU;StartCC;EndCC;HiddenDataSent");
+			out.write("Date;Current now;Level%;Voltage;Charging;Memory;ReadCPU;DeltaCPU;StartCC;EndCC;HiddenDataSent;MessageMd5");
 //			String uidsnames="";
 //			for(String uidNameKnown : uidNames)
 //			{
