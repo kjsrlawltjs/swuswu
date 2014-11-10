@@ -26,10 +26,19 @@ public class ScenarioService extends Service {
 
 	private PowerManager.WakeLock wl;
 
+	// The number of XP to perform
 	private int nbXP;
 
+	// The id of the used Covert Channels
+	private int idCC;
+
+	// How many data the CC should transmit
 	private static int getCCDataScheduled = 0;
+	
+	// The md5 sum of the transmitted message
 	private static String md5Message = "";
+	
+	// If the covert channels CC should be disabled for these XP
 	private static boolean idleCC = false;
 	
 	public synchronized static int getCCDataScheduled() {
@@ -65,6 +74,7 @@ public class ScenarioService extends Service {
 		int scenario = extras.getInt("scenario");
 		idleCC = extras.getBoolean("idleCC");
 		nbXP  = extras.getInt("nbXP");
+		idCC = extras.getInt("idCC");
 		RedFlashLight();
 		
 		Thread t = null;
@@ -197,10 +207,10 @@ public class ScenarioService extends Service {
 						// Parameters for randomness
 						Random r = new Random();
 						int nb_messages_max = nbXP; // Max nb messages
-						int message_size_max = 1500; // Size max 1000 Bytes
-						int nb_first_sleep_random_max = 60; // Max sleeping time 
+						int message_size_max = 1000; // Size max 1000 Bytes
+						int nb_first_sleep_random_max = 30; // Max sleeping time 
 						int nb_second_sleep_random_max = 30; // Max sleeping time 
-
+						int wait_factor = 1;
 						sleep(3*1000); // Sleep a little before starting
 
 						// Choose a random number of messages to send 
@@ -222,8 +232,61 @@ public class ScenarioService extends Service {
 
 								Intent intent = new Intent();
 								intent.setAction(Const.ACTION_START_STEGANO);
+								//Log.w("JFL", "idCC="+idCC);
 								// Choose the CC method to use
-								intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
+								switch (idCC) {
+								case 0:
+									Log.w("JFL", "Using OPTION_VOLUME_MUSIC_OBSERVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_MUSIC_OBSERVER);
+									break;
+								case 1:
+									Log.w("JFL", "Using OPTION_VOLUME_RING_OBSERVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_RING_OBSERVER);
+									wait_factor = 2;
+									break;
+								case 2:
+									Log.w("JFL", "Using OPTION_VOLUME_NOTIFICATION_OBSERVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_VOLUME_NOTIFICATION_OBSERVER);
+									break;
+								case 3:
+									Log.w("JFL", "Using OPTION_TYPE_OF_INTENT_OBSERVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_TYPE_OF_INTENT_OBSERVER);
+									break;
+								case 4:
+									Log.w("JFL", "Using OPTION_TYPE_OF_INTENT_RECEIVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_TYPE_OF_INTENT_RECEIVER);
+									break;
+								case 5:
+									Log.w("JFL", "Using OPTION_UNIX_SOCKET_RECEIVER_ALARM method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_UNIX_SOCKET_RECEIVER_ALARM);
+									wait_factor = 3;
+									break;
+								case 6:
+									Log.w("JFL", "Using OPTION_FILE_LOCK_OBSERVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_FILE_LOCK_OBSERVER);
+									break;
+								case 7:
+									Log.w("JFL", "Using OPTION_FILE_SIZE_OBSERVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_FILE_SIZE_OBSERVER);
+									break;
+								case 8:
+									Log.w("JFL", "Using OPTION_FILE_EXISTENCE_OBSERVER method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_FILE_EXISTENCE_OBSERVER);
+									wait_factor = 2;
+									break;
+								case 9:
+									Log.w("JFL", "Using OPTION_SYSTEM_LOAD_RECEIVER_ALARM method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_SYSTEM_LOAD_RECEIVER_ALARM);
+									break;
+								case 10:
+									Log.w("JFL", "Using OPTION_MEMORY_LOAD_RECEIVER_ALARM method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_MEMORY_LOAD_RECEIVER_ALARM);
+									break;
+								case 11:
+									Log.w("JFL", "Using OPTION_USAGE_TREND_RECEIVER_ALARM method !");
+									intent.putExtra(Const.EXTRA_METHOD, Const.OPTION_USAGE_TREND_RECEIVER_ALARM);
+									break;
+								}
 
 								
 								//intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
@@ -242,17 +305,16 @@ public class ScenarioService extends Service {
 									md.update(my_message.getBytes(), 0, my_message.length());
 									md5 = new BigInteger(1, md.digest()).toString(16); // Hashed 
 								} catch (NoSuchAlgorithmException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								Log.i("JFL", "Sending message " + nb_message + " of size " + size_message/8 + " Bytes (" + size_message + " bits): " + md5);
+								Log.i("JFL", "Sending  message " + nb_message + " of size " + size_message/8 + " Bytes (" + size_message + " bits): " + md5);
 								setCCDataScheduled(size_message, md5);
 								// Send the intent that asks the Stegano sender to transmit !
 								sendBroadcast(intent);
 
 							}
 							// Random sleep before the first CC message sending
-							sleep((60 + r.nextInt(nb_second_sleep_random_max))*1000);
+							sleep((60 * wait_factor + r.nextInt(nb_second_sleep_random_max))*1000);
 							
 							// Stop logging service
 							service = new Intent("jf.andro.energyservice");

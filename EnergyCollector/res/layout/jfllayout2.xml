@@ -4,37 +4,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
- 
+                
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
      <Button
          android:id="@+id/startservice"
+          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:text="Start Record service" />
+         android:text="Start" />
      
      <Button
          android:id="@+id/stopservice"
+          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:text="Stop Record service" />
+         android:text="Stop" />
      
        <Button
          android:id="@+id/starttransmission"
+          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:text="Start Stegano Transmission" />
+         android:text="Test" />
        
-
-     
-              
-                    <Button
+           <Button
            android:id="@+id/stopscenarios"
            style="?android:attr/buttonStyleSmall"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="Stop scenario service" />
                     
-                    
+     
 
+</LinearLayout>
+              
+         
+                    
                     
 <LinearLayout 
     android:layout_width="match_parent"
@@ -48,7 +56,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:inputType="number" 
-        android:text="100">
+        android:text="1">
 
     </EditText>
          
@@ -81,5 +89,77 @@
     android:layout_height="wrap_content"
     android:text="End"
     android:textAppearance="?android:attr/textAppearanceMedium" />
+
+<RadioGroup
+    android:id="@+id/typeCC" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+   
+    >
+    <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume (music)"
+
+      />
+        <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume (ring)"
+
+      />
+            <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume (notif)"
+
+      />
+    <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type of Intent (obs)"
+        />
+        <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type of Intent (rec)"
+        />
+       <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unix Socket"
+        />
+              <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Lock"
+        />
+                            <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Size"
+        />
+                                          <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Existence"
+        />
+                            <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="System Load (?)"
+        />
+                                                        <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Memory Load"
+        />
+                                                                                                               <RadioButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Usage trend (?)"
+        />
+</RadioGroup>
 
 </LinearLayout>
