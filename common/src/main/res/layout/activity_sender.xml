@@ -1,0 +1,131 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.steganomobile.common.sender.view.SenderActivity">
+
+    <!--<Button-->
+    <!--android:id="@+id/buttonTest"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_below="@+id/textViewState"-->
+    <!--android:text="@string/button_text_test" />-->
+
+    <Button
+        android:id="@+id/buttonScenario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonMessage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/send_scenario" />
+
+    <Button
+        android:id="@+id/buttonMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonPhoneState"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/button_text_message" />
+
+    <Button
+        android:id="@+id/buttonPhoneState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonChooseCc"
+        android:layout_alignEnd="@+id/buttonChooseCc"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/buttonChooseCc"
+        android:text="@string/button_text_phone_state" />
+
+    <Switch
+        android:id="@+id/switchSms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/switchScreen"
+        android:layout_alignEnd="@+id/buttonPhoneState"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/buttonPhoneState"
+        android:checked="true"
+        android:text="@string/text_listen_for_sms" />
+
+    <Switch
+        android:id="@+id/switchScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:checked="false"
+        android:text="@string/text_send_after_screen_off" />
+
+    <TextView
+        android:id="@+id/textViewState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonScenario"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="@string/state_idle" />
+
+    <Button
+        android:id="@+id/buttonChooseCc"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonChooseSync"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:alpha="0.75"
+        android:text="@string/choose_cc" />
+
+    <Button
+        android:id="@+id/buttonChooseSync"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonTimeInterval"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:alpha="0.75"
+        android:text="@string/choose_sync" />
+
+    <Button
+        android:id="@+id/buttonTimeInterval"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonTestIterations"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:alpha="0.75"
+        android:text="@string/interval" />
+
+    <Button
+        android:id="@+id/buttonTestIterations"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/switchSms"
+        android:layout_alignEnd="@+id/buttonTimeInterval"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/buttonTimeInterval"
+        android:layout_marginBottom="44dp"
+        android:alpha="0.75"
+        android:text="@string/iterations" />
+
+</RelativeLayout>

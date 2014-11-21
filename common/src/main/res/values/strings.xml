@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_cancel">Shutdown</string>
+    <string name="action_split">Listen only in background</string>
+
+    <string name="will_be_sent_after_screen_goes_off">Will be sent after screen goes off</string>
+
+    <string name="send_scenario">Send scenario</string>
+    <string name="set_scenario">Set scenario</string>
+
+    <string name="choose_sync">Choose sync</string>
+    <string name="select_sync">Select sync:</string>
+    <string name="set_sync">Set sync</string>
+    <string name="summary_choose_sync">Choose sync</string>
+    <string name="title_sync">Sync</string>
+
+    <string name="set_interval">Set time interval</string>
+    <string name="set_cc">Set info</string>
+    <string name="set_iterations">Set test iterations</string>
+    <string name="send_message">Send message</string>
+    <string name="send_phone_state">Send phone state</string>
+    <string name="select_iterations">Selected test iterations:</string>
+    <string name="select_interval">Selected time interval:</string>
+
+    <string name="button_text_message">Send message</string>
+    <string name="button_text_phone_state">Send phone state</string>
+    <string name="title_activity_file_select" translatable="false">FileSelectActivity</string>
+    <string name="category_methods">Steganography Methods</string>
+    <string name="title_cc">List of steganography methods</string>
+    <string name="summary_cc">Choose info</string>
+    <string name="category_global">Global Settings</string>
+    <string name="summary_interval">Used when we are waiting to send next particle</string>
+    <string name="summary_type">Choose what would you like to send</string>
+    <string name="title_type">Type of message</string>
+
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="title_activity_my" translatable="false">MyActivity</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+
+    <string name="choose_cc">Choose info</string>
+    <string name="interval" translatable="false">Time interval</string>
+    <string name="iterations">Test iterations</string>
+
+    <string name="summary_iterations">Number of iterations in each test</string>
+    <string name="tittle_iterations">Test iterations</string>
+    <string name="tittle_port">Port</string>
+    <string name="summary_port">Select port to send test and other</string>
+
+    <string name="default_cc" translatable="false">1</string>
+    <string name="default_type" translatable="false">1</string>
+    <string name="default_interval" translatable="false">40</string>
+    <string name="default_iterations" translatable="false">1</string>
+    <string name="default_port" translatable="false">6666</string>
+
+    <string name="text_send_after_screen_off">Send after screen goes off</string>
+    <string name="text_send">Send</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_write">Write message</string>
+
+    <string name="state_sending">State: Sending!</string>
+    <string name="state_idle">State: Idle</string>
+    <string name="text_set">Set</string>
+    <string name="select_cc">Selected info:</string>
+    <string name="set_type">Set typeId</string>
+    <string name="select_type">Selected typeId:</string>
+
+    <string name="text_volume_music" translatable="false">Volume Settings - Music</string>
+    <string name="text_volume_ring" translatable="false">Volume Settings - Ring</string>
+    <string name="text_volume_notification" translatable="false">Volume Settings - Notification</string>
+    <string name="text_volume_system" translatable="false">Volume Settings - Notification</string>
+    <string name="text_volume_alarm" translatable="false">Volume Settings - Alarm</string>
+    <string name="text_volume_dtmf" translatable="false">Volume Settings - DTMF</string>
+    <string name="text_volume_voice_call" translatable="false">Volume Settings - Voice Call</string>
+    <string name="text_file_lock" translatable="false">File Lock</string>
+    <string name="text_file_size" translatable="false">File Size</string>
+    <string name="text_file_existence" translatable="false">File Existence</string>
+    <string name="text_content_of_uri" translatable="false">Content of Uri</string>
+    <string name="text_type_of_intent" translatable="false">Type of Intent</string>
+    <string name="text_unix_socket" translatable="false">Unix Socket Discovery</string>
+    <string name="text_memory_load" translatable="false">Memory Load</string>
+    <string name="text_system_load" translatable="false">System Load</string>
+    <string name="text_usage_trend" translatable="false">Usage Trend</string>
+
+    <string-array name="array_methods">
+        <item>Volume Settings - Music (4 bit)</item>
+        <item>Volume Settings - Ring (3 bit)</item>
+        <item>Volume Settings - Notification (3 bit)</item>
+        <item>Volume Settings - DTMF (3 bit)</item>
+        <item>Volume Settings - System (3 bit)</item>
+        <item>Volume Settings - Alarm (3 bit)</item>
+        <item>Volume Settings - Voice Call (2 bit)</item>
+        <item>File Lock (1 bit)</item>
+        <item>File Size (8 bit)</item>
+        <item>File Existence (1 bit)</item>
+        <item>Content of Uri (8 bit)</item>
+        <item>Type of Intent (8 bit)</item>
+        <item>Unix Socket Discovery (8 bit)</item>
+        <item>Memory Load (8 bit)</item>
+        <item>System Load (1 bit)</item>
+        <item>Usage Trend (1 bit)</item>
+    </string-array>
+
+    <string-array name="array_methods_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+    </string-array>
+
+    <string-array name="array_default_methods_values">
+        <item>1</item>
+    </string-array>
+
+    <string name="text_broadcast_receiver" translatable="false">Broadcast Receiver</string>
+    <string name="text_content_observer" translatable="false">Content Observer</string>
+    <string name="text_handler" translatable="false">Handler</string>
+
+    <string-array name="array_sync">
+        <item>Broadcast Receiver</item>
+        <item>Content Observer</item>
+        <item>Handler</item>
+    </string-array>
+
+    <string-array name="array_sync_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="array_default_sync_values">
+        <item>1</item>
+    </string-array>
+
+    <string name="text_imei" translatable="false">IMEI</string>
+    <string name="text_location">Location</string>
+    <string name="text_operator_name">Operator Name</string>
+    <string name="text_cell_location">Cell Location</string>
+    <string name="text_contacts_list">Contacts List</string>
+    <string name="text_sms">SMS</string>
+    <string name="text_listen_for_sms">Listen for SMS</string>
+
+    <string-array name="array_types">
+        <item>Message</item>
+        <item>Location</item>
+        <item>Cell Location</item>
+        <item>Sms</item>
+        <item>Contacts</item>
+        <item>IMEI</item>
+        <item>Test</item>
+        <item>Operator name</item>
+        <item>File</item>
+    </string-array>
+
+    <string-array name="array_types_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
+
+    <string-array name="array_default_types_values">
+        <item>1</item>
+    </string-array>
+
+    <string name="scenario1" translatable="false">Scenario 1</string>
+    <string name="scenario2" translatable="false">Scenario 2</string>
+    <string name="scenario3" translatable="false">Scenario 3</string>
+    <string name="scenario4" translatable="false">Scenario 4</string>
+    <string name="scenario5" translatable="false">Scenario 5</string>
+    <string name="scenario6" translatable="false">Scenario 6</string>
+    <string name="scenario7" translatable="false">Scenario 7</string>
+    <string name="scenario8" translatable="false">Scenario 8</string>
+    <string name="scenario9" translatable="false">Scenario 9</string>
+    <string name="scenario10" translatable="false">Scenario 10</string>
+    <string name="scenario11" translatable="false">Scenario 11</string>
+    <string name="scenario12" translatable="false">Scenario 12</string>
+    <string name="scenario13" translatable="false">Scenario 13</string>
+    <string name="scenario14" translatable="false">Scenario 14</string>
+    <string name="tittle_interval">Interval</string>
+
+</resources>

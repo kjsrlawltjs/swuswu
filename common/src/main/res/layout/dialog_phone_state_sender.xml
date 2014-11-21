@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioButtonImei"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_imei" />
+
+        <RadioButton
+            android:id="@+id/radioButtonCellLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_cell_location" />
+
+        <RadioButton
+            android:id="@+id/radioButtonOperatorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_operator_name" />
+
+        <RadioButton
+            android:id="@+id/radioButtonLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_location" />
+
+        <RadioButton
+            android:id="@+id/radioButtonContactsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_contacts_list" />
+
+        <RadioButton
+            android:id="@+id/radioButtonSms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_sms" />
+    </RadioGroup>
+
+</RelativeLayout>

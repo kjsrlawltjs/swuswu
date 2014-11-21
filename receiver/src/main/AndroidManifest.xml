@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.steganomobile.receiver">
+
+    <!--<uses-permission android:name="android.permission.BROADCAST_STICKY" />-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <service
+            android:name=".view.CcService"
+            android:exported="false"
+            android:label="@string/app_name" />
+
+        <service
+            android:name=".view.NsdPresenceService"
+            android:exported="false" />
+
+        <service
+            android:name=".view.NsdSocketService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".controller.DataReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ACTION_START_RECEIVER_CC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".view.ReceiverActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_cancel">Zamknij</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_split">Praca w tle</string>
+
+    <string name="button_text_message">Wyślij wiadomość</string>
+    <string name="button_text_phone_state">Wyślij prywatne dane</string>
+    <string name="category_global">Globalne ustawienia</string>
+    <string name="category_methods">Metody steganograficzne</string>
+    <string name="select_type">Wybrany typ danych:</string>
+    <string name="set_type">Ustaw typ danych</string>
+
+    <string name="summary_cc">Wybierz metodę</string>
+    <string name="summary_iterations">Liczba iteracji w każdym teście</string>
+    <string name="summary_type">Wybierz co wysłać</string>
+    <string name="summary_port">Wybierz port </string>
+    <string name="summary_interval">No mięczyczas</string>
+
+    <string name="text_cancel">Anuluj</string>
+    <string name="text_cell_location">Położenie telefonu</string>
+    <string name="text_contacts_list">Lista kontaktów</string>
+    <string name="text_listen_for_sms">Odbieraj wiadomości tekstowe</string>
+    <string name="text_location">Położenie użytkownika</string>
+    <string name="text_operator_name">Nazwa operatora</string>
+    <string name="text_send">Wyślij</string>
+    <string name="text_send_after_screen_off">Wyślij po wyłączeniu ekranu</string>
+    <string name="text_set">Ustaw</string>
+    <string name="text_sms">Wiadomości tekstowe</string>
+
+    <string name="state_sending">Stan: wysłanie </string>
+    <string name="text_write">Napisz wiadomość</string>
+    <string name="title_cc">Lista metod steganograficznych</string>
+    <string name="title_type">Typ wiadomości</string>
+    <string name="tittle_iterations">Testowe iteracje</string>
+    <string name="tittle_port">Port</string>
+    <string name="tittle_interval">Międzyczas</string>
+    <string name="choose_cc">Wybierz metodę</string>
+    <string name="select_cc">Wybrana metoda:</string>
+    <string name="select_iterations">Wybrana liczba iteracji testów:</string>
+    <string name="select_interval">Wybrany międzyczas:</string>
+    <string name="send_scenario">Wyślij scenariusz</string>
+    <string name="send_message">Wyślij wiadomość</string>
+    <string name="send_phone_state">Wyślij prywatne dane</string>
+    <string name="will_be_sent_after_screen_goes_off">Zostanie wysłane po wyłączeniu ekranu</string>
+    <string name="set_cc">Wybierz metodę</string>
+    <string name="set_scenario">Wybierz scenariusz</string>
+    <string name="set_iterations">Wybierz liczbę iteracji testowych</string>
+    <string name="set_interval">Wybierz międzyczas</string>
+    <string name="state_idle">Stan: w spoczynku</string>
+    <string name="iterations">Liczba testowych iteracji</string>
+    <string name="choose_sync">Wybierz metodę synchronizacji</string>
+    <string name="set_sync">Ustaw metodę synchronizacji</string>
+    <string name="summary_choose_sync">Możesz tu wybrać metodę synchronizacji pomiędzy CC</string>
+    <string name="title_sync">Metoda synchronizacji</string>
+    <string name="select_sync">Wybrana metoda synchronizacji:</string>
+</resources>

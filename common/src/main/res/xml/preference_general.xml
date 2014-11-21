@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="pref_key_category_methods"
+        android:title="@string/category_methods">
+        <MultiSelectListPreference
+            android:defaultValue="@array/array_default_methods_values"
+            android:dialogTitle="@string/title_cc"
+            android:entries="@array/array_methods"
+            android:entryValues="@array/array_methods_values"
+            android:key="pref_key_list_methods"
+            android:summary="@string/summary_cc"
+            android:title="@string/title_cc" />
+        <MultiSelectListPreference
+            android:defaultValue="@array/array_default_sync_values"
+            android:dialogTitle="@string/title_sync"
+            android:entries="@array/array_sync"
+            android:entryValues="@array/array_sync_values"
+            android:key="pref_key_list_sync"
+            android:summary="@string/summary_choose_sync"
+            android:title="@string/title_sync" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_category_global"
+        android:title="@string/category_global">
+        <EditTextPreference
+            android:defaultValue="@string/default_interval"
+            android:inputType="number"
+            android:key="pref_key_wait_time"
+            android:summary="@string/summary_interval"
+            android:title="@string/tittle_interval" />
+    </PreferenceCategory>
+</PreferenceScreen>

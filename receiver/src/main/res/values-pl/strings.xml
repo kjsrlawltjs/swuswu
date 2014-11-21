@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Stegano: Receiver</string>
+    <string name="action_cancel">Zamknij</string>
+    <string name="action_cc">Widok metod steganograficznych</string>
+    <string name="action_clear_cc_database">Wyczyść bazę danych metod steganograficznych</string>
+    <string name="action_clear_nsd_database">Wyczyść bazę "Network Service Discovery"</string>
+    <string name="action_nsd_client">Klient Nsd</string>
+    <string name="action_nsd_server">Serwer Nsd</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_split">Praca w tle</string>
+    <string name="action_start_nsd_client">Uruchom klienta Nsd</string>
+    <string name="action_start_nsd_server">Uruchom serwer Nsd</string>
+    <string name="category_global">Globalne ustawienia</string>
+    <string name="category_methods">Metody steganograficzne</string>
+    <string name="clear_cc_database">Wyczyść bazę danych metod steganograficznych</string>
+    <string name="clear_database">Wyczyść bazę danych</string>
+    <string name="clear_nsd_database">Wyczyść bazę danych Nsd</string>
+    <string name="client">Klient</string>
+    <string name="connecting">Wysyłanie</string>
+    <string name="item_deleted_from_database">Skasowano element z bazy danych</string>
+    <string name="local_service_connected">Połączono z Stegano Receiver Service</string>
+    <string name="local_service_disconnected">Rozłączono ze Stegano Receiver Service</string>
+    <string name="local_service_problem">Wystąpił problem z serwisem</string>
+    <string name="no_service_connection">Nie ma z czym połączyć</string>
+    <string name="select_time_interval">Wybrany międzyczas:</string>
+    <string name="server">Serwer</string>
+    <string name="set_time_interval">Ustaw międzyczas</string>
+    <string name="summary_choose_method">Wybierz metody</string>
+    <string name="summary_unix_socket_port">Wybierz port</string>
+    <string name="summary_wait_time">Czas pomiędzy kolejnymi uruchomieniami</string>
+    <string name="time_interval">Międzyczas</string>
+    <string name="title_steganography_methods">Lista metod steganograficznych</string>
+    <string name="tittle_unix_socket_port">Port</string>
+    <string name="tittle_wait_time">Międzyczas</string>
+    <string name="closing_stegano_receiver">Zamykanie aplikacji Stegano Receiver </string>
+</resources>

@@ -1,0 +1,90 @@
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/radioGroupChooseScenario"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario1" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario2" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario3" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario4" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario5" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario6" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario7" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario8" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario9" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario10" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario11" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario12" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario13"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario13" />
+
+    <RadioButton
+        android:id="@+id/radioButtonScenario14"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scenario14" />
+
+</RadioGroup>

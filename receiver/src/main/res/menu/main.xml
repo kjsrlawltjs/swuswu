@@ -1,0 +1,55 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.steganomobile.receiver.view.ReceiverActivity">
+
+    <group>
+        <item
+            android:id="@+id/action_clear_nsd_database"
+            android:icon="@drawable/ic_action_split"
+            android:orderInCategory="95"
+            android:title="@string/action_clear_nsd_database"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/action_clear_cc_database"
+            android:icon="@drawable/ic_action_split"
+            android:orderInCategory="96"
+            android:title="@string/action_clear_cc_database"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/action_nsd_server"
+            android:checkable="true"
+            android:orderInCategory="97"
+            android:title="@string/action_nsd_server"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/action_nsd_client"
+            android:checkable="true"
+            android:orderInCategory="98"
+            android:title="@string/action_nsd_client"
+            app:showAsAction="ifRoom" />
+    </group>
+
+    <group>
+        <item
+            android:id="@+id/action_split"
+            android:icon="@drawable/ic_action_split"
+            android:orderInCategory="99"
+            android:title="@string/action_split"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_action_settings"
+            android:orderInCategory="100"
+            android:title="@string/action_settings"
+            app:showAsAction="always" />
+
+        <item
+            android:id="@+id/action_cancel"
+            android:icon="@drawable/ic_action_cancel"
+            android:orderInCategory="101"
+            android:title="@string/action_cancel"
+            app:showAsAction="always" />
+    </group>
+</menu>

@@ -1,0 +1,103 @@
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/radioGroupChooseCc"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioButton
+        android:id="@+id/radioButtonVolumeMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_volume_music" />
+
+    <RadioButton
+        android:id="@+id/radioButtonVolumeNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_volume_notification" />
+
+    <RadioButton
+        android:id="@+id/radioButtonVolumeRing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_volume_ring" />
+
+    <RadioButton
+        android:id="@+id/radioButtonVolumeAlarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_volume_alarm" />
+
+    <RadioButton
+        android:id="@+id/radioButtonVolumeDtmf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_volume_dtmf" />
+
+    <RadioButton
+        android:id="@+id/radioButtonVolumeSystem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_volume_system" />
+
+    <RadioButton
+        android:id="@+id/radioButtonVolumeVoiceCall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_volume_voice_call" />
+
+    <RadioButton
+        android:id="@+id/radioButtonFileLock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_file_lock" />
+
+    <RadioButton
+        android:id="@+id/radioButtonFileSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_file_size" />
+
+    <RadioButton
+        android:id="@+id/radioButtonFileExistence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_file_existence" />
+
+    <RadioButton
+        android:id="@+id/radioButtonTypeOfIntentObserver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_content_of_uri" />
+
+    <RadioButton
+        android:id="@+id/radioButtonTypeOfIntentReceiver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_type_of_intent" />
+
+    <RadioButton
+        android:id="@+id/radioButtonUnixSocket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_unix_socket" />
+
+    <RadioButton
+        android:id="@+id/radioButtonMemoryLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_memory_load" />
+
+    <RadioButton
+        android:id="@+id/radioButtonSystemLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_system_load" />
+
+    <RadioButton
+        android:id="@+id/radioButtonUsageTrend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_usage_trend" />
+
+</RadioGroup>
+

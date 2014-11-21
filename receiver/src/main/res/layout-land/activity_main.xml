@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.steganomobile.receiver.view.ReceiverActivity"
+    tools:ignore="MergeRootFrame">
+
+    <ListView
+        android:id="@+id/ccListView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/nsdListView"
+        android:layout_toStartOf="@+id/nsdListView"
+        android:dividerHeight="2dp"
+        android:drawSelectorOnTop="true"
+        android:fastScrollAlwaysVisible="false"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
+        android:smoothScrollbar="true" />
+
+    <ListView
+        android:id="@+id/nsdListView"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:footerDividersEnabled="false" />
+
+</RelativeLayout>

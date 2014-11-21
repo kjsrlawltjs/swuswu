@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:defaultValue="@string/default_port"
+        android:inputType="number"
+        android:key="pref_key_unix_socket_port"
+        android:numeric="integer"
+        android:title="@string/tittle_port" />
+
+</PreferenceScreen>

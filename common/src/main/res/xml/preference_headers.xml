@@ -1,0 +1,33 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="com.steganomobile.common.sender.view.SettingsActivity$PrefsGeneralFragment"
+        android:summary="Set typeId of info and some common settings"
+        android:title="General" />
+
+    <header
+        android:fragment="com.steganomobile.common.sender.view.SettingsActivity$PrefsVolumeFragment"
+        android:summary="Set typeId of channel and general volume settings"
+        android:title="Volume Settings" />
+
+    <header
+        android:fragment="com.steganomobile.common.sender.view.SettingsActivity$PrefsFileLockFragment"
+        android:summary="Set file lock settings"
+        android:title="File Lock" />
+
+    <header
+        android:fragment="com.steganomobile.common.sender.view.SettingsActivity$PrefsFileSizeFragment"
+        android:summary="Set file size settings"
+        android:title="File Size" />
+
+    <header
+        android:fragment="com.steganomobile.common.sender.view.SettingsActivity$PrefsTypeOfIntentFragment"
+        android:summary="Set typeId of intent settings"
+        android:title="Type of Intent" />
+
+    <header
+        android:fragment="com.steganomobile.common.sender.view.SettingsActivity$PrefsUnixSocketFragment"
+        android:summary="Set Unix socket settings"
+        android:title="Unix Socket Discovery" />
+
+</preference-headers>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Stegano: Receiver</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_cancel">Shutdown</string>
+    <string name="action_split">Listen only in background</string>
+    <string name="category_methods">Steganography Methods</string>
+    <string name="title_steganography_methods">List of steganography methods</string>
+    <string name="summary_choose_method">Choose info</string>
+    <string name="local_service_connected">Connected with Stegano Receiver Service</string>
+    <string name="local_service_disconnected">Disconnected with Stegano Receiver Service</string>
+    <string name="summary_unix_socket_port">Select port to receive test and other</string>
+    <string name="tittle_unix_socket_port">Port</string>
+    <string name="local_service_problem">Problem with your service</string>
+    <string name="summary_wait_time">Used when we are waiting to send next particle</string>
+    <string name="tittle_wait_time">Wait Time</string>
+    <string name="category_global">Global Settings</string>
+    <string name="default_method" translatable="false">1</string>
+    <string name="default_wait_time" translatable="false">4</string>
+    <string name="default_unix_socket_port" translatable="false">6666</string>
+    <string name="set_time_interval">Set time interval</string>
+    <string name="select_time_interval">Selected time interval:</string>
+    <string name="clear_database">Clear database</string>
+    <string name="time_interval">Time interval</string>
+    <string name="server_not_bound" translatable="false">ServerSocket isn\'t bound.</string>
+    <string name="connecting">Connecting.</string>
+    <string name="no_service_connection">No service to connect to!</string>
+    <string name="client">Client</string>
+    <string name="server">Server</string>
+
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="action_cc">Covert Channels View</string>
+    <string name="action_nsd" translatable="false">Network Service Discovery</string>
+    <string name="item_deleted_from_database">Deleted item from database</string>
+    <string name="clear_cc_database">Clear Cc Database</string>
+    <string name="clear_nsd_database">Clear Nsd Database</string>
+    <string name="action_clear_nsd_database">Clear Nsd Database</string>
+    <string name="action_clear_cc_database">Clear Cc Database</string>
+    <string name="action_start_nsd_server">Start Nsd Server</string>
+    <string name="action_nsd_server">Nsd Server</string>
+    <string name="action_start_nsd_client">Start Nsd Client</string>
+    <string name="action_nsd_client">Nsd Client</string>
+    <string name="closing_stegano_receiver">Shutting down Stegano Receiver Application</string>
+    <string name="list_cc">List of cc results</string>
+    <string name="list_nsd">List of nsd results</string>
+
+</resources>
