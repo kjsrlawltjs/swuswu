@@ -95,4 +95,5 @@ public class Const {
     public static final Uri SYNC_OBSERVER = Uri.parse("content://stegano_sync");
     public static final String NO_ACTION = "NO_ACTION";
     public static final long SYNC_WAIT = 1000;
+    public static final String EXTRA_SENT_ELEMENT = "EXTRA_SENT_ELEMENT";
 }

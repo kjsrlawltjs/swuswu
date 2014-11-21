@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 public class CcMessage implements BaseColumns, Parcelable {
 
     public static final String SIZE = "size";
+    public static final String CORRECT = "correct";
     public static final String DATA = "data";
 
     public static Parcelable.Creator<CcMessage> CREATOR = new Parcelable.Creator<CcMessage>() {
@@ -18,15 +19,18 @@ public class CcMessage implements BaseColumns, Parcelable {
             return new CcMessage[size];
         }
     };
+    private long correct;
     private long size;
     private String data;
 
-    public CcMessage(long size, String data) {
+    public CcMessage(long size, String data, long correct) {
         this.size = size;
         this.data = data;
+        this.correct = correct;
     }
 
     public CcMessage(Parcel parcel) {
+        correct = parcel.readLong();
         data = parcel.readString();
         size = parcel.readLong();
     }
@@ -43,8 +47,9 @@ public class CcMessage implements BaseColumns, Parcelable {
     public String toString() {
         String format =
                 "Size: %d [b]\n" +
+                        "Accuracy: %.3f%%\n" +
                         "Data: \n%s";
-        return String.format(format, size, data);
+        return String.format(format, size, getPercentAccuracy(), data);
     }
 
     @Override
@@ -54,7 +59,20 @@ public class CcMessage implements BaseColumns, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeLong(correct);
         parcel.writeString(data);
         parcel.writeLong(size);
+    }
+
+    public double getAccuracy() {
+        return (double) correct / size;
+    }
+
+    public double getPercentAccuracy() {
+        return (double) correct / size * 100;
+    }
+
+    public long getCorrect() {
+        return correct;
     }
 }

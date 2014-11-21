@@ -12,6 +12,7 @@ import com.steganomobile.common.receiver.model.cc.CcTime;
 import com.steganomobile.common.sender.model.CcInfo;
 import com.steganomobile.common.sender.model.CcMethod;
 import com.steganomobile.common.sender.model.CcSegment;
+import com.steganomobile.common.sender.model.CcSync;
 import com.steganomobile.common.sender.model.CcType;
 import com.steganomobile.receiver.db.ReceiverDatabase;
 
@@ -34,6 +35,8 @@ public class DataCollector {
     private byte remainder;
     private int iteration;
     private ArrayList<Byte> bytes = new ArrayList<Byte>();
+    private ArrayList<Byte> receivedElements = new ArrayList<Byte>();
+    private ArrayList<Byte> sentElements = new ArrayList<Byte>();
     private StringBuilder data = new StringBuilder();
     private long size;
     private long start = 0;
@@ -43,9 +46,15 @@ public class DataCollector {
         this.info = info;
     }
 
+    public void setSentElement(byte element) {
+        sentElements.add(element);
+    }
+
     public void setData(byte number) {
 
         Log.v(TAG, "Received " + number);
+
+        receivedElements.add(number);
 
         if (size == 0) {
             start = System.currentTimeMillis();
@@ -236,20 +245,16 @@ public class DataCollector {
         String startDate = dateFormat.format(new Time(start));
         String finishDate = dateFormat.format(Calendar.getInstance().getTime());
 
-        if (data.length() == 0) {
-            Byte[] myDataBytes = new Byte[bytes.size()];
-            bytes.toArray(myDataBytes);
-            byte[] myBytes = new byte[myDataBytes.length];
-            for (int i = 0; i < myDataBytes.length; i++) {
-                myBytes[i] = myDataBytes[i];
-            }
-            data.append(new String(myBytes));
-        } else {
-            size = data.length() * Character.SIZE;
+        Byte[] newBytes = new Byte[bytes.size()];
+        bytes.toArray(newBytes);
+        byte[] myBytes = new byte[newBytes.length];
+        for (int i = 0; i < newBytes.length; i++) {
+            myBytes[i] = newBytes[i];
         }
+        data.append(new String(myBytes));
 
         CcTime time = new CcTime(finishDate, startDate, now - start);
-        CcMessage message = new CcMessage(size, data.toString());
+        CcMessage message = new CcMessage(size, data.toString(), countCorrectData());
         CcReceiverItem ccReceiverItem = new CcReceiverItem(0, message, time, info);
         long id = database.addCcItem(ccReceiverItem);
         ccReceiverItem.setId(id);
@@ -261,6 +266,26 @@ public class DataCollector {
         data.setLength(0);
         size = 0;
         start = 0;
+    }
+
+    private long countCorrectData() {
+        long counter = 0;
+        if (info.getSync() != CcSync.HANDLER) {
+            int length = receivedElements.size() < sentElements.size() ?
+                    receivedElements.size() : sentElements.size();
+            for (int i = 0; i < length; i++) {
+                byte mask = 0x01;
+                for (int j = 0; j < info.getName().getSegment().getValue(); j++) {
+                    boolean received = (receivedElements.get(i) & mask) != 0;
+                    boolean sent = (sentElements.get(i) & mask) != 0;
+                    if (received == sent) {
+                        counter++;
+                    }
+                    mask <<= 1;
+                }
+            }
+        }
+        return counter;
     }
 
     private String getTypeName(CcType type) {

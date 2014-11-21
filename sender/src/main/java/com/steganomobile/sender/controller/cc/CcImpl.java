@@ -2,6 +2,7 @@ package com.steganomobile.sender.controller.cc;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import com.steganomobile.common.Const;
@@ -17,15 +18,18 @@ public abstract class CcImpl implements Cc {
     }
 
     @Override
-    public void syncCc(Context context, CcSync sync) {
+    public void syncCc(Context context, CcSync sync, byte element) {
         switch (sync) {
             case NO_VALUE:
                 break;
             case CONTENT_OBSERVER:
-                context.getContentResolver().notifyChange(Const.SYNC_OBSERVER, null);
+                context.getContentResolver().notifyChange(
+                        Uri.parse(Const.SYNC_OBSERVER + "/" + element), null);
                 break;
             case BROADCAST_RECEIVER:
-                context.sendBroadcast(new Intent(Const.SYNC_RECEIVER));
+                Intent intent = new Intent(Const.SYNC_RECEIVER);
+                intent.putExtra(Const.EXTRA_SENT_ELEMENT, element);
+                context.sendBroadcast(intent);
                 break;
             case HANDLER:
                 break;

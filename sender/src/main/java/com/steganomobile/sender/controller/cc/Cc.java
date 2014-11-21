@@ -11,5 +11,5 @@ public interface Cc {
 
     public void clearCc();
 
-    public void syncCc(Context context, CcSync sync);
+    public void syncCc(Context context, CcSync sync, byte element);
 }

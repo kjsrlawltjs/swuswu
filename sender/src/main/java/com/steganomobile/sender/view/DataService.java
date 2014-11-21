@@ -35,11 +35,8 @@ public class DataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         CcSenderItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_SENDER_CC);
-
         int iterations = item.getInfo().getIterations();
-
         for (int i = 1; i <= iterations; i++) {
-
             start(i, item.getInfo());
             waitToSync();
             send(item);
@@ -64,7 +61,7 @@ public class DataService extends IntentService {
 
         for (byte element : DataConverter.getData(item.getData(), segment)) {
             cc.sendCc(this, element);
-            cc.syncCc(this, item.getInfo().getSync());
+            cc.syncCc(this, item.getInfo().getSync(), element);
             waitToSend(interval);
             cc.finishCc();
         }

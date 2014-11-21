@@ -44,9 +44,8 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
 
     @Override
     public String toString() {
-        final double bitRate = (double) message.getSize() * 1000 / time.getDuration();
-        String format = "%s%sBit rate: %f [b/s]\n%s\n";
-        return String.format(format, info, time, bitRate, message);
+        String format = "%s%sBit rate: %.3f [b/s]\n%s\n";
+        return String.format(format, info, time, getBitRate(), message);
     }
 
     public long getId() {
@@ -81,5 +80,9 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
         parcel.writeParcelable(message, flags);
         parcel.writeParcelable(info, flags);
         parcel.writeParcelable(time, flags);
+    }
+
+    public double getBitRate() {
+        return (double) message.getSize() * 1000 / time.getDuration();
     }
 }

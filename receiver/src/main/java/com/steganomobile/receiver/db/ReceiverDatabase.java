@@ -30,6 +30,7 @@ public class ReceiverDatabase {
     private SteganoSQLiteHelper dbHelper;
     private String[] ccColumns = {
             CcReceiverItem._ID,
+            CcMessage.CORRECT,
             CcMessage.DATA,
             CcTime.DURATION,
             CcTime.FINISH,
@@ -65,6 +66,7 @@ public class ReceiverDatabase {
         ContentValues values = new ContentValues();
 
         open();
+        values.put(CcMessage.CORRECT, item.getMessage().getCorrect());
         values.put(CcMessage.DATA, item.getMessage().getData());
         values.put(CcTime.DURATION, item.getTime().getDuration());
         values.put(CcTime.FINISH, item.getTime().getFinish());
@@ -168,18 +170,19 @@ public class ReceiverDatabase {
 
     private CcReceiverItem cursorToCcItem(Cursor cursor) {
         long id = cursor.getLong(0);
-        String data = cursor.getString(1);
-        long duration = cursor.getLong(2);
-        String finish = cursor.getString(3);
-        int interval = cursor.getInt(4);
-        int iterations = cursor.getInt(5);
-        int name = cursor.getInt(6);
-        long size = cursor.getLong(7);
-        String start = cursor.getString(8);
-        int sync = cursor.getInt(9);
-        int type = cursor.getInt(10);
+        long correct = cursor.getLong(1);
+        String data = cursor.getString(2);
+        long duration = cursor.getLong(3);
+        String finish = cursor.getString(4);
+        int interval = cursor.getInt(5);
+        int iterations = cursor.getInt(6);
+        int name = cursor.getInt(7);
+        long size = cursor.getLong(8);
+        String start = cursor.getString(9);
+        int sync = cursor.getInt(10);
+        int type = cursor.getInt(11);
 
-        CcMessage message = new CcMessage(size, data);
+        CcMessage message = new CcMessage(size, data, correct);
         CcTime time = new CcTime(finish, start, duration);
         CcInfo info = new CcInfo(CcStatus.NO_VALUE, CcMethod.getFromInt(name), iterations,
                 CcType.getFromInt(type), interval, CcSync.getFromInt(sync));
@@ -209,6 +212,7 @@ public class ReceiverDatabase {
         private static final String CC_TABLE_CREATE = "CREATE TABLE "
                 + CcReceiverItem.TABLE_NAME + " ("
                 + CcReceiverItem.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + CcMessage.CORRECT + " INTEGER,"
                 + CcMessage.DATA + " LONGTEXT,"
                 + CcTime.DURATION + " INTEGER,"
                 + CcTime.FINISH + " VARCHAR(17),"
