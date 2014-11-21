@@ -120,4 +120,8 @@ public class CcInfo implements Parcelable, BaseColumns {
     public CcSync getSync() {
         return sync;
     }
+
+    public void setSync(CcSync sync) {
+        this.sync = sync;
+    }
 }

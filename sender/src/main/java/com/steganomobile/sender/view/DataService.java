@@ -36,6 +36,7 @@ public class DataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         CcSenderItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_SENDER_CC);
         int iterations = item.getInfo().getIterations();
+
         for (int i = 1; i <= iterations; i++) {
             start(i, item.getInfo());
             waitToSync();
@@ -105,8 +106,10 @@ public class DataService extends IntentService {
             case FILE_EXISTENCE:
                 return new FileExistence();
             case CONTENT_OF_URI:
+                info.setSync(CcSync.CONTENT_OBSERVER);
                 return new ContentOfUri();
             case TYPE_OF_INTENT:
+                info.setSync(CcSync.BROADCAST_RECEIVER);
                 return new TypeOfIntent();
             case UNIX_SOCKET_DISCOVERY:
                 return new UnixSocketDiscovery(info.getPort());

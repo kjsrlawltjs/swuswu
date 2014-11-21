@@ -22,7 +22,11 @@ public class SyncObserver extends ContentObserver implements Sync {
     public void onChange(boolean selfChange, Uri uri) {
         super.onChange(selfChange);
         if (uri.getPath().contains(Const.SYNC_OBSERVER.getPath())) {
-            cc.runCc(uri.getLastPathSegment());
+            String data = uri.getLastPathSegment();
+            if (data != null) {
+                cc.getCollector().setSentElement(Byte.parseByte(data));
+            }
+            cc.runCc(data);
         }
     }
 
