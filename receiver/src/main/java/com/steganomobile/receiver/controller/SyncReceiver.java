@@ -19,11 +19,11 @@ public class SyncReceiver extends BroadcastReceiver implements Sync {
     @Override
     public void onReceive(final Context context, Intent intent) {
         final String action = intent.getAction();
-        cc.getCollector().setSentElement(intent.getByteExtra(Const.EXTRA_SENT_ELEMENT, (byte) 0));
 
         // Broadcast Receiver Sync
         if (action != null && action.contains(Const.SYNC_RECEIVER)) {
             if (cc != null) {
+                cc.getCollector().setSentElement(intent.getByteExtra(Const.EXTRA_SENT_ELEMENT, (byte) 0));
                 cc.runCc(action);
             }
         }

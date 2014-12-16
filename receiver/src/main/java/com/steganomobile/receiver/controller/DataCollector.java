@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.Methods;
 import com.steganomobile.common.receiver.model.cc.CcMessage;
 import com.steganomobile.common.receiver.model.cc.CcReceiverItem;
 import com.steganomobile.common.receiver.model.cc.CcTime;
 import com.steganomobile.common.sender.model.CcInfo;
-import com.steganomobile.common.sender.model.CcMethod;
 import com.steganomobile.common.sender.model.CcSegment;
 import com.steganomobile.common.sender.model.CcSync;
-import com.steganomobile.common.sender.model.CcType;
 import com.steganomobile.receiver.db.ReceiverDatabase;
 
 import java.sql.Time;
@@ -21,6 +18,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class DataCollector {
 
@@ -239,7 +237,7 @@ public class DataCollector {
 
     public void finish(Context context) {
         ReceiverDatabase database = new ReceiverDatabase(context);
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
         long now = System.currentTimeMillis();
 
         String startDate = dateFormat.format(new Time(start));
@@ -254,14 +252,14 @@ public class DataCollector {
         data.append(new String(myBytes));
 
         CcTime time = new CcTime(finishDate, startDate, now - start);
-        CcMessage message = new CcMessage(size, data.toString(), countCorrectData());
-        CcReceiverItem ccReceiverItem = new CcReceiverItem(0, message, time, info);
+        CcMessage message = new CcMessage(size, data.toString(), countCorrectData(), time);
+        CcReceiverItem ccReceiverItem = new CcReceiverItem(0, message, info);
         long id = database.addCcItem(ccReceiverItem);
         ccReceiverItem.setId(id);
         Intent intent = new Intent(Const.ACTION_FINISH_RECEIVER_CC);
         intent.putExtra(Const.EXTRA_ITEM_RECEIVER_CC, ccReceiverItem);
         context.sendBroadcast(intent);
-        Methods.playSound(context);
+        // Methods.playSound(context);
 
         data.setLength(0);
         size = 0;
@@ -286,14 +284,6 @@ public class DataCollector {
             }
         }
         return counter;
-    }
-
-    private String getTypeName(CcType type) {
-        return CcType.NAMES[type.getValue()];
-    }
-
-    private String getMethodName(CcMethod name) {
-        return CcMethod.NAMES[name.getValue()];
     }
 
     public CcInfo getInfo() {

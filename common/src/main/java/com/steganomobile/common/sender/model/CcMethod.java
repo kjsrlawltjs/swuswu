@@ -41,6 +41,26 @@ public enum CcMethod {
             "Usage Trend (1 bit)"
     };
 
+    public static final String[] FILE_NAMES = {
+            "no_method",
+            "volume_music",
+            "volume_ring",
+            "volume_notification",
+            "volume_dtmf",
+            "volume_system",
+            "volume_alarm",
+            "volume_voice_call",
+            "file_lock",
+            "file_size",
+            "file_existence",
+            "content_of_uri",
+            "type_of_intent",
+            "unix_socket_discovery",
+            "memory_load",
+            "system_load",
+            "usage_trend"
+    };
+
     private static final int NO_VALUE_HERE = -1;
     private final int value;
     private final CcSegment segment;

@@ -68,13 +68,13 @@ public class ReceiverDatabase {
         open();
         values.put(CcMessage.CORRECT, item.getMessage().getCorrect());
         values.put(CcMessage.DATA, item.getMessage().getData());
-        values.put(CcTime.DURATION, item.getTime().getDuration());
-        values.put(CcTime.FINISH, item.getTime().getFinish());
+        values.put(CcTime.DURATION, item.getMessage().getTime().getDuration());
+        values.put(CcTime.FINISH, item.getMessage().getTime().getFinish());
         values.put(CcInfo.INTERVAL, item.getInfo().getInterval());
         values.put(CcInfo.ITERATIONS, item.getInfo().getIterations());
         values.put(CcInfo.NAME, item.getInfo().getName().getValue());
         values.put(CcMessage.SIZE, item.getMessage().getSize());
-        values.put(CcTime.START, item.getTime().getStart());
+        values.put(CcTime.START, item.getMessage().getTime().getStart());
         values.put(CcInfo.SYNC, item.getInfo().getSync().getValue());
         values.put(CcInfo.TYPE, item.getInfo().getType().getValue());
         long id = database.insert(CcReceiverItem.TABLE_NAME, null, values);
@@ -182,11 +182,11 @@ public class ReceiverDatabase {
         int sync = cursor.getInt(10);
         int type = cursor.getInt(11);
 
-        CcMessage message = new CcMessage(size, data, correct);
         CcTime time = new CcTime(finish, start, duration);
+        CcMessage message = new CcMessage(size, data, correct, time);
         CcInfo info = new CcInfo(CcStatus.NO_VALUE, CcMethod.getFromInt(name), iterations,
                 CcType.getFromInt(type), interval, CcSync.getFromInt(sync));
-        return new CcReceiverItem(id, message, time, info);
+        return new CcReceiverItem(id, message, info);
     }
 
     private NsdItem cursorToNsdItem(Cursor cursor) {

@@ -17,6 +17,7 @@ import java.util.StringTokenizer;
 public class EnergyReader {
 
     static final String BUILD_MODEL = Build.MODEL.toLowerCase(Locale.ENGLISH);
+    private static final String TAG = EnergyReader.class.getSimpleName();
 
     static Energy lastRecorded = new Energy();
 
@@ -83,6 +84,10 @@ public class EnergyReader {
                 || EnergyReader.BUILD_MODEL.contains("gt-n7100")
                 || EnergyReader.BUILD_MODEL.contains("sgh-i317")) {
             prefix = "/sys/class/power_supply/battery/";
+        }
+
+        if (EnergyReader.BUILD_MODEL.equals("optimus 4x hd")) {
+            prefix = "/sys/devices/platform/lge-battery/power_supply/battery/";
         }
 
         if (prefix != null) {

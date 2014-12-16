@@ -39,6 +39,7 @@ public class ScenarioService extends Service {
     // The id of the used Covert Channels
     private int idCC;
     private String email;
+    private String TAG = ScenarioService.class.getSimpleName();
 
     public synchronized static int getCCDataScheduled() {
         int tmp = getCCDataScheduled;
@@ -53,11 +54,6 @@ public class ScenarioService extends Service {
 
     public static String getCCDataScheduledMd5() {
         return md5Message;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
     }
 
     @Override
@@ -212,7 +208,7 @@ public class ScenarioService extends Service {
                         try {
                             // Parameters for randomness
                             Random r = new Random();
-                            int nb_messages_max = nbXP; // Max nb messages
+                            int nb_messages_max = 1;//nbXP; // Max nb messages
                             int message_size_max = 1000; // Size max 1000 Bytes
                             int nb_first_sleep_random_max = 30; // Max sleeping time
                             int nb_second_sleep_random_max = 30; // Max sleeping time
@@ -229,58 +225,16 @@ public class ScenarioService extends Service {
                                 Intent service = new Intent("jf.andro.energyservice");
                                 service.putExtra("nbTest", nb_message);
                                 service.putExtra("email", email);
+                                service.putExtra("idCC", idCC);
+
                                 startService(service);
 
                                 // Random sleep before the first CC message sending
-                                sleep((10 + r.nextInt(nb_first_sleep_random_max)) * 1000);
+//                                sleep((10 + r.nextInt(nb_first_sleep_random_max)) * 1000);
 
                                 if (!idleCC) // IDLE the stegano transmission
                                 {
-
-                                    //Log.w("JFL", "idCC="+idCC);
-                                    // Choose the CC method to use
-                                    switch (idCC) {
-                                        case 0:
-                                            break;
-                                        case 1:
-                                            wait_factor = 2;
-                                            break;
-                                        case 2:
-                                            break;
-                                        case 3:
-                                            break;
-                                        case 4:
-                                            break;
-                                        case 5:
-                                            wait_factor = 3;
-                                            break;
-                                        case 6:
-                                            break;
-                                        case 7:
-                                            break;
-                                        case 8:
-                                            wait_factor = 2;
-                                            break;
-                                        case 9:
-                                            break;
-                                        case 10:
-                                            break;
-                                        case 11:
-                                            break;
-                                    }
-
-                                    Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
-                                    CcMethod method = CcMethod.getFromInt(idCC + 1);
-                                    Log.w("JFL", String.format("Using %s method!", CcMethod.NAMES[method.getValue()]));
-                                    int iterations = 1;
-                                    int interval = 20;
                                     String data = generate(message_size_max, nb_message);
-                                    CcType type = CcType.MESSAGE;
-                                    CcSync sync = CcSync.BROADCAST_RECEIVER;
-                                    CcInfo info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
-                                    CcSenderItem item = new CcSenderItem(data, info);
-                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
-
                                     // Pick a random size for the message to transmit
                                     int size_data = data.length() * 8; // bits
 
@@ -295,25 +249,116 @@ public class ScenarioService extends Service {
                                     Log.i("JFL", "Sending  message " + nb_message + " of size " + size_data / 8 + " Bytes (" + size_data + " bits): " + md5);
                                     setCCDataScheduled(size_data, md5);
                                     // Send the intent that asks the Stegano sender to transmit !
-//								sendBroadcast(intent);
+
+                                    Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
+                                    CcMethod method = CcMethod.getFromInt(idCC + 1);
+                                    Log.w("JFL", String.format("Using %s method!", CcMethod.NAMES[method.getValue()]));
+
+                                    // iterations = 2, means that CC will be activated 2 times.
+                                    int iterations = 1;
+                                    // interval is time between synchronization step in stegano system.
+                                    // 200 [ms] is some kind of universal number, because it is the lowest number
+                                    // which will provide good accuracy for all CCs
+                                    int interval = 200;
+                                    CcType type = CcType.MESSAGE;
+                                    CcSync sync = CcSync.BROADCAST_RECEIVER;
+                                    CcInfo info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    CcSenderItem item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    /*
+
+                                    interval = 5;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 10;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 20;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 40;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 60;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 80;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 100;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 150;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 200;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 400;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 600;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 1000;
+                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+                                    */
 
                                 }
                                 // Random sleep before the first CC message sending
-                                sleep((60 * wait_factor + r.nextInt(nb_second_sleep_random_max)) * 1000);
-
-                                // Stop logging service
-                                service = new Intent("jf.andro.energyservice");
-                                stopService(service);
+//                                sleep((60 + r.nextInt(nb_second_sleep_random_max)) * 1000);
 
                                 nb_message++;
 
                                 // wait a little bit
-                                sleep(1000);
+//                                sleep(1000);
                             }
 
                             GreenFlashLight();
-                            Intent intent = new Intent();
-                            intent.setAction("jf.andro.endScenario");
+
+                            Intent intent = new Intent(EnergyLoggerService.ACTION_STOP_SERVICE);
+                            // Send information to logger about our sending
+                            // Test number tells how many times the CC was running
+                            // (how many times there was execution of sendBroadcast to stegano system
+                            intent.putExtra(Const.EXTRA_TEST_NUMBER, 1);
                             sendBroadcast(intent);
 
                         } catch (InterruptedException e) {
@@ -331,9 +376,7 @@ public class ScenarioService extends Service {
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
-
         wl.release();
     }
 
@@ -375,5 +418,4 @@ public class ScenarioService extends Service {
         }
         return pass;
     }
-
 }

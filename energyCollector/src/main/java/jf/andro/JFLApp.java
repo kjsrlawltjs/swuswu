@@ -33,11 +33,13 @@ import jf.andro.energycollector.R;
 
 public class JFLApp extends Activity {
 
+    private static final String TAG = JFLApp.class.getSimpleName();
     protected BroadcastReceiver endReceiver;
     private SteganoReceiver sr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jfllayout3);
 
@@ -45,6 +47,7 @@ public class JFLApp extends Activity {
         IntentFilter mIntentFilter = new IntentFilter();
         sr = new SteganoReceiver();
         mIntentFilter.addAction(Const.ACTION_FINISH_RECEIVER_CC);
+        mIntentFilter.addAction(Const.ACTION_START_STEGANO);
         registerReceiver(sr, mIntentFilter);
 
         // Register new receiver for the end

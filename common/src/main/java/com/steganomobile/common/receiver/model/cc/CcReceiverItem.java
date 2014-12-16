@@ -6,6 +6,8 @@ import android.provider.BaseColumns;
 
 import com.steganomobile.common.sender.model.CcInfo;
 
+import java.util.Locale;
+
 public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelable {
 
     public static final String TABLE_NAME = "cc";
@@ -23,14 +25,12 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
 
     private long id;
     private CcMessage message;
-    private CcTime time;
     private CcInfo info;
 
-    public CcReceiverItem(long id, CcMessage message, CcTime time, CcInfo info) {
+    public CcReceiverItem(long id, CcMessage message, CcInfo info) {
         super(info.getName().getValue(), info.getType().getValue());
         this.id = id;
         this.message = message;
-        this.time = time;
         this.info = info;
     }
 
@@ -39,13 +39,26 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
         id = parcel.readLong();
         message = parcel.readParcelable(CcMessage.class.getClassLoader());
         info = parcel.readParcelable(CcInfo.class.getClassLoader());
-        time = parcel.readParcelable(CcTime.class.getClassLoader());
     }
 
     @Override
     public String toString() {
-        String format = "%s%sBit rate: %.3f [b/s]\n%s\n";
-        return String.format(format, info, time, getBitRate(), message);
+        return print(": ", true, false);
+    }
+
+    public String print(String sep, boolean header, boolean horizontal) {
+
+        if (horizontal) {
+            String dataS = info.printHorizontalFormat(sep) + message.printHorizontalFormat(sep);
+            if (header) {
+                String headerS = info.printHorizontalHeader(sep) + message.printHorizontalHeader(sep);
+                return headerS + "\n" + dataS + "\n";
+            }
+            return dataS + "\n";
+        }
+
+        return String.format(Locale.US, "%s\n%s", info.printVertical(sep, header),
+                message.printVertical(sep, header));
     }
 
     public long getId() {
@@ -58,10 +71,6 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
 
     public CcMessage getMessage() {
         return message;
-    }
-
-    public CcTime getTime() {
-        return time;
     }
 
     public CcInfo getInfo() {
@@ -79,10 +88,5 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
         parcel.writeLong(id);
         parcel.writeParcelable(message, flags);
         parcel.writeParcelable(info, flags);
-        parcel.writeParcelable(time, flags);
-    }
-
-    public double getBitRate() {
-        return (double) message.getSize() * 1000 / time.getDuration();
     }
 }

@@ -75,14 +75,7 @@ public class CcInfo implements Parcelable, BaseColumns {
 
     @Override
     public String toString() {
-        String format = "" +
-                "Name: %s\n" +
-                "Type: %s\n" +
-                "Sync: %s\n" +
-                "Iterations: %s\n" +
-                "Interval: %d\n";
-        return String.format(format, CcMethod.NAMES[name.getValue()], CcType.NAMES[type.getValue()],
-                CcSync.NAMES[sync.getValue()], iterations, interval);
+        return printVertical(": ", true);
     }
 
     public CcStatus getStatus() {
@@ -124,4 +117,27 @@ public class CcInfo implements Parcelable, BaseColumns {
     public void setSync(CcSync sync) {
         this.sync = sync;
     }
+
+    public String printHorizontalHeader(String sep) {
+        return sep + "Name" + sep + "Type" + sep + "Sync" + sep + "Iterations" + sep
+                + "Interval [ms]";
+    }
+
+    public String printHorizontalFormat(String sep) {
+        return sep + CcMethod.NAMES[name.getValue()] + sep + CcType.NAMES[type.getValue()]
+                + sep + CcSync.NAMES[sync.getValue()] + sep + iterations + sep + interval;
+    }
+
+    public String printVertical(String sep, boolean header) {
+        String nameV = header ? "Name" + sep + "%s\n" : "%s\n";
+        String typeV = header ? "Type" + sep + "%s\n" : "%s\n";
+        String syncV = header ? "Sync" + sep + "%s\n" : "%s\n";
+        String iterationsV = header ? "Iterations" + sep + "%d\n" : "%d\n";
+        String intervalV = header ? "Interval [ms]" + sep + "%d\n" : "%d\n";
+
+        return String.format(nameV + typeV + syncV + iterationsV + intervalV,
+                CcMethod.NAMES[name.getValue()], CcType.NAMES[type.getValue()],
+                CcSync.NAMES[sync.getValue()], iterations, interval);
+    }
+
 }

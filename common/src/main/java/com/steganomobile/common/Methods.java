@@ -168,6 +168,7 @@ public class Methods {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[stegano] CSV data");
         emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         emailIntent.setType("text/plain");
+        Log.e(TAG, "Sending email");
         context.startActivity(emailIntent);
     }
 

@@ -53,6 +53,7 @@ public class CcService extends Service {
         infoReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+
                 final CcInfo info = intent.getParcelableExtra(Const.EXTRA_CC_INFO);
 
                 if (info.getStatus() == CcStatus.START) {

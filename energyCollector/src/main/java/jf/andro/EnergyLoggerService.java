@@ -5,8 +5,10 @@ import android.app.ActivityManager.MemoryInfo;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,16 +16,22 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
+import com.steganomobile.common.Const;
 import com.steganomobile.common.Methods;
+import com.steganomobile.common.receiver.model.cc.CcReceiverItem;
+import com.steganomobile.common.sender.model.CcMethod;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,8 +44,10 @@ import java.util.Vector;
 
 public class EnergyLoggerService extends Service {
 
-    public static final String SEP = ",";
+    public static final String SEP = ";";
     public final static String filenameFinal = "energy.csv";
+    public static final String ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE";
+    public static final String ACTION_START_SERVICE = "ACTION_START_SERVICE";
     private final String filename = "energy.tmp";
     //private Vector<String> uidNames = null;
     PowerTutorReceiver mResultReceiver;
@@ -47,10 +57,28 @@ public class EnergyLoggerService extends Service {
     private String numberOfTests = "000";
     private String email;
     private Vector<Integer> uidIndex = null;
+    private int idCC;
+    private File energyFile;
+    private File infoFile;
+    private File root = Environment.getExternalStorageDirectory();
+    private EnergyLoggerStopReceiver stopReceiver;
+    private SteganoStopReceiver steganoReceiver;
+    private ArrayList<Pair<String, CcReceiverItem>> results = new ArrayList<Pair<String, CcReceiverItem>>();
+    private int testCounter = 0;
+    private int testNumber = -1;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        stopReceiver = new EnergyLoggerStopReceiver();
+        registerReceiver(stopReceiver, new IntentFilter(ACTION_STOP_SERVICE));
+
+        steganoReceiver = new SteganoStopReceiver();
+        IntentFilter filter = new IntentFilter(Const.ACTION_FINISH_RECEIVER_CC);
+        filter.addAction(Const.ACTION_FINISH_STEGANO);
+        registerReceiver(steganoReceiver, filter);
+
+        testCounter = 0;
     }
 
     @Override
@@ -70,6 +98,7 @@ public class EnergyLoggerService extends Service {
             int nbTest = extras.getInt("nbTest");
             numberOfTests = String.format("%03d", nbTest);
             email = extras.getString("email");
+            idCC = extras.getInt("idCC") + 1;
         }
 
         // Reset energy collected
@@ -88,13 +117,15 @@ public class EnergyLoggerService extends Service {
         // Read one time for purging energies
         EnergyReader.readEnergyValues();
         ScenarioService.getCCDataScheduled();
-        SteganoReceiver.isTrue();
+        SteganoReceiver.isFinishedTrue();
         PowerTutorReceiver.getUIDEnergy();
         PowerTutorReceiver.getUIDNames();
-
-        File root = Environment.getExternalStorageDirectory();
         File file = new File(root, filename);
-        file.delete();
+        clearFile(file);
+        energyFile = new File(root, "" + numberOfTests + "_" + CcMethod.FILE_NAMES[idCC] + "_" + filenameFinal);
+        infoFile = new File(root, "" + numberOfTests + "_" + CcMethod.FILE_NAMES[idCC] + "_info.csv");
+        clearFile(energyFile);
+        clearFile(infoFile);
 
         timer = new Timer();
 
@@ -119,19 +150,12 @@ public class EnergyLoggerService extends Service {
                         e.deltaCpu + SEP;
 
                 int hiddenDataSend = ScenarioService.getCCDataScheduled();
-                if (hiddenDataSend > 0)
-                    values += "1" + SEP;
-                else
-                    values += "0" + SEP;
-
-                values += SteganoReceiver.isTrue() + SEP;
+                String started = SteganoReceiver.isStartedTrue();
+                String md5 = ScenarioService.getCCDataScheduledMd5();
+                values += started + SEP;
+                values += SteganoReceiver.isFinishedTrue() + SEP;
                 values += hiddenDataSend + SEP;
-
-                if (hiddenDataSend > 0) {
-                    String md5 = ScenarioService.getCCDataScheduledMd5();
-                    values += md5;
-                } else
-                    values += "";
+                values += "1".equals(started) ? md5 : "";
 
                 HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
                 HashMap<Integer, String> hname = PowerTutorReceiver.getUIDNames();
@@ -208,8 +232,6 @@ public class EnergyLoggerService extends Service {
 //
 //				values += uidEnergies;
 
-
-                File root = Environment.getExternalStorageDirectory();
                 File file = new File(root, filename);
 
                 try {
@@ -232,77 +254,9 @@ public class EnergyLoggerService extends Service {
 
     @Override
     public void onDestroy() {
-
-        Log.w("JFL", "Service STOPPED !");
-
-        timer.cancel();
-        wl.release();
-
-        File root = Environment.getExternalStorageDirectory();
-        File file = new File(root, "" + numberOfTests + "_" + filenameFinal);
-        file.delete();
-
-        try {
-            FileWriter filewriter = new FileWriter(file);
-            BufferedWriter out = new BufferedWriter(filewriter);
-//			out.write(";;;;;;;UIDs;");
-//			// We search for power of already known UIDs
-//			String uids="";
-//			for(int uidKnown : uidIndex)
-//			{
-//				uids += uidKnown + SEP;
-//
-//			}
-//
-//			out.write(uids + "\n");
-
-            out.write("Date" + SEP + "Current now" + SEP + "Level%" + SEP + "Voltage" + SEP +
-                    "Charging" + SEP + "Memory" + SEP + "ReadCPU" + SEP + "DeltaCPU" + SEP +
-                    "StartCC" + SEP + "EndCC" + SEP + "HiddenDataSent" + SEP + "MessageMd5" + SEP);
-//			String uidsnames="";
-//			for(String uidNameKnown : uidNames)
-//			{
-//				uidsnames += uidNameKnown + SEP;
-//			}
-//			out.write(uidsnames + "\n");
-
-            SharedPreferences seenApps = getApplicationContext().getSharedPreferences("apps", Context.MODE_PRIVATE);
-            int nbAppTotal = seenApps.getInt("nbAppTotal", 0);
-
-            Map<String, Integer> map = (Map<String, Integer>) seenApps.getAll();
-            HashMap<Integer, String> nbToNameApp = new HashMap<Integer, String>();
-            for (String eachApp : map.keySet()) {
-                if (!eachApp.equals("nbAppTotal"))
-                    nbToNameApp.put(map.get(eachApp), eachApp);
-            }
-
-            for (int eachApp = 1; eachApp <= nbAppTotal; eachApp++) {
-                out.write(SEP + nbToNameApp.get(eachApp));
-            }
-            out.write("\n");
-
-
-            FileReader filetmp = new FileReader(root + "/" + filename);
-            BufferedReader in = new BufferedReader(filetmp);
-
-            String line = null;
-            while ((line = in.readLine()) != null) {
-                out.write(line + "\n");
-            }
-
-            in.close();
-            out.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        ArrayList<Uri> uris = new ArrayList<Uri>();
-        uris.add(Uri.fromFile(file));
-        Methods.sendEmail(this, uris, email);
-
-        // Tell the user we stopped.
-        Toast.makeText(this, "STOP !", Toast.LENGTH_SHORT).show();
         super.onDestroy();
+        unregisterReceiver(steganoReceiver);
+        unregisterReceiver(stopReceiver);
     }
 
     @Override
@@ -330,5 +284,159 @@ public class EnergyLoggerService extends Service {
         notif.ledOffMS = 0;
         int LED_NOTIFICATION_ID = 0;
         nm.notify(LED_NOTIFICATION_ID, notif);
+    }
+
+    private void writeToFile(String data, File file) {
+
+        try {
+            FileWriter filewriter = new FileWriter(file, true);
+            BufferedWriter out = new BufferedWriter(filewriter);
+            out.write(data);
+//			out.write(";;;;;;;UIDs;");
+//			// We search for power of already known UIDs
+//			String uids="";
+//			for(int uidKnown : uidIndex)
+//			{
+//				uids += uidKnown + SEP;
+//
+//			}
+//
+//			out.write(uids + "\n");
+
+            // ++ out.write();
+//			String uidsnames="";
+//			for(String uidNameKnown : uidNames)
+//			{
+//				uidsnames += uidNameKnown + SEP;
+//			}
+//			out.write(uidsnames + "\n");
+
+//            ++++
+//            SharedPreferences seenApps = getApplicationContext().getSharedPreferences("apps", Context.MODE_PRIVATE);
+//            int nbAppTotal = seenApps.getInt("nbAppTotal", 0);
+//
+//            Map<String, Integer> map = (Map<String, Integer>) seenApps.getAll();
+//            HashMap<Integer, String> nbToNameApp = new HashMap<Integer, String>();
+//            for (String eachApp : map.keySet()) {
+//                if (!eachApp.equals("nbAppTotal"))
+//                    nbToNameApp.put(map.get(eachApp), eachApp);
+//            }
+//
+//            for (int eachApp = 1; eachApp <= nbAppTotal; eachApp++) {
+//                out.write(SEP + nbToNameApp.get(eachApp));
+//            }
+//            out.write("\n");
+
+            out.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        // Tell the user we stopped.
+        Toast.makeText(this, "STOP !", Toast.LENGTH_SHORT).show();
+    }
+
+    private void sendEmail(String email) {
+
+        ArrayList<Uri> uris = new ArrayList<Uri>();
+        uris.add(Uri.fromFile(energyFile));
+        uris.add(Uri.fromFile(infoFile));
+        Methods.sendEmail(this, uris, email);
+    }
+
+    private String processEnergyData() {
+        String header = "\n\nDate" + SEP + "Current now" + SEP + "Level%" + SEP + "Voltage" + SEP +
+                "Charging" + SEP + "Memory" + SEP + "ReadCPU" + SEP + "DeltaCPU" + SEP +
+                "StartCC" + SEP + "EndCC" + SEP + "HiddenDataSent" + SEP + "MessageMd5";
+
+        StringBuilder b = new StringBuilder(header);
+        SharedPreferences seenApps = getSharedPreferences("apps", Context.MODE_PRIVATE);
+        int nbAppTotal = seenApps.getInt("nbAppTotal", 0);
+
+        Map<String, Integer> map = (Map<String, Integer>) seenApps.getAll();
+        HashMap<Integer, String> nbToNameApp = new HashMap<Integer, String>();
+        for (String eachApp : map.keySet()) {
+            if (!eachApp.equals("nbAppTotal"))
+                nbToNameApp.put(map.get(eachApp), eachApp);
+        }
+
+        for (int eachApp = 1; eachApp <= nbAppTotal; eachApp++) {
+            b.append(SEP).append(nbToNameApp.get(eachApp));
+        }
+        b.append("\n");
+
+        FileReader tempFile;
+        try {
+            tempFile = new FileReader(root + "/" + filename);
+            BufferedReader in = new BufferedReader(tempFile);
+            String line;
+            try {
+                while ((line = in.readLine()) != null) {
+                    b.append(line).append("\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        clearFile(new File(root + "/" + filename));
+
+        return b.toString();
+    }
+
+    private void clearFile(File file) {
+        try {
+            new RandomAccessFile(file, "rw").setLength(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class EnergyLoggerStopReceiver extends BroadcastReceiver {
+        public EnergyLoggerStopReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (EnergyLoggerService.ACTION_STOP_SERVICE.equals(intent.getAction())) {
+                testNumber = intent.getIntExtra(Const.EXTRA_TEST_NUMBER, -1);
+            }
+        }
+    }
+
+    public class SteganoStopReceiver extends BroadcastReceiver {
+
+        private final String TAG = SteganoStopReceiver.class.getSimpleName();
+        private boolean printHeader = true;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (Const.ACTION_FINISH_RECEIVER_CC.equals(intent.getAction())) {
+                CcReceiverItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_RECEIVER_CC);
+                writeToFile(item.print(SEP, printHeader, true), infoFile);
+                printHeader = false;
+                Toast.makeText(context, "Finished in " + item.getMessage().getTime().getDuration() + " ms", Toast.LENGTH_LONG).show();
+            } else if (Const.ACTION_FINISH_STEGANO.equals(intent.getAction())) {
+                writeToFile(processEnergyData(), energyFile);
+                testCounter++;
+            }
+
+            if (testCounter == testNumber) {
+                sendEmail(email);
+                Log.w("JFL", "Service STOPPED !");
+                Methods.playSound(context);
+                timer.cancel();
+                wl.release();
+                stopSelf();
+            }
+        }
     }
 }

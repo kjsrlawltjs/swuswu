@@ -1,7 +1,5 @@
 package com.steganomobile.receiver.controller.cc;
 
-import android.util.Log;
-
 import com.steganomobile.common.Const;
 import com.steganomobile.receiver.controller.DataCollector;
 
@@ -19,13 +17,9 @@ public class TypeOfIntent extends CcImpl {
         }
 
         if (action != null) {
-            int index = action.indexOf("/");
-            Log.i(TAG, action);
-            if (index == -1) {
-                String stringByte = action.substring(Const.SYNC_RECEIVER.length());
-                byte data = Byte.parseByte(stringByte);
-                getCollector().setData(data);
-            }
+            String stringByte = action.substring(Const.SYNC_RECEIVER.length());
+            byte data = Byte.parseByte(stringByte);
+            getCollector().setData(data);
         }
     }
 }

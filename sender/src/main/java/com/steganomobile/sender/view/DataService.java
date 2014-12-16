@@ -1,12 +1,16 @@
 package com.steganomobile.sender.view;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.common.sender.model.CcInfo;
+import com.steganomobile.common.sender.model.CcMethod;
 import com.steganomobile.common.sender.model.CcSegment;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
@@ -24,9 +28,12 @@ import com.steganomobile.sender.controller.cc.UnixSocketDiscovery;
 import com.steganomobile.sender.controller.cc.UsageTrend;
 import com.steganomobile.sender.controller.cc.VolumeSettings;
 
+import java.util.Random;
+
 public class DataService extends IntentService {
 
     private static final String TAG = DataService.class.getSimpleName();
+    public static volatile boolean running = true;
 
     public DataService() {
         super(TAG);
@@ -34,15 +41,56 @@ public class DataService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        running = true;
+        BroadcastReceiver stopReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (Const.ACTION_FORCE_STOP.equals(intent.getAction())) {
+                    running = false;
+                }
+            }
+        };
+        registerReceiver(stopReceiver, new IntentFilter(Const.ACTION_FORCE_STOP));
         CcSenderItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_SENDER_CC);
         int iterations = item.getInfo().getIterations();
 
+        if (item.getInfo().getName() == CcMethod.CONTENT_OF_URI) {
+            item.getInfo().setSync(CcSync.CONTENT_OBSERVER);
+        } else if (item.getInfo().getName() == CcMethod.TYPE_OF_INTENT) {
+            item.getInfo().setSync(CcSync.BROADCAST_RECEIVER);
+        }
+
         for (int i = 1; i <= iterations; i++) {
             start(i, item.getInfo());
-            waitToSync();
+            waitToStart();
+            sendBroadcast(new Intent(Const.ACTION_START_STEGANO));
             send(item);
             finish(item.getInfo());
-            waitToSync();
+            waitToFinish();
+            sendBroadcast(new Intent(Const.ACTION_FINISH_STEGANO));
+        }
+        unregisterReceiver(stopReceiver);
+    }
+
+    private void waitToFinish() {
+        synchronized (this) {
+            try {
+                Random r = new Random();
+                wait(60 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM) * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void waitToStart() {
+        synchronized (this) {
+            try {
+                Random r = new Random();
+                wait(60 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM) * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -65,6 +113,7 @@ public class DataService extends IntentService {
             cc.syncCc(this, item.getInfo().getSync(), element);
             waitToSend(interval);
             cc.finishCc();
+            if (!running) break;
         }
         cc.clearCc();
     }
@@ -75,16 +124,6 @@ public class DataService extends IntentService {
         Intent statusIntent = new Intent(Const.ACTION_INFO);
         statusIntent.putExtra(Const.EXTRA_CC_INFO, info);
         sendBroadcast(statusIntent);
-    }
-
-    private void waitToSync() {
-        synchronized (this) {
-            try {
-                wait(Const.SYNC_WAIT);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private CcImpl getMethod(CcInfo info) {
@@ -106,10 +145,8 @@ public class DataService extends IntentService {
             case FILE_EXISTENCE:
                 return new FileExistence();
             case CONTENT_OF_URI:
-                info.setSync(CcSync.CONTENT_OBSERVER);
                 return new ContentOfUri();
             case TYPE_OF_INTENT:
-                info.setSync(CcSync.BROADCAST_RECEIVER);
                 return new TypeOfIntent();
             case UNIX_SOCKET_DISCOVERY:
                 return new UnixSocketDiscovery(info.getPort());

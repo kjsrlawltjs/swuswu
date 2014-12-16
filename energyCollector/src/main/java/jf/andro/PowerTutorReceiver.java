@@ -76,7 +76,7 @@ public class PowerTutorReceiver extends BroadcastReceiver {
 
     private void addAllUIDEnergy(String s) {
 
-        StringTokenizer st = new StringTokenizer(s, EnergyLoggerService.SEP);
+        StringTokenizer st = new StringTokenizer(s, ";");
         while (st.hasMoreElements()) {
             String token = st.nextToken();
             StringTokenizer st2 = new StringTokenizer(token, "=");

@@ -12,13 +12,16 @@ public class TypeOfIntent extends CcImpl {
 
     @Override
     public void sendCc(Context context, int element) {
+        super.sendCc(context, element);
         // Sending is connected with sync in this method
         this.element = element;
     }
 
     @Override
-    public void syncCc(Context context, CcSync sync, byte element) {
+    public void syncCc(Context context, CcSync sync, byte sentElement) {
         // Sending is connected with sync in this method
-        context.sendBroadcast(new Intent(Const.SYNC_RECEIVER + this.element));
+        Intent intent = new Intent(Const.SYNC_RECEIVER + this.element);
+        intent.putExtra(Const.EXTRA_SENT_ELEMENT, sentElement);
+        context.sendBroadcast(intent);
     }
 }

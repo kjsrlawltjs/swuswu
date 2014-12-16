@@ -50,8 +50,7 @@ public class CcTime implements BaseColumns, Parcelable {
 
     @Override
     public String toString() {
-        String format = "Start date: %s\nFinish date: %s\nDuration: %d [s]\n";
-        return String.format(format, start, finish, duration);
+        return printVertical(": ", true);
     }
 
     @Override
@@ -64,5 +63,20 @@ public class CcTime implements BaseColumns, Parcelable {
         parcel.writeLong(duration);
         parcel.writeString(finish);
         parcel.writeString(start);
+    }
+
+    public String printVertical(String sep, boolean header) {
+        String startV = header ? "Start date" + sep + "%s\n" : "%s\n";
+        String finishV = header ? "Finish date" + sep + "%s\n" : "%s\n";
+        String durationV = header ? "Duration [ms]" + sep + "%d\n" : "%d\n";
+        return String.format(startV + finishV + durationV, start, finish, duration);
+    }
+
+    public String printHorizontalHeader(String sep) {
+        return sep + "Start date" + sep + "Finish date" + sep + "Duration [ms]";
+    }
+
+    public String printHorizontalFormat(String sep) {
+        return sep + start + sep + finish + sep + duration;
     }
 }

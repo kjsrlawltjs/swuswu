@@ -43,6 +43,7 @@ public class Const {
     public static final String ACTION_START_SCENARIO = "ACTION_START_SCENARIO";
     public static final String ACTION_START_SENDER_CC = "ACTION_START_SENDER_CC";
     public static final String ACTION_START_STEGANO = "ACTION_START_STEGANO";
+    public static final String ACTION_FINISH_STEGANO = "ACTION_FINISH_STEGANO";
     public static final String ACTION_START_RECEIVER_CC = "ACTION_START_RECEIVER_CC";
     public static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
     // ---------------------------------------------------------------------------------------------
@@ -94,6 +95,9 @@ public class Const {
     public static final String SYNC_RECEIVER = "SYNC_RECEIVER";
     public static final Uri SYNC_OBSERVER = Uri.parse("content://stegano_sync");
     public static final String NO_ACTION = "NO_ACTION";
-    public static final long SYNC_WAIT = 1000;
+    public static final long SYNC_WAIT = 5000;
     public static final String EXTRA_SENT_ELEMENT = "EXTRA_SENT_ELEMENT";
+    public static final String EXTRA_TEST_NUMBER = "EXTRA_TEST_NUMBER";
+    public static final String ACTION_FORCE_STOP = "ACTION_FORCE_STOP";
+    public static final int SYNC_WAIT_SLEEP_RANDOM = 30;
 }
