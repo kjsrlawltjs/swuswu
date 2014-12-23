@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 
-public class CcInfo implements Parcelable, BaseColumns {
+public class CcSenderInfo implements Parcelable, BaseColumns {
 
     public static final String INTERVAL = "interval";
     public static final String ITERATIONS = "iterations";
@@ -17,13 +17,13 @@ public class CcInfo implements Parcelable, BaseColumns {
     private int interval = NO_VALUE;
     private int port = NO_VALUE;
 
-    public static Parcelable.Creator<CcInfo> CREATOR = new Parcelable.Creator<CcInfo>() {
-        public CcInfo createFromParcel(Parcel parcel) {
-            return new CcInfo(parcel);
+    public static Parcelable.Creator<CcSenderInfo> CREATOR = new Parcelable.Creator<CcSenderInfo>() {
+        public CcSenderInfo createFromParcel(Parcel parcel) {
+            return new CcSenderInfo(parcel);
         }
 
-        public CcInfo[] newArray(int size) {
-            return new CcInfo[size];
+        public CcSenderInfo[] newArray(int size) {
+            return new CcSenderInfo[size];
         }
     };
 
@@ -32,7 +32,7 @@ public class CcInfo implements Parcelable, BaseColumns {
     private CcStatus status = CcStatus.NO_VALUE;
     private CcSync sync = CcSync.NO_VALUE;
 
-    public CcInfo(CcStatus status, CcMethod name, int iterations, CcType type, int interval, CcSync sync) {
+    public CcSenderInfo(CcStatus status, CcMethod name, int iterations, CcType type, int interval, CcSync sync) {
         this.status = status;
         this.name = name;
         this.iterations = iterations;
@@ -42,7 +42,7 @@ public class CcInfo implements Parcelable, BaseColumns {
         this.port = NO_VALUE;
     }
 
-    public CcInfo(Parcel parcel) {
+    public CcSenderInfo(Parcel parcel) {
         interval = parcel.readInt();
         iterations = parcel.readInt();
         name = CcMethod.getFromInt(parcel.readInt());
@@ -52,7 +52,7 @@ public class CcInfo implements Parcelable, BaseColumns {
         type = CcType.getFromInt(parcel.readInt());
     }
 
-    public CcInfo(CcStatus status, CcSync sync) {
+    public CcSenderInfo(CcStatus status, CcSync sync) {
         this.status = status;
         this.sync = sync;
     }

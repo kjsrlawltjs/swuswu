@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.common.sender.model.CcSenderItem;
@@ -22,8 +21,6 @@ public class DataReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        Log.e(TAG, intent.getAction());
 
         if (ACTION_START_SENDER_CC.equals(intent.getAction())) {
             CcSenderItem item = intent.getParcelableExtra(EXTRA_ITEM_SENDER_CC);

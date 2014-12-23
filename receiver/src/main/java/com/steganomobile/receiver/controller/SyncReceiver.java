@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.receiver.controller.cc.CcImpl;
+import com.steganomobile.receiver.controller.cc.CcImplReceiver;
 
 public class SyncReceiver extends BroadcastReceiver implements Sync {
 
     private static final String TAG = SyncReceiver.class.getSimpleName();
-    private CcImpl cc;
+    private CcImplReceiver cc;
 
-    public SyncReceiver(CcImpl cc) {
+    public SyncReceiver(CcImplReceiver cc) {
         this.cc = cc;
     }
 
@@ -24,17 +24,17 @@ public class SyncReceiver extends BroadcastReceiver implements Sync {
         if (action != null && action.contains(Const.SYNC_RECEIVER)) {
             if (cc != null) {
                 cc.getCollector().setSentElement(intent.getByteExtra(Const.EXTRA_SENT_ELEMENT, (byte) 0));
-                cc.runCc(action);
+                cc.onReceive(action);
             }
         }
     }
 
-    public CcImpl getCc() {
+    public CcImplReceiver getCc() {
         return cc;
     }
 
-    public void finish(Context context) {
-        cc.clearCc();
+    public void onFinish(Context context) {
+        cc.onFinish();
         cc.getCollector().finish(context);
     }
 }

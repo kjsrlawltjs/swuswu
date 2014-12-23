@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".view.CcService"
+            android:name=".view.CcReceiverService"
             android:exported="false"
             android:label="@string/app_name" />
 

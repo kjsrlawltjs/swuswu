@@ -4,17 +4,17 @@ import android.content.Context;
 
 import com.steganomobile.common.Const;
 
-public abstract class SystemImpl extends CcImpl {
-    private static final String TAG = SystemImpl.class.getSimpleName();
+public abstract class SystemImplSender extends CcImplSender {
+    private static final String TAG = SystemImplSender.class.getSimpleName();
     private int interval;
 
-    public SystemImpl(int interval) {
+    public SystemImplSender(int interval) {
         this.interval = interval;
     }
 
     @Override
-    public void sendCc(Context context, int element) {
-        super.sendCc(context, element);
+    public void onSend(Context context, int element) {
+        super.onSend(context, element);
     }
 
     protected void sendSystem(int element) {

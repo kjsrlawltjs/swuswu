@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.receiver.view.CcService;
+import com.steganomobile.receiver.view.CcReceiverService;
 
 public class DataReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Const.ACTION_START_RECEIVER_CC.equals(intent.getAction())) {
-            Intent myIntent = new Intent(context, CcService.class);
+            Intent myIntent = new Intent(context, CcReceiverService.class);
             context.startService(myIntent.replaceExtras(intent));
         }
     }

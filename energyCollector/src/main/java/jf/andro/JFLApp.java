@@ -18,8 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcInfo;
 import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
@@ -93,7 +93,7 @@ public class JFLApp extends Activity {
                 int interval = 20;
                 int iterations = 1;
 
-                CcInfo info = new CcInfo(status, method, iterations, type, interval, sync);
+                CcSenderInfo info = new CcSenderInfo(status, method, iterations, type, interval, sync);
                 CcSenderItem item = new CcSenderItem("JFL", info);
 
 //				int message_size = 5;

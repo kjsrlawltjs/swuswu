@@ -5,15 +5,15 @@ import com.steganomobile.receiver.controller.DataCollector;
 
 import java.io.IOException;
 
-public class FileLock extends FileImpl {
-    private static final String TAG = FileLock.class.getSimpleName();
+public class FileLockReceiver extends FileImplReceiver {
+    private static final String TAG = FileLockReceiver.class.getSimpleName();
 
-    public FileLock(DataCollector collector) {
+    public FileLockReceiver(DataCollector collector) {
         super(collector);
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         try {
             getFileChannel().tryLock().release();
             getCollector().setData(Const.DOWN_NUMBER);

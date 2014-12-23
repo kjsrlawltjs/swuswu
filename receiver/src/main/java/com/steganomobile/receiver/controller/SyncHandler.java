@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.receiver.controller.cc.CcImpl;
+import com.steganomobile.receiver.controller.cc.CcImplReceiver;
 
 public class SyncHandler implements Sync {
 
     private static final String TAG = SyncHandler.class.getSimpleName();
-    private CcImpl cc;
+    private CcImplReceiver cc;
     final Runnable callback = new Runnable() {
         public void run() {
             int interval = cc.getCollector().getInfo().getInterval();
@@ -17,12 +17,12 @@ public class SyncHandler implements Sync {
             if (cc == null) {
                 handler.removeCallbacks(this);
             }
-            cc.runCc(Const.NO_ACTION);
+            cc.onReceive(Const.NO_ACTION);
         }
     };
     private Handler handler = new Handler();
 
-    public SyncHandler(CcImpl cc) {
+    public SyncHandler(CcImplReceiver cc) {
         this.cc = cc;
 
         synchronized (this) {
@@ -36,12 +36,12 @@ public class SyncHandler implements Sync {
         handler.post(callback);
     }
 
-    public CcImpl getCc() {
+    public CcImplReceiver getCc() {
         return cc;
     }
 
-    public void finish(Context context) {
-        cc.clearCc();
+    public void onFinish(Context context) {
+        cc.onFinish();
         handler.removeCallbacks(callback);
         cc.getCollector().finish(context);
     }

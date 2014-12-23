@@ -341,7 +341,7 @@ public class EnergyLoggerService extends Service {
         ArrayList<Uri> uris = new ArrayList<Uri>();
         uris.add(Uri.fromFile(energyFile));
         uris.add(Uri.fromFile(infoFile));
-        Methods.sendEmail(this, uris, email);
+        Methods.sendEmail(this, uris);
     }
 
     private String processEnergyData() {

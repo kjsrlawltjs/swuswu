@@ -5,18 +5,18 @@ import android.content.Context;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class UnixSocketDiscovery extends CcImpl {
-    private static final String TAG = UnixSocketDiscovery.class.getSimpleName();
+public class UnixSocketDiscoverySender extends CcImplSender {
+    private static final String TAG = UnixSocketDiscoverySender.class.getSimpleName();
     private int port;
     private ServerSocket socket;
 
-    public UnixSocketDiscovery(int port) {
+    public UnixSocketDiscoverySender(int port) {
         this.port = port;
     }
 
     @Override
-    public void sendCc(Context context, int element) {
-        super.sendCc(context, element);
+    public void onSend(Context context, int element) {
+        super.onSend(context, element);
 
         try {
             socket = new ServerSocket(port + element);
@@ -26,7 +26,7 @@ public class UnixSocketDiscovery extends CcImpl {
     }
 
     @Override
-    public void finishCc() {
+    public void onRestart() {
         try {
             socket.close();
         } catch (IOException e) {

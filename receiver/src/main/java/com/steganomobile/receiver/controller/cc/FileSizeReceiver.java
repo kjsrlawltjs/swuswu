@@ -4,15 +4,15 @@ import com.steganomobile.receiver.controller.DataCollector;
 
 import java.io.IOException;
 
-public class FileSize extends FileImpl {
-    private static final String TAG = FileSize.class.getSimpleName();
+public class FileSizeReceiver extends FileImplReceiver {
+    private static final String TAG = FileSizeReceiver.class.getSimpleName();
 
-    public FileSize(DataCollector collector) {
+    public FileSizeReceiver(DataCollector collector) {
         super(collector);
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         try {
             getCollector().setData((byte) (getFileChannel().size() - BASE_SIZE));
         } catch (IOException e) {

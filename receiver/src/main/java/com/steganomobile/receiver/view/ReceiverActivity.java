@@ -77,7 +77,7 @@ public class ReceiverActivity extends Activity {
 
     public void runService() {
         if (!Methods.isServiceRunning(this, Const.PACKAGE_STEGANO_RECEIVER)) {
-            startService(new Intent(getBaseContext(), CcService.class));
+            startService(new Intent(getBaseContext(), CcReceiverService.class));
         }
     }
 
@@ -186,7 +186,7 @@ public class ReceiverActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent returnIntent) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Const.REQUEST_SETTINGS) {
-                stopService(new Intent(getBaseContext(), CcService.class));
+                stopService(new Intent(getBaseContext(), CcReceiverService.class));
                 runService();
             }
         }
@@ -238,7 +238,7 @@ public class ReceiverActivity extends Activity {
     }
 
     private void stopCcService() {
-        stopService(new Intent(getBaseContext(), CcService.class));
+        stopService(new Intent(getBaseContext(), CcReceiverService.class));
     }
 
     private void splitServiceAndActivity() {

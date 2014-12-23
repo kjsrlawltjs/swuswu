@@ -24,8 +24,8 @@ import android.widget.Toast;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.common.R;
-import com.steganomobile.common.sender.model.CcInfo;
 import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
@@ -51,12 +51,12 @@ public class SenderActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             TextView myTextView = (TextView) findViewById(R.id.textViewState);
-            CcInfo ccInfo = intent.getParcelableExtra(Const.EXTRA_CC_INFO);
-            if (ccInfo.getStatus() == CcStatus.FINISH) {
+            CcSenderInfo ccSenderInfo = intent.getParcelableExtra(Const.EXTRA_CC_INFO);
+            if (ccSenderInfo.getStatus() == CcStatus.FINISH) {
                 myTextView.setText(getResources().getString(R.string.state_idle));
 
-            } else if (ccInfo.getStatus() == CcStatus.START) {
-                int nameId = ccInfo.getName().getValue();
+            } else if (ccSenderInfo.getStatus() == CcStatus.START) {
+                int nameId = ccSenderInfo.getName().getValue();
                 if (nameId > 0 && nameId <= CcMethod.NAMES.length)
                     myTextView.setText(
                             getResources().getString(R.string.state_sending) + " - " + CcMethod.NAMES[nameId]
@@ -512,7 +512,7 @@ public class SenderActivity extends Activity {
         CcType type = CcType.getFromInt(typeId);
         CcSync sync = CcSync.getFromInt(syncId);
         CcMethod name = CcMethod.getFromInt(ccNameId);
-        CcInfo info = new CcInfo(status, name, iterations, type, interval, sync);
+        CcSenderInfo info = new CcSenderInfo(status, name, iterations, type, interval, sync);
         CcSenderItem item = new CcSenderItem(data.toString(), info);
 
         intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);

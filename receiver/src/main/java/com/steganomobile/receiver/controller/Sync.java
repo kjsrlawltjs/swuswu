@@ -2,12 +2,12 @@ package com.steganomobile.receiver.controller;
 
 import android.content.Context;
 
-import com.steganomobile.receiver.controller.cc.CcImpl;
+import com.steganomobile.receiver.controller.cc.CcImplReceiver;
 
 public interface Sync {
 
-    public CcImpl getCc();
+    public CcImplReceiver getCc();
 
-    public void finish(Context context);
+    public void onFinish(Context context);
 
 }

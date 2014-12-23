@@ -6,14 +6,14 @@ import android.net.Uri;
 import android.os.Handler;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.receiver.controller.cc.CcImpl;
+import com.steganomobile.receiver.controller.cc.CcImplReceiver;
 
 public class SyncObserver extends ContentObserver implements Sync {
 
     private static final String TAG = SyncObserver.class.getSimpleName();
-    private CcImpl cc;
+    private CcImplReceiver cc;
 
-    public SyncObserver(Handler handler, CcImpl cc) {
+    public SyncObserver(Handler handler, CcImplReceiver cc) {
         super(handler);
         this.cc = cc;
     }
@@ -26,16 +26,16 @@ public class SyncObserver extends ContentObserver implements Sync {
             if (data != null) {
                 cc.getCollector().setSentElement(Byte.parseByte(data));
             }
-            cc.runCc(data);
+            cc.onReceive(data);
         }
     }
 
-    public CcImpl getCc() {
+    public CcImplReceiver getCc() {
         return cc;
     }
 
-    public void finish(Context context) {
-        cc.clearCc();
+    public void onFinish(Context context) {
+        cc.onFinish();
         cc.getCollector().finish(context);
     }
 }

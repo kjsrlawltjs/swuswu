@@ -5,10 +5,10 @@ import com.steganomobile.receiver.controller.DataCollector;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class UnixSocketDiscovery extends CcImpl {
-    private static final String TAG = UnixSocketDiscovery.class.getSimpleName();
+public class UnixSocketDiscoveryReceiver extends CcImplReceiver {
+    private static final String TAG = UnixSocketDiscoveryReceiver.class.getSimpleName();
 
-    public UnixSocketDiscovery(DataCollector collector) {
+    public UnixSocketDiscoveryReceiver(DataCollector collector) {
         super(collector);
     }
 
@@ -22,7 +22,7 @@ public class UnixSocketDiscovery extends CcImpl {
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         int port = getCollector().getInfo().getPort();
 
         for (int i = port - 127; i < port + 127; i++) {

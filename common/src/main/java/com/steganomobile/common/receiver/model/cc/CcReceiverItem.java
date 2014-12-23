@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 
-import com.steganomobile.common.sender.model.CcInfo;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 
 import java.util.Locale;
 
@@ -25,9 +25,9 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
 
     private long id;
     private CcMessage message;
-    private CcInfo info;
+    private CcSenderInfo info;
 
-    public CcReceiverItem(long id, CcMessage message, CcInfo info) {
+    public CcReceiverItem(long id, CcMessage message, CcSenderInfo info) {
         super(info.getName().getValue(), info.getType().getValue());
         this.id = id;
         this.message = message;
@@ -38,7 +38,7 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
         super((CcBaseItem) parcel.readParcelable(CcBaseItem.class.getClassLoader()));
         id = parcel.readLong();
         message = parcel.readParcelable(CcMessage.class.getClassLoader());
-        info = parcel.readParcelable(CcInfo.class.getClassLoader());
+        info = parcel.readParcelable(CcSenderInfo.class.getClassLoader());
     }
 
     @Override
@@ -73,7 +73,7 @@ public class CcReceiverItem extends CcBaseItem implements BaseColumns, Parcelabl
         return message;
     }
 
-    public CcInfo getInfo() {
+    public CcSenderInfo getInfo() {
         return info;
     }
 

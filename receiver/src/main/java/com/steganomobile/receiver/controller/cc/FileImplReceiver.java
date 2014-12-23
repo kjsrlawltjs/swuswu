@@ -1,8 +1,9 @@
-package com.steganomobile.sender.controller.cc;
+package com.steganomobile.receiver.controller.cc;
 
 import android.os.Environment;
 
 import com.steganomobile.common.Const;
+import com.steganomobile.receiver.controller.DataCollector;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,14 +11,16 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 
-public abstract class FileImpl extends CcImpl {
+public abstract class FileImplReceiver extends CcImplReceiver {
+
     public static final int BASE_SIZE = 128;
-    private static final String TAG = FileImpl.class.getSimpleName();
+    private static final String TAG = FileImplReceiver.class.getSimpleName();
     private RandomAccessFile accessFile;
     private File file;
     private FileChannel fileChannel;
 
-    protected FileImpl() {
+    public FileImplReceiver(DataCollector collector) {
+        super(collector);
         file = new File(Environment.getExternalStorageDirectory(), Const.SHARED_FILE);
         try {
             accessFile = new RandomAccessFile(file, Const.READ_WRITE);
@@ -26,7 +29,6 @@ public abstract class FileImpl extends CcImpl {
             e.printStackTrace();
         }
     }
-
 
     public File getFile() {
         return file;
@@ -41,7 +43,7 @@ public abstract class FileImpl extends CcImpl {
     }
 
     @Override
-    public void clearCc() {
+    public void onFinish() {
         try {
             fileChannel.close();
             accessFile.close();

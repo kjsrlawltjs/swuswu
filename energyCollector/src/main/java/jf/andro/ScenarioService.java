@@ -12,8 +12,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcInfo;
 import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
@@ -159,15 +159,9 @@ public class ScenarioService extends Service {
                                 CcStatus status = CcStatus.START;
                                 int iterations = 1;
                                 int interval = 20;
-                                CcInfo info = new CcInfo(status, method, iterations, type, interval, sync);
+                                CcSenderInfo info = new CcSenderInfo(status, method, iterations, type, interval, sync);
                                 CcSenderItem item = new CcSenderItem(generate(size_message_B, 0), info);
                                 intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
-
-                                // Prepare receiver response
-                            /*IntentFilter mIntentFilter = new IntentFilter();
-            mIntentFilter.addAction(Const.ACTION_FINISH_STEGANO);
-			CCResultReceiver mResultReceiver = new CCResultReceiver();
-			registerReceiver(mResultReceiver, mIntentFilter);*/
 
                                 // Send the intent that asks the Stegano sender to transmit !
                                 sendBroadcast(intent);
@@ -259,88 +253,115 @@ public class ScenarioService extends Service {
                                     // interval is time between synchronization step in stegano system.
                                     // 200 [ms] is some kind of universal number, because it is the lowest number
                                     // which will provide good accuracy for all CCs
-                                    int interval = 200;
+                                    int interval = 1;
                                     CcType type = CcType.MESSAGE;
                                     CcSync sync = CcSync.BROADCAST_RECEIVER;
-                                    CcInfo info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    CcSenderInfo info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     CcSenderItem item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
-                                    /*
+                                    interval = 1;
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
 
                                     interval = 5;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 10;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 20;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 30;
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 40;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 50;
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 60;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 80;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 100;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 150;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 200;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 300;
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 400;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
-                                    interval = 600;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    interval = 500;
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    item = new CcSenderItem(data, info);
+                                    intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
+                                    sendBroadcast(intent);
+
+                                    interval = 700;
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
 
                                     interval = 1000;
-                                    info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                    info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     item = new CcSenderItem(data, info);
                                     intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                     sendBroadcast(intent);
-                                    */
 
                                 }
                                 // Random sleep before the first CC message sending
@@ -358,7 +379,7 @@ public class ScenarioService extends Service {
                             // Send information to logger about our sending
                             // Test number tells how many times the CC was running
                             // (how many times there was execution of sendBroadcast to stegano system
-                            intent.putExtra(Const.EXTRA_TEST_NUMBER, 1);
+                            intent.putExtra(Const.EXTRA_TEST_NUMBER, 18);
                             sendBroadcast(intent);
 
                         } catch (InterruptedException e) {

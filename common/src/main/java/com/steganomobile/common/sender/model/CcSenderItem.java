@@ -16,16 +16,16 @@ public class CcSenderItem implements Parcelable {
     };
 
     private String data;
-    private CcInfo info;
+    private CcSenderInfo info;
 
-    public CcSenderItem(String data, CcInfo info) {
+    public CcSenderItem(String data, CcSenderInfo info) {
         this.data = data;
         this.info = info;
     }
 
     public CcSenderItem(Parcel parcel) {
         data = parcel.readString();
-        info = parcel.readParcelable(CcInfo.class.getClassLoader());
+        info = parcel.readParcelable(CcSenderInfo.class.getClassLoader());
     }
 
     public String getData() {
@@ -47,7 +47,7 @@ public class CcSenderItem implements Parcelable {
         parcel.writeParcelable(info, flags);
     }
 
-    public CcInfo getInfo() {
+    public CcSenderInfo getInfo() {
         return info;
     }
 }

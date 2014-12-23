@@ -8,17 +8,17 @@ import android.util.Log;
 import com.steganomobile.common.Const;
 import com.steganomobile.common.sender.model.CcSync;
 
-public abstract class CcImpl implements Cc {
+public abstract class CcImplSender implements CcSender {
     public static final int NO_VALUE = -1;
-    private static final String TAG = CcImpl.class.getSimpleName();
+    private static final String TAG = CcImplSender.class.getSimpleName();
 
     @Override
-    public void sendCc(Context context, int element) {
+    public void onSend(Context context, int element) {
         Log.i(TAG, "Sent " + element);
     }
 
     @Override
-    public void syncCc(Context context, CcSync sync, byte element) {
+    public void onSync(Context context, CcSync sync, byte element) {
         switch (sync) {
             case NO_VALUE:
                 break;
@@ -37,12 +37,12 @@ public abstract class CcImpl implements Cc {
     }
 
     @Override
-    public void finishCc() {
+    public void onRestart() {
 
     }
 
     @Override
-    public void clearCc() {
+    public void onFinish() {
 
     }
 }
