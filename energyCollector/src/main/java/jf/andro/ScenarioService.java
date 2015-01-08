@@ -100,12 +100,10 @@ public class ScenarioService extends Service {
                         try {
                             // Parameters for randomness
                             Random r = new Random();
-                            int nb_messages_max = 1;//nbXP; // Max nb messages
                             int message_size_max = 5; //1000; // Size max 1000 Bytes
-                            int nb_first_sleep_random_max = 30; // Max sleeping time
-                            int nb_second_sleep_random_max = 30; // Max sleeping time
-                            int wait_factor = 1;
-                            sleep(3 * 1000); // Sleep a little before starting
+
+                            // Sleep a little before starting the energy recording
+                            sleep(1 * 1000);
 
                             // Choose a random number of messages to send
                             int nb_message = 1; // + r.nextInt(nb_messages_max);
@@ -115,11 +113,10 @@ public class ScenarioService extends Service {
                             service.putExtra("nbTest", nb_message);
                             service.putExtra("email", email);
                             service.putExtra("idCC", idCC);
-
                             startService(service);
 
-                            // Random sleep before the first CC message sending
-//                                sleep((10 + r.nextInt(nb_first_sleep_random_max)) * 1000);
+                            // Short sleep before starting
+                            sleep(2 * 1000);
 
                             if (!idleCC) // IDLE the stegano transmission
                             {
@@ -144,11 +141,12 @@ public class ScenarioService extends Service {
                                 Log.w("JFL", String.format("Using %s method!", CcMethod.NAMES[method.getValue()]));
 
                                 // iterations = 2, means that CC will be activated 2 times.
-                                int iterations = 1;
+                                int iterations = nbXP;
                                 // interval is time between synchronization step in stegano system.
                                 // 200 [ms] is some kind of universal number, because it is the lowest number
                                 // which will provide good accuracy for all CCs
-                                int interval = 200;
+                                //int interval = 200;
+                                int interval = 10;
                                 CcType type = CcType.MESSAGE;
                                 CcSync sync = CcSync.BROADCAST_RECEIVER;
                                 CcInfo info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);

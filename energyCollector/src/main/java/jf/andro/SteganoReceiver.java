@@ -34,10 +34,7 @@ public class SteganoReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Const.ACTION_FINISH_RECEIVER_CC.equals(intent.getAction())) {
-            Log.w("JFL", "End of stegano transmission !");
-            CcReceiverItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_RECEIVER_CC);
-            Toast.makeText(context, "Finished in " + item.getMessage().getTime().getDuration() + " ms", Toast.LENGTH_LONG).show();
+        if (Const.ACTION_FINISH_STEGANO.equals(intent.getAction())) {
 
             Log.w("JFL", String.format("All XP finished: stopping the logger service."));
             GreenFlashLight(context);
@@ -47,11 +44,16 @@ public class SteganoReceiver extends BroadcastReceiver {
             // (how many times there was execution of sendBroadcast to stegano system
             stopservice.putExtra(Const.EXTRA_TEST_NUMBER, 1);
             context.sendBroadcast(stopservice);
+        }
+        else if (Const.ACTION_FINISH_RECEIVER_CC.equals(intent.getAction())) {
+            Log.w("JFL", "End of one stegano transmission !");
+            CcReceiverItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_RECEIVER_CC);
+            Log.w("JFL", "Finished in " + item.getMessage().getTime().getDuration() + " ms");
 
-            finished++;
+            finished++; // for detecting the end when logging
         } else if (Const.ACTION_START_STEGANO.equals(intent.getAction())) {
             Log.w("JFL", "Start of stegano transmission !");
-            started++;
+            started++; // for detecting the beginning when logging
         }
     }
 
