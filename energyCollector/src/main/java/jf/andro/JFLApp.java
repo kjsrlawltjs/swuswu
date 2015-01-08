@@ -63,45 +63,7 @@ public class JFLApp extends Activity {
         };
         registerReceiver(endReceiver, new IntentFilter("jf.andro.endScenario"));
 
-        Button start = (Button) findViewById(R.id.startservice);
-        start.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Intent service = new Intent("jf.andro.energyservice");
-                startService(service);
-            }
-        });
 
-        Button stop = (Button) findViewById(R.id.stopservice);
-        stop.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Intent service = new Intent("jf.andro.energyservice");
-                stopService(service);
-                service = new Intent("jf.andro.scenarioservice");
-                stopService(service);
-            }
-        });
-
-        Button startCC = (Button) findViewById(R.id.starttransmission);
-        startCC.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
-
-                CcStatus status = CcStatus.START;
-                CcMethod method = CcMethod.VOLUME_MUSIC;
-                CcSync sync = CcSync.BROADCAST_RECEIVER;
-                CcType type = CcType.MESSAGE;
-                int interval = 20;
-                int iterations = 1;
-
-                CcInfo info = new CcInfo(status, method, iterations, type, interval, sync);
-                CcSenderItem item = new CcSenderItem("JFL", info);
-
-                intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
-
-                Log.w("JFL", "Starting CC transmission !");
-                sendBroadcast(intent);
-            }
-        });
 
         Button xpCC100 = (Button) findViewById(R.id.startCC100);
         xpCC100.setOnClickListener(new OnClickListener() {
