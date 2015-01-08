@@ -96,36 +96,12 @@ public class JFLApp extends Activity {
                 CcInfo info = new CcInfo(status, method, iterations, type, interval, sync);
                 CcSenderItem item = new CcSenderItem("JFL", info);
 
-//				int message_size = 5;
-//				ScenarioService.setCCDataScheduled(message_size);
-//				intent.putExtra(Const.EXTRA_TYPE, Const.TYPE_TEST);
-//				// Nb numbers sent
-//				intent.putExtra(Const.EXTRA_TEST_ITERATIONS, message_size);
-
                 intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
 
                 Log.w("JFL", "Starting CC transmission !");
                 sendBroadcast(intent);
             }
         });
-
-//		Button xpIDLE = (Button)findViewById(R.id.startidle);
-//		xpIDLE.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//						Intent service = new Intent("jf.andro.scenarioservice");
-//						service.putExtra("scenario", 1);
-//						startService(service);
-//			}
-//		});
-//		
-//		Button xpCC1 = (Button)findViewById(R.id.startCC1);
-//		xpCC1.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//						Intent service = new Intent("jf.andro.scenarioservice");
-//						service.putExtra("scenario", 2);
-//						startService(service);
-//			}
-//		});
 
         Button xpCC100 = (Button) findViewById(R.id.startCC100);
         xpCC100.setOnClickListener(new OnClickListener() {
@@ -176,19 +152,7 @@ public class JFLApp extends Activity {
             }
         });
 
-        //updateReport();
 
-
-    }
-
-    public void updateReport() {
-        Energy e = EnergyReader.readLastEnergy();
-        ((TextView) findViewById(R.id.current)).setText("Current now: " + e.current_now + " mA");
-        ((TextView) findViewById(R.id.level)).setText("Level: " + e.capacity + " %");
-        ((TextView) findViewById(R.id.voltage)).setText("Battery voltage: " + e.voltage_now + " V");
-        ((TextView) findViewById(R.id.isCharging)).setText("Charging: " + e.charge_now);
-        ((TextView) findViewById(R.id.energyReceiver)).setText("Stegano Receiver: " + e.receiverEnergy + " mJ");
-        ((TextView) findViewById(R.id.energySender)).setText("Stegano Sender: " + e.senderEnergy + " mJ");
     }
 
     @Override
