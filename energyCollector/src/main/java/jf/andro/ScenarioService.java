@@ -3,9 +3,9 @@ package jf.andro;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -19,7 +19,6 @@ import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
 import com.steganomobile.common.sender.model.CcType;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +36,6 @@ public class ScenarioService extends Service {
     // The id of the used Covert Channels
     private int idCC;
     private String email;
-    private String TAG = ScenarioService.class.getSimpleName();
 
     public synchronized static int getCCDataScheduled() {
         return getCCDataScheduled.length() / nbXP;
@@ -69,7 +67,8 @@ public class ScenarioService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // KEEP CPU RUNNING !
-        PowerManager pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
         wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "JFL");
         wl.acquire();
 
@@ -85,7 +84,7 @@ public class ScenarioService extends Service {
         email = extras.getString("email");
         idCC = extras.getInt("idCC");
 
-        Thread t = null;
+        Thread t;
 
         // SCENARIOS
         // *********
@@ -99,11 +98,10 @@ public class ScenarioService extends Service {
                     public void run() {
                         try {
                             // Parameters for randomness
-                            Random r = new Random();
                             int message_size_max = 5; //1000; // Size max 1000 Bytes
 
                             // Sleep a little before starting the energy recording
-                            sleep(1 * 1000);
+                            sleep(1000);
 
                             // Starting Energy Collector Service for logging
                             Intent service = new Intent("jf.andro.energyservice");
