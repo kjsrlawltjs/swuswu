@@ -84,7 +84,6 @@ public class ScenarioService extends Service {
         nbXP = extras.getInt("nbXP");
         email = extras.getString("email");
         idCC = extras.getInt("idCC");
-        RedFlashLight();
 
         Thread t = null;
 
@@ -116,6 +115,8 @@ public class ScenarioService extends Service {
                             // Short sleep before starting
                             sleep(2 * 1000);
 
+                            RedFlashLight();
+
                             if (!idleCC) // IDLE the stegano transmission
                             {
                                 String data = generate(nbXP * message_size_max, 1); // seed is fixed to 1
@@ -135,8 +136,8 @@ public class ScenarioService extends Service {
                                 // interval is time between synchronization step in stegano system.
                                 // 200 [ms] is some kind of universal number, because it is the lowest number
                                 // which will provide good accuracy for all CCs
-                                //int interval = 200;
-                                int interval = 10;
+                                int interval = 200;
+                                //int interval = 10;
                                 CcType type = CcType.MESSAGE;
                                 CcSync sync = CcSync.BROADCAST_RECEIVER;
                                 CcInfo info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
