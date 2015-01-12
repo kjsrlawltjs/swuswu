@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,14 +15,6 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcInfo;
-import com.steganomobile.common.sender.model.CcMethod;
-import com.steganomobile.common.sender.model.CcSenderItem;
-import com.steganomobile.common.sender.model.CcStatus;
-import com.steganomobile.common.sender.model.CcSync;
-import com.steganomobile.common.sender.model.CcType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,20 +26,13 @@ public class JFLApp extends Activity {
 
     private static final String TAG = JFLApp.class.getSimpleName();
     protected BroadcastReceiver endReceiver;
-    private SteganoReceiver sr;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jfllayout3);
-
-        // Prepare receiver response
-        IntentFilter mIntentFilter = new IntentFilter();
-        sr = new SteganoReceiver();
-        mIntentFilter.addAction(Const.ACTION_FINISH_RECEIVER_CC);
-        mIntentFilter.addAction(Const.ACTION_START_STEGANO);
-        registerReceiver(sr, mIntentFilter);
 
         // Register new receiver for the end
         endReceiver = new BroadcastReceiver() {
@@ -106,14 +90,6 @@ public class JFLApp extends Activity {
             }
         });
 
-        Button stopScenario = (Button) findViewById(R.id.stopscenarios);
-        stopScenario.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Intent service = new Intent("jf.andro.scenarioservice");
-                stopService(service);
-            }
-        });
-
 
     }
 
@@ -126,6 +102,5 @@ public class JFLApp extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(endReceiver);
-        unregisterReceiver(sr);
     }
 }

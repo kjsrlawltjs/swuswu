@@ -27,34 +27,42 @@ import java.util.Random;
 
 public class ScenarioService extends Service {
 
-    // How many data the CC should transmit
-    private static int getCCDataScheduled = 0;
-    // The md5 sum of the transmitted message
-    private static String md5Message = "";
+    // The data to transmit
+    private static String getCCDataScheduled = "";
     // If the covert channels CC should be disabled for these XP
     private static boolean idleCC = false;
     private PowerManager.WakeLock wl;
     // The number of XP to perform
-    private int nbXP;
+    private static int nbXP;
     // The id of the used Covert Channels
     private int idCC;
     private String email;
     private String TAG = ScenarioService.class.getSimpleName();
 
     public synchronized static int getCCDataScheduled() {
-        int tmp = getCCDataScheduled;
-        getCCDataScheduled = 0;
-        return tmp;
+        return getCCDataScheduled.length() / nbXP;
     }
 
-    public synchronized static void setCCDataScheduled(int nbdata, String md5) {
-        Log.i("JFL", "Some data is scheduled to send !");
-        getCCDataScheduled = nbdata;
-        md5Message = md5;
+    public synchronized static void setCCDataScheduled(String data) {
+        if (!data.equals(""))
+            Log.i("JFL", "Some data is scheduled to send: " + nbXP + " x " + getCCDataScheduled());
+        getCCDataScheduled = data;
     }
 
-    public static String getCCDataScheduledMd5() {
-        return md5Message;
+    public static String getCCDataScheduledMd5(int currentsubpart) {
+        //Log.w("JFL", "Getting chunk "+ (currentsubpart+1) + " over " + nbXP);
+        int chunk_length = getCCDataScheduled.length() / nbXP;
+        String data = getCCDataScheduled.substring(chunk_length * (currentsubpart), chunk_length * (currentsubpart + 1));
+        //Log.w("JFL", "Computing md5 on message "+ data);
+        String md5 = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(data.getBytes(), 0, data.length());
+            md5 = new BigInteger(1, md.digest()).toString(16); // Hashed
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("JFL", "No such algorithme exception ! " + e);
+        }
+        return md5;
     }
 
     @Override
@@ -66,7 +74,7 @@ public class ScenarioService extends Service {
         wl.acquire();
 
         // Reset somes values
-        setCCDataScheduled(0, "");
+        setCCDataScheduled("");
 
         // Tell the user we start
         Toast.makeText(this, "START SCENARIO: Switch off the SCREEN !", Toast.LENGTH_SHORT).show();
@@ -86,13 +94,6 @@ public class ScenarioService extends Service {
 
             case 3:
 
-                File root = Environment.getExternalStorageDirectory();
-                for (int i = 0; i <= 100; i++) {
-                    String numberOfTests = String.format("%03d", i);
-                    File file = new File(root, numberOfTests + "_" + EnergyLoggerService.filenameFinal);
-                    file.delete();
-                }
-
                 t = new Thread() {
 
                     @Override
@@ -105,12 +106,9 @@ public class ScenarioService extends Service {
                             // Sleep a little before starting the energy recording
                             sleep(1 * 1000);
 
-                            // Choose a random number of messages to send
-                            int nb_message = 1; // + r.nextInt(nb_messages_max);
-
                             // Starting Energy Collector Service for logging
                             Intent service = new Intent("jf.andro.energyservice");
-                            service.putExtra("nbTest", nb_message);
+                            service.putExtra("nbTest", nbXP);
                             service.putExtra("email", email);
                             service.putExtra("idCC", idCC);
                             startService(service);
@@ -120,28 +118,20 @@ public class ScenarioService extends Service {
 
                             if (!idleCC) // IDLE the stegano transmission
                             {
-                                String data = generate(message_size_max, nb_message);
-                                // Pick a random size for the message to transmit
-                                int size_data = data.length() * 8; // bits
+                                String data = generate(nbXP * message_size_max, 1); // seed is fixed to 1
+                                int size_data = message_size_max * 8; // bits
 
-                                String md5 = null;
-                                try {
-                                    MessageDigest md = MessageDigest.getInstance("MD5");
-                                    md.update(data.getBytes(), 0, data.length());
-                                    md5 = new BigInteger(1, md.digest()).toString(16); // Hashed
-                                } catch (NoSuchAlgorithmException e) {
-                                    e.printStackTrace();
-                                }
-                                Log.i("JFL", "Sending  message " + nb_message + " of size " + size_data / 8 + " Bytes (" + size_data + " bits): " + md5);
-                                setCCDataScheduled(size_data, md5);
+
+                                Log.i("JFL", "Sending " + nbXP + " messages of size " + size_data / 8 + " Bytes (" + size_data + " bits)");
+                                setCCDataScheduled(data);
                                 // Send the intent that asks the Stegano sender to transmit !
 
                                 Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
                                 CcMethod method = CcMethod.getFromInt(idCC + 1);
-                                Log.w("JFL", String.format("Using %s method!", CcMethod.NAMES[method.getValue()]));
+                                Log.i("JFL", String.format("Using %s method!", CcMethod.NAMES[method.getValue()]));
 
                                 // iterations = 2, means that CC will be activated 2 times.
-                                int iterations = nbXP;
+                                int iterations = nbXP; // We activate only one time the CC.
                                 // interval is time between synchronization step in stegano system.
                                 // 200 [ms] is some kind of universal number, because it is the lowest number
                                 // which will provide good accuracy for all CCs
@@ -150,7 +140,12 @@ public class ScenarioService extends Service {
                                 CcType type = CcType.MESSAGE;
                                 CcSync sync = CcSync.BROADCAST_RECEIVER;
                                 CcInfo info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+
+
                                 CcSenderItem item = new CcSenderItem(data, info);
+                                item.setSendsubparts(nbXP); // Used to ask the CC sender to send a subpart of the message
+                                // for example if the message is ABCDEF and there is 3 iteration to do
+                                // then for iteration 1, send AB then for iteration 2 send CD, and then EF.
                                 intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);
                                 sendBroadcast(intent);
                             }

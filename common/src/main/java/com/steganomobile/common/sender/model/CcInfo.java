@@ -17,6 +17,8 @@ public class CcInfo implements Parcelable, BaseColumns {
     private int interval = NO_VALUE;
     private int port = NO_VALUE;
 
+
+
     public static Parcelable.Creator<CcInfo> CREATOR = new Parcelable.Creator<CcInfo>() {
         public CcInfo createFromParcel(Parcel parcel) {
             return new CcInfo(parcel);
@@ -56,6 +58,7 @@ public class CcInfo implements Parcelable, BaseColumns {
         this.status = status;
         this.sync = sync;
     }
+
 
     @Override
     public int describeContents() {

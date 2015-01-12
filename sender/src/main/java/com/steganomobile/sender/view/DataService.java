@@ -61,6 +61,7 @@ public class DataService extends IntentService {
         }
 
         for (int i = 1; i <= iterations; i++) {
+            item.setCurrentsubpart(i); // indicates the number of the current XP
             start(i, item.getInfo());
             waitToStart();
             sendBroadcast(new Intent(Const.ACTION_START_STEGANO));
@@ -76,7 +77,7 @@ public class DataService extends IntentService {
         synchronized (this) {
             try {
                 Random r = new Random();
-                wait(60 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM) * 1000);
+                wait((5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM)) * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -87,7 +88,7 @@ public class DataService extends IntentService {
         synchronized (this) {
             try {
                 Random r = new Random();
-                wait(60 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM) * 1000);
+                wait((5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM)) * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -107,6 +108,7 @@ public class DataService extends IntentService {
         CcImpl cc = getMethod(item.getInfo());
         CcSegment segment = item.getInfo().getName().getSegment();
         int interval = item.getInfo().getInterval();
+        Log.w("JFL", "In sender sending the message: " + item.getData());
 
         for (byte element : DataConverter.getData(item.getData(), segment)) {
             cc.sendCc(this, element);

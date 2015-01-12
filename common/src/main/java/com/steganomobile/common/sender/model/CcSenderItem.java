@@ -18,6 +18,18 @@ public class CcSenderItem implements Parcelable {
     private String data;
     private CcInfo info;
 
+    // Used to ask to send a subpart of the message for each iteration
+    // for example if the message is ABCDEF and there is 3 iteration to do
+    // then for iteration 1, send AB then for iteration 2 send CD, and then EF.
+    private int sendsubparts = 0;
+
+    private int currentsubpart = -1; // 1 to N
+
+    public void setCurrentsubpart(int currentsubpart) {
+        this.currentsubpart = currentsubpart;
+    }
+
+
     public CcSenderItem(String data, CcInfo info) {
         this.data = data;
         this.info = info;
@@ -29,7 +41,14 @@ public class CcSenderItem implements Parcelable {
     }
 
     public String getData() {
-        return data;
+        if (sendsubparts == 0)
+            return data;
+        else {
+            // There is sendsubparts XP to perform
+            int chunk_length = data.length() / sendsubparts;
+            return data.substring(chunk_length * (currentsubpart - 1), chunk_length * (currentsubpart));
+        }
+
     }
 
     public void setData(String data) {
@@ -50,4 +69,10 @@ public class CcSenderItem implements Parcelable {
     public CcInfo getInfo() {
         return info;
     }
+
+
+    public void setSendsubparts(int sendsubparts) {
+        this.sendsubparts = sendsubparts;
+    }
+
 }

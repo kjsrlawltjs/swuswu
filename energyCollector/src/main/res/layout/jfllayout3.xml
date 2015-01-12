@@ -8,12 +8,14 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <Button
-        android:id="@+id/stopscenarios"
+        android:id="@+id/startCC100"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/startCC100"
-        android:text="Stop scenario" />
+        android:text="Launch"
+        android:layout_above="@+id/activateCC"
+        android:layout_alignRight="@+id/activateCC"
+        android:layout_alignEnd="@+id/activateCC" />
 
     <EditText
         android:id="@+id/nbXP"
@@ -24,20 +26,8 @@
         android:layout_weight="1"
         android:ems="10"
         android:inputType="number"
-        android:text="1"
+        android:text="2"
         android:layout_above="@+id/emailText"></EditText>
-
-    <Button
-        android:id="@+id/startCC100"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/activateCC"
-        android:layout_alignLeft="@+id/activateCC"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignStart="@+id/activateCC"
-        android:text="XP CC100" />
 
     <CheckBox
         android:id="@+id/activateCC"
@@ -85,7 +75,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/stopscenarios"
+        android:layout_above="@+id/startCC100"
         android:focusable="true">
 
         <RadioGroup
