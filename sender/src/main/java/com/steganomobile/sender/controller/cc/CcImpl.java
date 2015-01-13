@@ -14,7 +14,7 @@ public abstract class CcImpl implements Cc {
 
     @Override
     public void sendCc(Context context, int element) {
-        Log.i(TAG, "Sent " + element);
+        //Log.v(TAG, "Sent " + element);
     }
 
     @Override

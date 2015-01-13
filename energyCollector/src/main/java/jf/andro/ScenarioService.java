@@ -42,15 +42,17 @@ public class ScenarioService extends Service {
     }
 
     public synchronized static void setCCDataScheduled(String data) {
+        getCCDataScheduled = data;
         if (!data.equals(""))
             Log.i("JFL", "Some data is scheduled to send: " + nbXP + " x " + getCCDataScheduled());
-        getCCDataScheduled = data;
     }
 
     public static String getCCDataScheduledMd5(int currentsubpart) {
+        if (currentsubpart > nbXP || currentsubpart < 1)
+            return "";
         //Log.w("JFL", "Getting chunk "+ (currentsubpart+1) + " over " + nbXP);
         int chunk_length = getCCDataScheduled.length() / nbXP;
-        String data = getCCDataScheduled.substring(chunk_length * (currentsubpart), chunk_length * (currentsubpart + 1));
+        String data = getCCDataScheduled.substring(chunk_length * (currentsubpart-1), chunk_length * (currentsubpart));
         //Log.w("JFL", "Computing md5 on message "+ data);
         String md5 = null;
         try {
@@ -113,8 +115,6 @@ public class ScenarioService extends Service {
                             // Short sleep before starting
                             sleep(2 * 1000);
 
-                            RedFlashLight();
-
                             if (!idleCC) // IDLE the stegano transmission
                             {
                                 String data = generate(nbXP * message_size_max, 1); // seed is fixed to 1
@@ -172,19 +172,6 @@ public class ScenarioService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-    private void RedFlashLight() {
-        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Notification notif = new Notification();
-        notif.ledARGB = 0xFFff0000;
-        notif.flags = Notification.FLAG_SHOW_LIGHTS;
-        notif.ledOnMS = 100;
-        notif.ledOffMS = 100;
-        int LED_NOTIFICATION_ID = 0;
-        nm.notify(LED_NOTIFICATION_ID, notif);
-    }
-
-
 
     public String generate(int message_size_max, int seed) {
         String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // Tu supprimes les lettres dont tu ne veux pas

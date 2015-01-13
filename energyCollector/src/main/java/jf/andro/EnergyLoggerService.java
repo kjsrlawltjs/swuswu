@@ -95,7 +95,7 @@ public class EnergyLoggerService extends Service {
         filter.addAction(Const.ACTION_START_STEGANO);
         registerReceiver(steganoReceiver, filter);
 
-        testCounter = 0;
+
     }
 
     @Override
@@ -130,6 +130,7 @@ public class EnergyLoggerService extends Service {
             timer.cancel();
 
         Log.i("JFL", "Service STARTED !");
+        testCounter = 1;
 
         // Read one time for purging energies
         EnergyReader.readEnergyValues();
@@ -370,6 +371,18 @@ public class EnergyLoggerService extends Service {
             nm.notify(LED_NOTIFICATION_ID, notif);
         }
 
+
+        private void RedFlashLight(Context context) {
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notif = new Notification();
+            notif.ledARGB = 0xFFff0000;
+            notif.flags = Notification.FLAG_SHOW_LIGHTS;
+            notif.ledOnMS = 100;
+            notif.ledOffMS = 100;
+            int LED_NOTIFICATION_ID = 0;
+            nm.notify(LED_NOTIFICATION_ID, notif);
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -379,22 +392,31 @@ public class EnergyLoggerService extends Service {
                 printHeader = false;
                 EnergyLoggerService.finished++; // for detecting the end when logging
                 Log.i("JFL", "End of one stegano transmission in " + item.getMessage().getTime().getDuration() + " ms");
+                BlueLightOn();
             }
             if (Const.ACTION_FINISH_STEGANO.equals(intent.getAction())) {
                 writeToFile(processEnergyData(), energyFile);
-                testCounter++;
+                Intent counterNotif = new Intent("jf.andro.counterIncrement");
+                counterNotif.putExtra("counter", testCounter);
+                sendBroadcast(counterNotif);
                 Log.i("JFL", "Done: " + testCounter + " XP over " + EnergyLoggerService.nbTest);
+                testCounter++;
             }
             if (Const.ACTION_START_STEGANO.equals(intent.getAction())) {
                 Log.i("JFL", "Start of stegano transmission !");
                 started++; // for detecting the beginning when logging
+                RedFlashLight(context);
             }
 
-            if (testCounter == EnergyLoggerService.nbTest) {
+            if (testCounter > EnergyLoggerService.nbTest) {
                 sendEmail(email);
                 Log.i("JFL", String.format("All XP finished: stopping the logger service."));
                 Intent serviceLogger = new Intent("jf.andro.scenarioservice");
                 stopService(serviceLogger);
+
+                Intent endDate = new Intent("jf.andro.endScenario");
+                sendBroadcast(endDate);
+
                 GreenFlashLight(context);
 
                 Methods.playSound(context);

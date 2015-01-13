@@ -63,6 +63,7 @@ public class DataService extends IntentService {
         for (int i = 1; i <= iterations; i++) {
             item.setCurrentsubpart(i); // indicates the number of the current XP
             start(i, item.getInfo());
+
             waitToStart();
             sendBroadcast(new Intent(Const.ACTION_START_STEGANO));
             send(item);
@@ -77,7 +78,9 @@ public class DataService extends IntentService {
         synchronized (this) {
             try {
                 Random r = new Random();
-                wait((5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM)) * 1000);
+                int rt = (5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM));
+                Log.i("CCDataService", "Waiting random time before ending: " + rt + "s...");
+                wait(rt* 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -88,7 +91,9 @@ public class DataService extends IntentService {
         synchronized (this) {
             try {
                 Random r = new Random();
-                wait((5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM)) * 1000);
+                int rt = (5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM));
+                Log.i("CCDataService", "Waiting random time before starting: " + rt + "s...");
+                wait(rt * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -101,6 +106,7 @@ public class DataService extends IntentService {
         CcStatus status = CcStatus.FINISH;
         CcSync sync = info.getSync();
         statusIntent.putExtra(Const.EXTRA_CC_INFO, new CcInfo(status, sync));
+        Log.i("CCDataService", "Ultimate broadcast ACTION_INFO");
         sendBroadcast(statusIntent);
     }
 
@@ -108,7 +114,7 @@ public class DataService extends IntentService {
         CcImpl cc = getMethod(item.getInfo());
         CcSegment segment = item.getInfo().getName().getSegment();
         int interval = item.getInfo().getInterval();
-        Log.w("JFL", "In sender sending the message: " + item.getData());
+        Log.i("CCDataService", "In sender sending the message: " + item.getData());
 
         for (byte element : DataConverter.getData(item.getData(), segment)) {
             cc.sendCc(this, element);

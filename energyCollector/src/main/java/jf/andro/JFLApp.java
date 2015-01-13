@@ -26,6 +26,8 @@ public class JFLApp extends Activity {
 
     private static final String TAG = JFLApp.class.getSimpleName();
     protected BroadcastReceiver endReceiver;
+    protected BroadcastReceiver counterReceiver;
+
 
 
     @Override
@@ -40,13 +42,23 @@ public class JFLApp extends Activity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 TextView endDate = (TextView) findViewById(R.id.endDate);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
                 Date date = new Date();
                 endDate.setText(dateFormat.format(date));
             }
         };
         registerReceiver(endReceiver, new IntentFilter("jf.andro.endScenario"));
 
+        counterReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                TextView counter = (TextView) findViewById(R.id.counter);
+                int c = intent.getIntExtra("counter",-1);
+               counter.setText("" + c);
+            }
+        };
+        registerReceiver(counterReceiver, new IntentFilter("jf.andro.counterIncrement"));
 
 
         Button xpCC100 = (Button) findViewById(R.id.startCC100);
@@ -63,7 +75,7 @@ public class JFLApp extends Activity {
                     // Updating UI for end/start dates
                     TextView startDate = (TextView) findViewById(R.id.startDate);
                     TextView endDate = (TextView) findViewById(R.id.endDate);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
                     Date date = new Date();
                     startDate.setText(dateFormat.format(date));
                     endDate.setText("***");
@@ -102,5 +114,6 @@ public class JFLApp extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(endReceiver);
+        unregisterReceiver(counterReceiver);
     }
 }
