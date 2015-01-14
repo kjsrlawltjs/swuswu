@@ -14,7 +14,7 @@ public abstract class CcImplSender implements CcSender {
 
     @Override
     public void onSend(Context context, int element) {
-        Log.i(TAG, "Sent " + element);
+        // Log.i(TAG, "Sent " + element);
     }
 
     @Override

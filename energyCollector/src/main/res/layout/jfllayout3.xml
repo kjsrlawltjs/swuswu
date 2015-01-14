@@ -8,70 +8,26 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <Button
-        android:id="@+id/startservice"
+        android:id="@+id/startCC100"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/emailText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Start" />
-
-    <Button
-        android:id="@+id/stopservice"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/emailText"
-        android:layout_toEndOf="@+id/startservice"
-        android:layout_toRightOf="@+id/startservice"
-        android:text="Stop" />
-
-    <Button
-        android:id="@+id/starttransmission"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/stopservice"
-        android:layout_toEndOf="@+id/stopservice"
-        android:layout_toRightOf="@+id/stopservice"
-        android:text="Test" />
-
-    <Button
-        android:id="@+id/stopscenarios"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/startCC100"
-        android:layout_toEndOf="@+id/startservice"
-        android:layout_toRightOf="@+id/startservice"
-        android:text="Stop scenario" />
+        android:text="Launch"
+        android:layout_above="@+id/activateCC"
+        android:layout_alignRight="@+id/activateCC"
+        android:layout_alignEnd="@+id/activateCC" />
 
     <EditText
         android:id="@+id/nbXP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/startservice"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/stopservice"
-        android:layout_toStartOf="@+id/stopservice"
         android:layout_weight="1"
         android:ems="10"
         android:inputType="number"
-        android:text="1"></EditText>
-
-    <Button
-        android:id="@+id/startCC100"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/activateCC"
-        android:layout_alignLeft="@+id/activateCC"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignStart="@+id/activateCC"
-        android:text="XP CC100" />
+        android:text="2"
+        android:layout_above="@+id/emailText"></EditText>
 
     <CheckBox
         android:id="@+id/activateCC"
@@ -80,9 +36,6 @@
         android:layout_above="@+id/emailText"
         android:layout_alignEnd="@+id/endDate"
         android:layout_alignRight="@+id/endDate"
-        android:layout_alignTop="@+id/starttransmission"
-        android:layout_toEndOf="@+id/starttransmission"
-        android:layout_toRightOf="@+id/starttransmission"
         android:checked="true"
         android:text="Activate CC" />
 
@@ -122,7 +75,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/stopscenarios"
+        android:layout_above="@+id/startCC100"
         android:focusable="true">
 
         <RadioGroup
@@ -216,5 +169,14 @@
 
         </RadioGroup>
     </ScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="*"
+        android:id="@+id/counter"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -57,6 +57,7 @@ public class CcSenderInfo implements Parcelable, BaseColumns {
         this.sync = sync;
     }
 
+
     @Override
     public int describeContents() {
         return 0;

@@ -55,30 +55,47 @@ public class EnergyLoggerService extends Service {
     private Timer timer = null;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
     private String numberOfTests = "000";
+    private static int nbTest = -1;
     private String email;
     private Vector<Integer> uidIndex = null;
     private int idCC;
     private File energyFile;
     private File infoFile;
     private File root = Environment.getExternalStorageDirectory();
-    private EnergyLoggerStopReceiver stopReceiver;
     private SteganoStopReceiver steganoReceiver;
     private ArrayList<Pair<String, CcReceiverItem>> results = new ArrayList<Pair<String, CcReceiverItem>>();
     private int testCounter = 0;
-    private int testNumber = -1;
+
+    public static int finished = 0;
+    public static int started = 0;
+
+    public synchronized static String isFinishedTrue() {
+        if (finished > 0) {
+            finished = 0;
+            return "1";
+        }
+        return "0";
+    }
+
+    public synchronized static String isStartedTrue() {
+        if (started > 0) {
+            started = 0;
+            return "1";
+        }
+        return "0";
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        stopReceiver = new EnergyLoggerStopReceiver();
-        registerReceiver(stopReceiver, new IntentFilter(ACTION_STOP_SERVICE));
 
         steganoReceiver = new SteganoStopReceiver();
         IntentFilter filter = new IntentFilter(Const.ACTION_FINISH_RECEIVER_CC);
         filter.addAction(Const.ACTION_FINISH_STEGANO);
+        filter.addAction(Const.ACTION_START_STEGANO);
         registerReceiver(steganoReceiver, filter);
 
-        testCounter = 0;
+
     }
 
     @Override
@@ -95,7 +112,7 @@ public class EnergyLoggerService extends Service {
         // Getting the numbering of the current test if any
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            int nbTest = extras.getInt("nbTest");
+            nbTest = extras.getInt("nbTest");
             numberOfTests = String.format("%03d", nbTest);
             email = extras.getString("email");
             idCC = extras.getInt("idCC") + 1;
@@ -112,12 +129,13 @@ public class EnergyLoggerService extends Service {
         if (timer != null)
             timer.cancel();
 
-        Log.w("JFL", "Service STARTED !");
+        Log.i("JFL", "Service STARTED !");
+        testCounter = 1;
 
         // Read one time for purging energies
         EnergyReader.readEnergyValues();
         ScenarioService.getCCDataScheduled();
-        SteganoReceiver.isFinishedTrue();
+        EnergyLoggerService.isFinishedTrue();
         PowerTutorReceiver.getUIDEnergy();
         PowerTutorReceiver.getUIDNames();
         File file = new File(root, filename);
@@ -150,11 +168,12 @@ public class EnergyLoggerService extends Service {
                         e.deltaCpu + SEP;
 
                 int hiddenDataSend = ScenarioService.getCCDataScheduled();
-                String started = SteganoReceiver.isStartedTrue();
-                String md5 = ScenarioService.getCCDataScheduledMd5();
+                String started = EnergyLoggerService.isStartedTrue();
+                String md5 = ScenarioService.getCCDataScheduledMd5(testCounter);
+                //Log.w("JFL", "Logging md5 " + md5);
                 values += started + SEP;
-                values += SteganoReceiver.isFinishedTrue() + SEP;
-                values += hiddenDataSend + SEP;
+                values += EnergyLoggerService.isFinishedTrue() + SEP;
+                values += "1".equals(started) ? hiddenDataSend + SEP : SEP;
                 values += "1".equals(started) ? md5 : "";
 
                 HashMap<Integer, Integer> h = PowerTutorReceiver.getUIDEnergy();
@@ -204,34 +223,6 @@ public class EnergyLoggerService extends Service {
                 uidEnergies += "\n";
                 values += uidEnergies;
 
-//				String uidEnergies = "";
-//				// We search for power of already known UIDs
-//				for(int uidKnown : uidIndex)
-//				{
-//					Integer energyUID = h.get(uidKnown);
-//					if (energyUID != null)
-//					{ // This already seen uid process has some value
-//						uidEnergies += energyUID.toString() + SEP;
-//						h.remove(uidKnown);
-//					}
-//					else
-//					{
-//						uidEnergies += SEP;
-//					}
-//				}
-//
-//				// Here we deal with not known UIDs that remains in h
-//				for(int uid : h.keySet())
-//				{
-//					Integer energy = h.get(uid);
-//					uidIndex.add(uid);
-//					uidNames.add(hname.get(uid));
-//					uidEnergies += energy.toString() + SEP;				
-//				}
-//				uidEnergies += "\n";
-//
-//				values += uidEnergies;
-
                 File file = new File(root, filename);
 
                 try {
@@ -256,7 +247,6 @@ public class EnergyLoggerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(steganoReceiver);
-        unregisterReceiver(stopReceiver);
     }
 
     @Override
@@ -292,41 +282,6 @@ public class EnergyLoggerService extends Service {
             FileWriter filewriter = new FileWriter(file, true);
             BufferedWriter out = new BufferedWriter(filewriter);
             out.write(data);
-//			out.write(";;;;;;;UIDs;");
-//			// We search for power of already known UIDs
-//			String uids="";
-//			for(int uidKnown : uidIndex)
-//			{
-//				uids += uidKnown + SEP;
-//
-//			}
-//
-//			out.write(uids + "\n");
-
-            // ++ out.write();
-//			String uidsnames="";
-//			for(String uidNameKnown : uidNames)
-//			{
-//				uidsnames += uidNameKnown + SEP;
-//			}
-//			out.write(uidsnames + "\n");
-
-//            ++++
-//            SharedPreferences seenApps = getApplicationContext().getSharedPreferences("apps", Context.MODE_PRIVATE);
-//            int nbAppTotal = seenApps.getInt("nbAppTotal", 0);
-//
-//            Map<String, Integer> map = (Map<String, Integer>) seenApps.getAll();
-//            HashMap<Integer, String> nbToNameApp = new HashMap<Integer, String>();
-//            for (String eachApp : map.keySet()) {
-//                if (!eachApp.equals("nbAppTotal"))
-//                    nbToNameApp.put(map.get(eachApp), eachApp);
-//            }
-//
-//            for (int eachApp = 1; eachApp <= nbAppTotal; eachApp++) {
-//                out.write(SEP + nbToNameApp.get(eachApp));
-//            }
-//            out.write("\n");
-
             out.close();
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -345,7 +300,7 @@ public class EnergyLoggerService extends Service {
     }
 
     private String processEnergyData() {
-        String header = "\n\nDate" + SEP + "Current now" + SEP + "Level%" + SEP + "Voltage" + SEP +
+        String header = "\nDate" + SEP + "Current now" + SEP + "Level%" + SEP + "Voltage" + SEP +
                 "Charging" + SEP + "Memory" + SEP + "ReadCPU" + SEP + "DeltaCPU" + SEP +
                 "StartCC" + SEP + "EndCC" + SEP + "HiddenDataSent" + SEP + "MessageMd5";
 
@@ -399,22 +354,34 @@ public class EnergyLoggerService extends Service {
         }
     }
 
-    public class EnergyLoggerStopReceiver extends BroadcastReceiver {
-        public EnergyLoggerStopReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (EnergyLoggerService.ACTION_STOP_SERVICE.equals(intent.getAction())) {
-                testNumber = intent.getIntExtra(Const.EXTRA_TEST_NUMBER, -1);
-            }
-        }
-    }
 
     public class SteganoStopReceiver extends BroadcastReceiver {
 
         private final String TAG = SteganoStopReceiver.class.getSimpleName();
         private boolean printHeader = true;
+
+        private void GreenFlashLight(Context context) {
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notif = new Notification();
+            notif.ledARGB = 0xFF00ff00;
+            notif.flags = Notification.FLAG_SHOW_LIGHTS;
+            notif.ledOnMS = 100;
+            notif.ledOffMS = 100;
+            int LED_NOTIFICATION_ID = 0;
+            nm.notify(LED_NOTIFICATION_ID, notif);
+        }
+
+
+        private void RedFlashLight(Context context) {
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notif = new Notification();
+            notif.ledARGB = 0xFFff0000;
+            notif.flags = Notification.FLAG_SHOW_LIGHTS;
+            notif.ledOnMS = 100;
+            notif.ledOffMS = 100;
+            int LED_NOTIFICATION_ID = 0;
+            nm.notify(LED_NOTIFICATION_ID, notif);
+        }
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -423,15 +390,35 @@ public class EnergyLoggerService extends Service {
                 CcReceiverItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_RECEIVER_CC);
                 writeToFile(item.print(SEP, printHeader, true), infoFile);
                 printHeader = false;
-                Toast.makeText(context, "Finished in " + item.getMessage().getTime().getDuration() + " ms", Toast.LENGTH_LONG).show();
-            } else if (Const.ACTION_FINISH_STEGANO.equals(intent.getAction())) {
+                EnergyLoggerService.finished++; // for detecting the end when logging
+                Log.i("JFL", "End of one stegano transmission in " + item.getMessage().getTime().getDuration() + " ms");
+                BlueLightOn();
+            }
+            if (Const.ACTION_FINISH_STEGANO.equals(intent.getAction())) {
                 writeToFile(processEnergyData(), energyFile);
+                Intent counterNotif = new Intent("jf.andro.counterIncrement");
+                counterNotif.putExtra("counter", testCounter);
+                sendBroadcast(counterNotif);
+                Log.i("JFL", "Done: " + testCounter + " XP over " + EnergyLoggerService.nbTest);
                 testCounter++;
             }
+            if (Const.ACTION_START_STEGANO.equals(intent.getAction())) {
+                Log.i("JFL", "Start of stegano transmission !");
+                started++; // for detecting the beginning when logging
+                RedFlashLight(context);
+            }
 
-            if (testCounter == testNumber) {
+            if (testCounter > EnergyLoggerService.nbTest) {
                 sendEmail(email);
-                Log.w("JFL", "Service STOPPED !");
+                Log.i("JFL", String.format("All XP finished: stopping the logger service."));
+                Intent serviceLogger = new Intent("jf.andro.scenarioservice");
+                stopService(serviceLogger);
+
+                Intent endDate = new Intent("jf.andro.endScenario");
+                sendBroadcast(endDate);
+
+                GreenFlashLight(context);
+
                 Methods.playSound(context);
                 timer.cancel();
                 wl.release();

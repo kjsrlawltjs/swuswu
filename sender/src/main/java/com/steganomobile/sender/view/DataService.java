@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -28,6 +29,12 @@ import com.steganomobile.sender.controller.cc.UnixSocketDiscoverySender;
 import com.steganomobile.sender.controller.cc.UsageTrendSender;
 import com.steganomobile.sender.controller.cc.VolumeSettingsSender;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 public class DataService extends IntentService {
@@ -41,16 +48,22 @@ public class DataService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        running = true;
-        BroadcastReceiver stopReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (Const.ACTION_FORCE_STOP.equals(intent.getAction())) {
-                    running = false;
-                }
-            }
-        };
-        registerReceiver(stopReceiver, new IntentFilter(Const.ACTION_FORCE_STOP));
+
+        //try
+        //{
+
+// What is that ? I Had error with this (leaked intent)
+//        running = true;
+//        BroadcastReceiver stopReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                if (Const.ACTION_FORCE_STOP.equals(intent.getAction())) {
+//                    running = false;
+//                }
+//            }
+//        };
+//
+//        registerReceiver(stopReceiver, new IntentFilter(Const.ACTION_FORCE_STOP));
         CcSenderItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_SENDER_CC);
         int iterations = item.getInfo().getIterations();
 
@@ -61,7 +74,9 @@ public class DataService extends IntentService {
         }
 
         for (int i = 1; i <= iterations; i++) {
+            item.setCurrentsubpart(i); // indicates the number of the current XP
             start(i, item.getInfo());
+            if (i > 0)
             waitToStart();
             sendBroadcast(new Intent(Const.ACTION_START_STEGANO));
             send(item);
@@ -69,14 +84,47 @@ public class DataService extends IntentService {
             waitToFinish();
             sendBroadcast(new Intent(Const.ACTION_FINISH_STEGANO));
         }
-        unregisterReceiver(stopReceiver);
+
+        //unregisterReceiver(stopReceiver);
+
+
+//        catch(Exception e)
+//        {
+////stream for writing text
+//            FileWriter writer=null;
+//            try
+//            {
+//                File root = Environment.getExternalStorageDirectory();
+//                File dir = new File(root.getAbsolutePath() + "/");
+//                File newfile = new File(dir, "jfllog.log");
+//                writer = new FileWriter(newfile);
+//                PrintWriter pw = new PrintWriter (writer);
+//                Log.e("JFL", "ERROR: " + e);
+//                e.printStackTrace();
+//                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
+//                Date date = new Date();
+//                writer.write(dateFormat.format(date)+"\n");
+//                e.printStackTrace(pw);
+//            } catch(Throwable t) {}
+//            finally
+//            {
+//                if(writer != null) try {
+//                    writer.close();
+//                } catch (IOException e1) {
+//                    e1.printStackTrace();
+//                }
+//            }
+//
+//        }
     }
 
     private void waitToFinish() {
         synchronized (this) {
             try {
                 Random r = new Random();
-                wait(60 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM) * 1000);
+                int rt = (5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM));
+                Log.i("CCDataService", "Waiting random time before ending: " + rt + "s...");
+                wait(rt* 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -87,7 +135,9 @@ public class DataService extends IntentService {
         synchronized (this) {
             try {
                 Random r = new Random();
-                wait(60 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM) * 1000);
+                int rt = (5 + r.nextInt(Const.SYNC_WAIT_SLEEP_RANDOM));
+                Log.i("CCDataService", "Waiting random time before starting: " + rt + "s...");
+                wait(rt * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -100,6 +150,7 @@ public class DataService extends IntentService {
         CcStatus status = CcStatus.FINISH;
         CcSync sync = info.getSync();
         statusIntent.putExtra(Const.EXTRA_CC_INFO, new CcSenderInfo(status, sync));
+        Log.i("CCDataService", "Ultimate broadcast ACTION_INFO");
         sendBroadcast(statusIntent);
     }
 
@@ -107,6 +158,7 @@ public class DataService extends IntentService {
         CcSender cc = getCcSender(item.getInfo());
         CcSegment segment = item.getInfo().getName().getSegment();
         int interval = item.getInfo().getInterval();
+        Log.i("CCDataService", "In sender sending the message: " + item.getData());
 
         for (byte element : DataConverter.getData(item.getData(), segment)) {
             cc.onSend(this, element);

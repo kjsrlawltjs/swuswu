@@ -32,7 +32,7 @@
             android:text="Test" />
 
         <Button
-            android:id="@+id/stopscenarios"
+            android:id="@+id/startCC100"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
