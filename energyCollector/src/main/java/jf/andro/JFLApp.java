@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
@@ -87,9 +87,9 @@ public class JFLApp extends Activity {
                 Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
 
                 CcStatus status = CcStatus.START;
-                CcMethod method = CcMethod.VOLUME_MUSIC;
+                Cc method = Cc.VOLUME_MUSIC;
                 CcSync sync = CcSync.BROADCAST_RECEIVER;
-                CcType type = CcType.MESSAGE;
+                CcType type = CcType.PLAIN_TEXT;
                 int interval = 20;
                 int iterations = 1;
 

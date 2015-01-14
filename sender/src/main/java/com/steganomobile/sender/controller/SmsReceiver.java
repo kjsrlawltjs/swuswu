@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
@@ -29,10 +29,12 @@ public class SmsReceiver extends BroadcastReceiver {
         int interval = Integer.parseInt(preferences.getString(Const.PREF_KEY_INTERVAL, Const.DEFAULT_INTERVAL));
         int iterations = Integer.parseInt(preferences.getString(Const.PREF_KEY_ITERATIONS, Const.DEFAULT_ITERATIONS));
         int ccNameId = Integer.parseInt(preferences.getString(Const.PREF_KEY_METHODS, Const.DEFAULT_METHODS));
+        int syncId = Integer.parseInt(preferences.getString(Const.PREF_KEY_SYNC, Const.DEFAULT_SYNC));
+
         CcStatus status = CcStatus.START;
-        CcSync sync = CcSync.HANDLER;
+        CcSync sync = CcSync.getFromInt(syncId);
         CcType type = CcType.NEW_SMS;
-        CcMethod name = CcMethod.getFromInt(ccNameId);
+        Cc name = Cc.getFromInt(ccNameId);
         CcSenderInfo info = new CcSenderInfo(status, name, iterations, type, interval, sync);
         CcSenderItem item = new CcSenderItem(message, info);
         intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);

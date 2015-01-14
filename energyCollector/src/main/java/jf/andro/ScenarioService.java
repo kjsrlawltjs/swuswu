@@ -12,7 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
@@ -153,8 +153,8 @@ public class ScenarioService extends Service {
                                 Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
 
                                 // Choose the CC method to use
-                                CcMethod method = CcMethod.VOLUME_MUSIC;
-                                CcType type = CcType.MESSAGE;
+                                Cc method = Cc.VOLUME_MUSIC;
+                                CcType type = CcType.PLAIN_TEXT;
                                 CcSync sync = CcSync.BROADCAST_RECEIVER;
                                 CcStatus status = CcStatus.START;
                                 int iterations = 1;
@@ -245,8 +245,8 @@ public class ScenarioService extends Service {
                                     // Send the intent that asks the Stegano sender to transmit !
 
                                     Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
-                                    CcMethod method = CcMethod.getFromInt(idCC + 1);
-                                    Log.w("JFL", String.format("Using %s method!", CcMethod.NAMES[method.getValue()]));
+                                    Cc method = Cc.getFromInt(idCC + 1);
+                                    Log.w("JFL", String.format("Using %s method!", Cc.NAMES[method.getValue()]));
 
                                     // iterations = 2, means that CC will be activated 2 times.
                                     int iterations = 1;
@@ -254,7 +254,7 @@ public class ScenarioService extends Service {
                                     // 200 [ms] is some kind of universal number, because it is the lowest number
                                     // which will provide good accuracy for all CCs
                                     int interval = 1;
-                                    CcType type = CcType.MESSAGE;
+                                    CcType type = CcType.PLAIN_TEXT;
                                     CcSync sync = CcSync.BROADCAST_RECEIVER;
                                     CcSenderInfo info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
                                     CcSenderItem item = new CcSenderItem(data, info);

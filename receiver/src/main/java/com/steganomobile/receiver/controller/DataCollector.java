@@ -70,7 +70,7 @@ public class DataCollector {
         } else if (info.getName().getSegment() == CcSegment.FOUR_BIT) {
             optionFourBitSegment(number);
 
-        } else if (info.getName().getSegment() == CcSegment.EIGHT_BIT) {
+        } else if (info.getName().getSegment() == CcSegment.ONE_BYTE) {
             optionEightBitSegment(number);
         }
     }

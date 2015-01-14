@@ -2,7 +2,7 @@ package com.steganomobile.common.sender.model;
 
 import android.media.AudioManager;
 
-public enum CcMethod {
+public enum Cc {
     NO_VALUE(0, CcSegment.NO_VALUE),
     VOLUME_MUSIC(1, CcSegment.FOUR_BIT, AudioManager.STREAM_MUSIC),
     VOLUME_RING(2, CcSegment.THREE_BIT, AudioManager.STREAM_RING),
@@ -12,12 +12,12 @@ public enum CcMethod {
     VOLUME_ALARM(6, CcSegment.THREE_BIT, AudioManager.STREAM_ALARM),
     VOLUME_VOICE_CALL(7, CcSegment.TWO_BIT, AudioManager.STREAM_VOICE_CALL),
     FILE_LOCK(8, CcSegment.ONE_BIT),
-    FILE_SIZE(9, CcSegment.EIGHT_BIT),
+    FILE_SIZE(9, CcSegment.ONE_BYTE),
     FILE_EXISTENCE(10, CcSegment.ONE_BIT),
-    CONTENT_OF_URI(11, CcSegment.EIGHT_BIT),
-    TYPE_OF_INTENT(12, CcSegment.EIGHT_BIT),
-    UNIX_SOCKET_DISCOVERY(13, CcSegment.EIGHT_BIT),
-    MEMORY_LOAD(14, CcSegment.EIGHT_BIT),
+    CONTENT_OF_URI(11, CcSegment.ONE_BYTE),
+    TYPE_OF_INTENT(12, CcSegment.ONE_BYTE),
+    UNIX_SOCKET_DISCOVERY(13, CcSegment.ONE_BYTE),
+    MEMORY_LOAD(14, CcSegment.ONE_BYTE),
     SYSTEM_LOAD(15, CcSegment.ONE_BIT),
     USAGE_TREND(16, CcSegment.ONE_BIT);
 
@@ -66,25 +66,25 @@ public enum CcMethod {
     private final CcSegment segment;
     private final int stream;
 
-    private CcMethod(int value, CcSegment segment, int stream) {
+    private Cc(int value, CcSegment segment, int stream) {
         this.value = value;
         this.segment = segment;
         this.stream = stream;
     }
 
-    private CcMethod(int value, CcSegment segment) {
+    private Cc(int value, CcSegment segment) {
         this.value = value;
         this.segment = segment;
         this.stream = NO_VALUE_HERE;
     }
 
-    public static CcMethod getFromInt(int value) {
-        for (CcMethod i : values()) {
+    public static Cc getFromInt(int value) {
+        for (Cc i : values()) {
             if (i.getValue() == value) {
                 return i;
             }
         }
-        return CcMethod.NO_VALUE;
+        return Cc.NO_VALUE;
     }
 
     public final int getValue() {

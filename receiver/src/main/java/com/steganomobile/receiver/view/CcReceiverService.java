@@ -19,7 +19,7 @@ import com.steganomobile.receiver.controller.DataCollector;
 import com.steganomobile.receiver.controller.SyncHandler;
 import com.steganomobile.receiver.controller.SyncObserver;
 import com.steganomobile.receiver.controller.SyncReceiver;
-import com.steganomobile.receiver.controller.cc.CcImplReceiver;
+import com.steganomobile.receiver.controller.cc.CcReceiver;
 import com.steganomobile.receiver.controller.cc.ContentOfUriReceiver;
 import com.steganomobile.receiver.controller.cc.FileExistenceReceiver;
 import com.steganomobile.receiver.controller.cc.FileLockReceiver;
@@ -140,7 +140,7 @@ public class CcReceiverService extends Service {
                 Looper.prepare();
                 handler = new Handler();
                 for (int i = -127; i < 128; i++) {
-                    intentFilter.addAction(Const.SYNC_RECEIVER + i);
+                    intentFilter.addAction(Const.ACTION_TYPE_OF_INTENT + i);
                 }
                 registerReceiver(infoReceiver, new IntentFilter(Const.ACTION_INFO));
                 makeToast(R.string.local_service_connected);
@@ -149,7 +149,7 @@ public class CcReceiverService extends Service {
         }).start();
     }
 
-    private CcImplReceiver getCcReceiver(Context context, CcSenderInfo info) {
+    private CcReceiver getCcReceiver(Context context, CcSenderInfo info) {
         DataCollector collector = new DataCollector(info);
 
         switch (info.getName()) {

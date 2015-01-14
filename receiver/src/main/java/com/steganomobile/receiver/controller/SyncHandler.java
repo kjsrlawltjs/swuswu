@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.receiver.controller.cc.CcImplReceiver;
+import com.steganomobile.receiver.controller.cc.CcReceiver;
 
 public class SyncHandler implements Sync {
 
@@ -22,8 +23,8 @@ public class SyncHandler implements Sync {
     };
     private Handler handler = new Handler();
 
-    public SyncHandler(CcImplReceiver cc) {
-        this.cc = cc;
+    public SyncHandler(CcReceiver cc) {
+        this.cc = (CcImplReceiver) cc;
 
         synchronized (this) {
             try {

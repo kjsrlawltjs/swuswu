@@ -7,15 +7,16 @@ import android.os.Handler;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.receiver.controller.cc.CcImplReceiver;
+import com.steganomobile.receiver.controller.cc.CcReceiver;
 
 public class SyncObserver extends ContentObserver implements Sync {
 
     private static final String TAG = SyncObserver.class.getSimpleName();
     private CcImplReceiver cc;
 
-    public SyncObserver(Handler handler, CcImplReceiver cc) {
+    public SyncObserver(Handler handler, CcReceiver cc) {
         super(handler);
-        this.cc = cc;
+        this.cc = (CcImplReceiver) cc;
     }
 
     @Override

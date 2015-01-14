@@ -100,4 +100,5 @@ public class Const {
     public static final String EXTRA_TEST_NUMBER = "EXTRA_TEST_NUMBER";
     public static final String ACTION_FORCE_STOP = "ACTION_FORCE_STOP";
     public static final int SYNC_WAIT_SLEEP_RANDOM = 30;
+    public static final String ACTION_TYPE_OF_INTENT = "ACTION_TYPE_OF_INTENT";
 }

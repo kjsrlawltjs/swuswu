@@ -13,7 +13,7 @@ import com.steganomobile.common.receiver.model.cc.CcReceiverItem;
 import com.steganomobile.common.receiver.model.cc.CcTime;
 import com.steganomobile.common.receiver.model.nsd.NsdItem;
 import com.steganomobile.common.receiver.model.nsd.NsdSocket;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
@@ -184,7 +184,7 @@ public class ReceiverDatabase {
 
         CcTime time = new CcTime(finish, start, duration);
         CcMessage message = new CcMessage(size, data, correct, time);
-        CcSenderInfo info = new CcSenderInfo(CcStatus.NO_VALUE, CcMethod.getFromInt(name), iterations,
+        CcSenderInfo info = new CcSenderInfo(CcStatus.NO_VALUE, Cc.getFromInt(name), iterations,
                 CcType.getFromInt(type), interval, CcSync.getFromInt(sync));
         return new CcReceiverItem(id, message, info);
     }

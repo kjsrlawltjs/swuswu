@@ -20,7 +20,7 @@ public class TypeOfIntentSender extends CcImplSender {
     @Override
     public void onSync(Context context, CcSync sync, byte sentElement) {
         // Sending is connected with sync in this method
-        Intent intent = new Intent(Const.SYNC_RECEIVER + this.element);
+        Intent intent = new Intent(Const.ACTION_TYPE_OF_INTENT + this.element);
         intent.putExtra(Const.EXTRA_SENT_ELEMENT, sentElement);
         context.sendBroadcast(intent);
     }

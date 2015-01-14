@@ -6,7 +6,7 @@ public enum CcSegment {
     TWO_BIT(2),
     THREE_BIT(3),
     FOUR_BIT(4),
-    EIGHT_BIT(8);
+    ONE_BYTE(8);
 
     private final int value;
 

@@ -23,6 +23,10 @@ public class CcSenderItem implements Parcelable {
         this.info = info;
     }
 
+    public CcSenderItem(CcSenderInfo info) {
+        this.info = info;
+    }
+
     public CcSenderItem(Parcel parcel) {
         data = parcel.readString();
         info = parcel.readParcelable(CcSenderInfo.class.getClassLoader());

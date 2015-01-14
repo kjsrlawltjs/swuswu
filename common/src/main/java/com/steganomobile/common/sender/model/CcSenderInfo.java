@@ -28,11 +28,11 @@ public class CcSenderInfo implements Parcelable, BaseColumns {
     };
 
     private CcType type = CcType.NO_VALUE;
-    private CcMethod name = CcMethod.NO_VALUE;
+    private Cc name = Cc.NO_VALUE;
     private CcStatus status = CcStatus.NO_VALUE;
     private CcSync sync = CcSync.NO_VALUE;
 
-    public CcSenderInfo(CcStatus status, CcMethod name, int iterations, CcType type, int interval, CcSync sync) {
+    public CcSenderInfo(CcStatus status, Cc name, int iterations, CcType type, int interval, CcSync sync) {
         this.status = status;
         this.name = name;
         this.iterations = iterations;
@@ -45,7 +45,7 @@ public class CcSenderInfo implements Parcelable, BaseColumns {
     public CcSenderInfo(Parcel parcel) {
         interval = parcel.readInt();
         iterations = parcel.readInt();
-        name = CcMethod.getFromInt(parcel.readInt());
+        name = Cc.getFromInt(parcel.readInt());
         port = parcel.readInt();
         status = CcStatus.getFromInt(parcel.readInt());
         sync = CcSync.getFromInt(parcel.readInt());
@@ -82,7 +82,7 @@ public class CcSenderInfo implements Parcelable, BaseColumns {
         return status;
     }
 
-    public CcMethod getName() {
+    public Cc getName() {
         return name;
     }
 
@@ -124,7 +124,7 @@ public class CcSenderInfo implements Parcelable, BaseColumns {
     }
 
     public String printHorizontalFormat(String sep) {
-        return sep + CcMethod.NAMES[name.getValue()] + sep + CcType.NAMES[type.getValue()]
+        return sep + Cc.NAMES[name.getValue()] + sep + CcType.NAMES[type.getValue()]
                 + sep + CcSync.NAMES[sync.getValue()] + sep + iterations + sep + interval;
     }
 
@@ -136,7 +136,7 @@ public class CcSenderInfo implements Parcelable, BaseColumns {
         String intervalV = header ? "Interval [ms]" + sep + "%d\n" : "%d\n";
 
         return String.format(nameV + typeV + syncV + iterationsV + intervalV,
-                CcMethod.NAMES[name.getValue()], CcType.NAMES[type.getValue()],
+                Cc.NAMES[name.getValue()], CcType.NAMES[type.getValue()],
                 CcSync.NAMES[sync.getValue()], iterations, interval);
     }
 

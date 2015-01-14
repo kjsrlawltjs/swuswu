@@ -6,7 +6,7 @@ import android.os.Handler;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.common.Methods;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
@@ -117,7 +117,7 @@ public class Scenario {
 
     private static void scenario1(final Context context, final Handler handler, final int option) {
         CcSenderInfo info =
-                new CcSenderInfo(CcStatus.START, CcMethod.VOLUME_MUSIC, 20, CcType.IMEI, 20, CcSync.HANDLER);
+                new CcSenderInfo(CcStatus.START, Cc.VOLUME_MUSIC, 20, CcType.IMEI, 20, CcSync.HANDLER);
 
         CcSenderItem volumeA = new CcSenderItem(MESSAGE_100, info);
         CcSenderItem volumeB = new CcSenderItem(MESSAGE_100, info);

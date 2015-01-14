@@ -6,14 +6,15 @@ import android.content.Intent;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.receiver.controller.cc.CcImplReceiver;
+import com.steganomobile.receiver.controller.cc.CcReceiver;
 
 public class SyncReceiver extends BroadcastReceiver implements Sync {
 
     private static final String TAG = SyncReceiver.class.getSimpleName();
     private CcImplReceiver cc;
 
-    public SyncReceiver(CcImplReceiver cc) {
-        this.cc = cc;
+    public SyncReceiver(CcReceiver cc) {
+        this.cc = (CcImplReceiver) cc;
     }
 
     @Override

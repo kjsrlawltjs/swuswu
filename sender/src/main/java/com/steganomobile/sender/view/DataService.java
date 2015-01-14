@@ -9,14 +9,14 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcSegment;
 import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
 import com.steganomobile.sender.controller.DataConverter;
-import com.steganomobile.sender.controller.cc.CcImplSender;
+import com.steganomobile.sender.controller.cc.CcSender;
 import com.steganomobile.sender.controller.cc.ContentOfUriSender;
 import com.steganomobile.sender.controller.cc.FileExistenceSender;
 import com.steganomobile.sender.controller.cc.FileLockSender;
@@ -54,9 +54,9 @@ public class DataService extends IntentService {
         CcSenderItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_SENDER_CC);
         int iterations = item.getInfo().getIterations();
 
-        if (item.getInfo().getName() == CcMethod.CONTENT_OF_URI) {
+        if (item.getInfo().getName() == Cc.CONTENT_OF_URI) {
             item.getInfo().setSync(CcSync.CONTENT_OBSERVER);
-        } else if (item.getInfo().getName() == CcMethod.TYPE_OF_INTENT) {
+        } else if (item.getInfo().getName() == Cc.TYPE_OF_INTENT) {
             item.getInfo().setSync(CcSync.BROADCAST_RECEIVER);
         }
 
@@ -104,7 +104,7 @@ public class DataService extends IntentService {
     }
 
     private void send(CcSenderItem item) {
-        CcImplSender cc = getMethod(item.getInfo());
+        CcSender cc = getCcSender(item.getInfo());
         CcSegment segment = item.getInfo().getName().getSegment();
         int interval = item.getInfo().getInterval();
 
@@ -126,7 +126,7 @@ public class DataService extends IntentService {
         sendBroadcast(statusIntent);
     }
 
-    private CcImplSender getMethod(CcSenderInfo info) {
+    private CcSender getCcSender(CcSenderInfo info) {
         switch (info.getName()) {
             case NO_VALUE:
                 break;
