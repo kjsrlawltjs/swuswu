@@ -25,11 +25,6 @@ public class CcSenderItem implements Parcelable {
 
     private int currentsubpart = -1; // 1 to N
 
-    public void setCurrentsubpart(int currentsubpart) {
-        this.currentsubpart = currentsubpart;
-    }
-
-
     public CcSenderItem(String data, CcSenderInfo info) {
         this.data = data;
         this.info = info;
@@ -74,9 +69,11 @@ public class CcSenderItem implements Parcelable {
         return info;
     }
 
-
     public void setSendsubparts(int sendsubparts) {
         this.sendsubparts = sendsubparts;
     }
 
+    public void setCurrentsubpart(int currentsubpart) {
+        this.currentsubpart = currentsubpart;
+    }
 }
