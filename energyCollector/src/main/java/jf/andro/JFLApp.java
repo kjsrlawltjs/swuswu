@@ -80,6 +80,15 @@ public class JFLApp extends Activity {
                     startDate.setText(dateFormat.format(date));
                     endDate.setText("***");
 
+                    // Stop service in case it is already running
+                    Intent serviceStop = new Intent("jf.andro.scenarioservice");
+                    stopService(serviceStop);
+
+                    try { // Sleep a little before starting
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     Intent service = new Intent("jf.andro.scenarioservice");
                     service.putExtra("scenario", 3);
