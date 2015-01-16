@@ -99,8 +99,8 @@ public class ScenarioService extends Service {
                     @Override
                     public void run() {
                         try {
-                            // Parameters for randomness
-                            int message_size_max = 1000; //1000; // Size max 1000 Bytes
+
+                            int message_size_max = 1000; // Size of transmitted messages
 
                             // Sleep a little before starting the energy recording
                             sleep(1000);
