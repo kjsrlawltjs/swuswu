@@ -5,15 +5,15 @@ import android.content.Context;
 import com.steganomobile.common.Methods;
 import com.steganomobile.receiver.controller.DataCollector;
 
-public class MemoryLoad extends ResourcesImpl {
-    private static final String TAG = MemoryLoad.class.getSimpleName();
+public class MemoryLoadReceiver extends ResourcesImplReceiver {
+    private static final String TAG = MemoryLoadReceiver.class.getSimpleName();
 
-    public MemoryLoad(Context context, DataCollector collector) {
+    public MemoryLoadReceiver(Context context, DataCollector collector) {
         super(context, collector);
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         final long value = Methods.readMemoryUsage(getPid());
         float data = (value - getPreviousValueMemory()) / 10;
         int element = Math.round(data);

@@ -6,14 +6,14 @@ import com.steganomobile.common.Const;
 
 import java.io.IOException;
 
-public class FileLock extends FileImpl {
-    private static final String TAG = FileLock.class.getSimpleName();
+public class FileLockSender extends FileImplSender {
+    private static final String TAG = FileLockSender.class.getSimpleName();
     private java.nio.channels.FileLock fileLock;
 
     @Override
-    public void sendCc(Context context, int element) {
+    public void onSend(Context context, int element) {
 
-        super.sendCc(context, element);
+        super.onSend(context, element);
 
         if (element == Const.UP_NUMBER) {
             try {
@@ -25,7 +25,7 @@ public class FileLock extends FileImpl {
     }
 
     @Override
-    public void finishCc() {
+    public void onRestart() {
         try {
             if (fileLock != null) {
                 fileLock.release();

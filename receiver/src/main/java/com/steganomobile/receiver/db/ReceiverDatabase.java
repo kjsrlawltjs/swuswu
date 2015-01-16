@@ -13,8 +13,8 @@ import com.steganomobile.common.receiver.model.cc.CcReceiverItem;
 import com.steganomobile.common.receiver.model.cc.CcTime;
 import com.steganomobile.common.receiver.model.nsd.NsdItem;
 import com.steganomobile.common.receiver.model.nsd.NsdSocket;
-import com.steganomobile.common.sender.model.CcInfo;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
 import com.steganomobile.common.sender.model.CcType;
@@ -34,13 +34,13 @@ public class ReceiverDatabase {
             CcMessage.DATA,
             CcTime.DURATION,
             CcTime.FINISH,
-            CcInfo.INTERVAL,
-            CcInfo.ITERATIONS,
-            CcInfo.NAME,
+            CcSenderInfo.INTERVAL,
+            CcSenderInfo.ITERATIONS,
+            CcSenderInfo.NAME,
             CcMessage.SIZE,
             CcTime.START,
-            CcInfo.SYNC,
-            CcInfo.TYPE
+            CcSenderInfo.SYNC,
+            CcSenderInfo.TYPE
     };
     private String[] nsdColumns = {
             NsdItem._ID,
@@ -70,13 +70,13 @@ public class ReceiverDatabase {
         values.put(CcMessage.DATA, item.getMessage().getData());
         values.put(CcTime.DURATION, item.getMessage().getTime().getDuration());
         values.put(CcTime.FINISH, item.getMessage().getTime().getFinish());
-        values.put(CcInfo.INTERVAL, item.getInfo().getInterval());
-        values.put(CcInfo.ITERATIONS, item.getInfo().getIterations());
-        values.put(CcInfo.NAME, item.getInfo().getName().getValue());
+        values.put(CcSenderInfo.INTERVAL, item.getInfo().getInterval());
+        values.put(CcSenderInfo.ITERATIONS, item.getInfo().getIterations());
+        values.put(CcSenderInfo.NAME, item.getInfo().getName().getValue());
         values.put(CcMessage.SIZE, item.getMessage().getSize());
         values.put(CcTime.START, item.getMessage().getTime().getStart());
-        values.put(CcInfo.SYNC, item.getInfo().getSync().getValue());
-        values.put(CcInfo.TYPE, item.getInfo().getType().getValue());
+        values.put(CcSenderInfo.SYNC, item.getInfo().getSync().getValue());
+        values.put(CcSenderInfo.TYPE, item.getInfo().getType().getValue());
         long id = database.insert(CcReceiverItem.TABLE_NAME, null, values);
         close();
 
@@ -184,7 +184,7 @@ public class ReceiverDatabase {
 
         CcTime time = new CcTime(finish, start, duration);
         CcMessage message = new CcMessage(size, data, correct, time);
-        CcInfo info = new CcInfo(CcStatus.NO_VALUE, CcMethod.getFromInt(name), iterations,
+        CcSenderInfo info = new CcSenderInfo(CcStatus.NO_VALUE, Cc.getFromInt(name), iterations,
                 CcType.getFromInt(type), interval, CcSync.getFromInt(sync));
         return new CcReceiverItem(id, message, info);
     }
@@ -216,13 +216,13 @@ public class ReceiverDatabase {
                 + CcMessage.DATA + " LONGTEXT,"
                 + CcTime.DURATION + " INTEGER,"
                 + CcTime.FINISH + " VARCHAR(17),"
-                + CcInfo.INTERVAL + " INTEGER,"
-                + CcInfo.ITERATIONS + " INTEGER,"
-                + CcInfo.NAME + " INTEGER,"
+                + CcSenderInfo.INTERVAL + " INTEGER,"
+                + CcSenderInfo.ITERATIONS + " INTEGER,"
+                + CcSenderInfo.NAME + " INTEGER,"
                 + CcMessage.SIZE + " INTEGER,"
                 + CcTime.START + " VARCHAR(17),"
-                + CcInfo.SYNC + " INTEGER,"
-                + CcInfo.TYPE + " INTEGER"
+                + CcSenderInfo.SYNC + " INTEGER,"
+                + CcSenderInfo.TYPE + " INTEGER"
                 + ");";
 
         SteganoSQLiteHelper(Context context) {

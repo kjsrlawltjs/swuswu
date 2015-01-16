@@ -12,28 +12,28 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcInfo;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.receiver.R;
 import com.steganomobile.receiver.controller.DataCollector;
 import com.steganomobile.receiver.controller.SyncHandler;
 import com.steganomobile.receiver.controller.SyncObserver;
 import com.steganomobile.receiver.controller.SyncReceiver;
-import com.steganomobile.receiver.controller.cc.CcImpl;
-import com.steganomobile.receiver.controller.cc.ContentOfUri;
-import com.steganomobile.receiver.controller.cc.FileExistence;
-import com.steganomobile.receiver.controller.cc.FileLock;
-import com.steganomobile.receiver.controller.cc.FileSize;
-import com.steganomobile.receiver.controller.cc.MemoryLoad;
-import com.steganomobile.receiver.controller.cc.SystemLoad;
-import com.steganomobile.receiver.controller.cc.TypeOfIntent;
-import com.steganomobile.receiver.controller.cc.UnixSocketDiscovery;
-import com.steganomobile.receiver.controller.cc.UsageTrend;
-import com.steganomobile.receiver.controller.cc.VolumeSettings;
+import com.steganomobile.receiver.controller.cc.CcReceiver;
+import com.steganomobile.receiver.controller.cc.ContentOfUriReceiver;
+import com.steganomobile.receiver.controller.cc.FileExistenceReceiver;
+import com.steganomobile.receiver.controller.cc.FileLockReceiver;
+import com.steganomobile.receiver.controller.cc.FileSizeReceiver;
+import com.steganomobile.receiver.controller.cc.MemoryLoadReceiver;
+import com.steganomobile.receiver.controller.cc.SystemLoadReceiver;
+import com.steganomobile.receiver.controller.cc.TypeOfIntentReceiver;
+import com.steganomobile.receiver.controller.cc.UnixSocketDiscoveryReceiver;
+import com.steganomobile.receiver.controller.cc.UsageTrendReceiver;
+import com.steganomobile.receiver.controller.cc.VolumeSettingsReceiver;
 
-public class CcService extends Service {
+public class CcReceiverService extends Service {
 
-    private static final String TAG = CcService.class.getSimpleName();
+    private static final String TAG = CcReceiverService.class.getSimpleName();
     private Handler handler;
 
     private boolean isCcReceiverRegistered = false;
@@ -54,13 +54,13 @@ public class CcService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                final CcInfo info = intent.getParcelableExtra(Const.EXTRA_CC_INFO);
+                final CcSenderInfo info = intent.getParcelableExtra(Const.EXTRA_CC_INFO);
 
                 if (info.getStatus() == CcStatus.START) {
 
                     if (syncObserver != null) {
                         if (isCcObserverRegistered) {
-                            syncObserver.finish(context);
+                            syncObserver.onFinish(context);
                             getContentResolver().unregisterContentObserver(syncObserver);
                             isCcObserverRegistered = false;
                         }
@@ -68,7 +68,7 @@ public class CcService extends Service {
 
                     if (syncReceiver != null) {
                         if (isCcReceiverRegistered) {
-                            syncReceiver.finish(context);
+                            syncReceiver.onFinish(context);
                             unregisterReceiver(syncReceiver);
                             isCcReceiverRegistered = false;
                         }
@@ -76,7 +76,7 @@ public class CcService extends Service {
 
                     if (syncHandler != null) {
                         if (isCcHandlerRegistered) {
-                            syncHandler.finish(context);
+                            syncHandler.onFinish(context);
                             isCcHandlerRegistered = false;
                         }
                     }
@@ -85,18 +85,18 @@ public class CcService extends Service {
                         case NO_VALUE:
                             break;
                         case CONTENT_OBSERVER:
-                            syncObserver = new SyncObserver(handler, initCc(context, info));
+                            syncObserver = new SyncObserver(handler, getCcReceiver(context, info));
                             getContentResolver().registerContentObserver(Const.SYNC_OBSERVER, true, syncObserver);
                             isCcObserverRegistered = true;
                             break;
                         case BROADCAST_RECEIVER:
-                            syncReceiver = new SyncReceiver(initCc(context, info));
+                            syncReceiver = new SyncReceiver(getCcReceiver(context, info));
                             intentFilter.addAction(Const.SYNC_RECEIVER);
                             registerReceiver(syncReceiver, intentFilter);
                             isCcReceiverRegistered = true;
                             break;
                         case HANDLER:
-                            syncHandler = new SyncHandler(initCc(context, info));
+                            syncHandler = new SyncHandler(getCcReceiver(context, info));
                             isCcHandlerRegistered = true;
                             break;
                     }
@@ -109,20 +109,20 @@ public class CcService extends Service {
                             if (isCcObserverRegistered) {
                                 getContentResolver().unregisterContentObserver(syncObserver);
                                 isCcObserverRegistered = false;
-                                syncObserver.finish(context);
+                                syncObserver.onFinish(context);
                             }
                             break;
                         case BROADCAST_RECEIVER:
                             if (isCcReceiverRegistered) {
                                 unregisterReceiver(syncReceiver);
                                 isCcReceiverRegistered = false;
-                                syncReceiver.finish(context);
+                                syncReceiver.onFinish(context);
                             }
                             break;
                         case HANDLER:
                             if (isCcHandlerRegistered) {
                                 isCcHandlerRegistered = false;
-                                syncHandler.finish(context);
+                                syncHandler.onFinish(context);
                             }
                             break;
                     }
@@ -140,7 +140,7 @@ public class CcService extends Service {
                 Looper.prepare();
                 handler = new Handler();
                 for (int i = -127; i < 128; i++) {
-                    intentFilter.addAction(Const.SYNC_RECEIVER + i);
+                    intentFilter.addAction(Const.ACTION_TYPE_OF_INTENT + i);
                 }
                 registerReceiver(infoReceiver, new IntentFilter(Const.ACTION_INFO));
                 makeToast(R.string.local_service_connected);
@@ -149,7 +149,7 @@ public class CcService extends Service {
         }).start();
     }
 
-    private CcImpl initCc(Context context, CcInfo info) {
+    private CcReceiver getCcReceiver(Context context, CcSenderInfo info) {
         DataCollector collector = new DataCollector(info);
 
         switch (info.getName()) {
@@ -162,25 +162,25 @@ public class CcService extends Service {
             case VOLUME_SYSTEM:
             case VOLUME_ALARM:
             case VOLUME_VOICE_CALL:
-                return new VolumeSettings(context, collector);
+                return new VolumeSettingsReceiver(context, collector);
             case FILE_LOCK:
-                return new FileLock(collector);
+                return new FileLockReceiver(collector);
             case FILE_SIZE:
-                return new FileSize(collector);
+                return new FileSizeReceiver(collector);
             case FILE_EXISTENCE:
-                return new FileExistence(collector);
+                return new FileExistenceReceiver(collector);
             case CONTENT_OF_URI:
-                return new ContentOfUri(collector);
+                return new ContentOfUriReceiver(collector);
             case TYPE_OF_INTENT:
-                return new TypeOfIntent(collector);
+                return new TypeOfIntentReceiver(collector);
             case UNIX_SOCKET_DISCOVERY:
-                return new UnixSocketDiscovery(collector);
+                return new UnixSocketDiscoveryReceiver(collector);
             case MEMORY_LOAD:
-                return new MemoryLoad(context, collector);
+                return new MemoryLoadReceiver(context, collector);
             case SYSTEM_LOAD:
-                return new SystemLoad(context, collector);
+                return new SystemLoadReceiver(context, collector);
             case USAGE_TREND:
-                return new UsageTrend(context, collector);
+                return new UsageTrendReceiver(context, collector);
         }
         return null;
     }
@@ -217,8 +217,8 @@ public class CcService extends Service {
     }
 
     public class ReceiverBinder extends Binder {
-        CcService getService() {
-            return CcService.this;
+        CcReceiverService getService() {
+            return CcReceiverService.this;
         }
     }
 }

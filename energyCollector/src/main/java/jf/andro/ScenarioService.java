@@ -12,8 +12,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcInfo;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
@@ -126,8 +126,8 @@ public class ScenarioService extends Service {
                                 // Send the intent that asks the Stegano sender to transmit !
 
                                 Intent intent = new Intent(Const.ACTION_START_SENDER_CC);
-                                CcMethod method = CcMethod.getFromInt(idCC + 1);
-                                Log.i("JFL", String.format("Using %s method!", CcMethod.NAMES[method.getValue()]));
+                                Cc method = Cc.getFromInt(idCC + 1);
+                                Log.i("JFL", String.format("Using %s method!", Cc.NAMES[method.getValue()]));
 
                                 // iterations = 2, means that CC will be activated 2 times.
                                 int iterations = nbXP; // We activate only one time the CC.
@@ -136,9 +136,9 @@ public class ScenarioService extends Service {
                                 // which will provide good accuracy for all CCs
                                 int interval = 200;
                                 //int interval = 10;
-                                CcType type = CcType.MESSAGE;
+                                CcType type = CcType.PLAIN_TEXT;
                                 CcSync sync = CcSync.BROADCAST_RECEIVER;
-                                CcInfo info = new CcInfo(CcStatus.START, method, iterations, type, interval, sync);
+                                CcSenderInfo info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
 
 
                                 CcSenderItem item = new CcSenderItem(data, info);

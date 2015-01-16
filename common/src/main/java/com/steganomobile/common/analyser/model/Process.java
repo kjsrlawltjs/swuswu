@@ -10,14 +10,14 @@ public class Process {
     private static final String CSV_HEADER_ALL = "Process\n";
     private String name;
     private int pid;
-    private SparseArray<ProcessInterval> processorIntervals;
+    private SparseArray<ProcessInterval> processIntervals;
     private long usage;
     private long delta;
 
     public Process(String name, int pid) {
         this.name = name;
         this.pid = pid;
-        processorIntervals = new SparseArray<ProcessInterval>();
+        processIntervals = new SparseArray<ProcessInterval>();
     }
 
     public static String toCsvHeader(int option) {
@@ -30,8 +30,8 @@ public class Process {
         }
     }
 
-    public SparseArray<ProcessInterval> getProcessorIntervals() {
-        return processorIntervals;
+    public SparseArray<ProcessInterval> getProcessIntervals() {
+        return processIntervals;
     }
 
     public int getPid() {
@@ -55,30 +55,30 @@ public class Process {
     }
 
     public double countAverageUsage() {
-        if (processorIntervals.size() > 0) {
-            return (double) usage / processorIntervals.size();
+        if (processIntervals.size() > 0) {
+            return (double) usage / processIntervals.size();
         } else {
             return 0;
         }
     }
 
     public double countAverageDelta() {
-        if (processorIntervals.size() > 0) {
-            return (double) delta / processorIntervals.size();
+        if (processIntervals.size() > 0) {
+            return (double) delta / processIntervals.size();
         } else {
             return 0;
         }
     }
 
     public double countAverageNDelta(int id, int n) {
-        ProcessInterval processInterval = processorIntervals.get(id);
-        int end = processorIntervals.indexOfKey(id);
+        ProcessInterval processInterval = processIntervals.get(id);
+        int end = processIntervals.indexOfKey(id);
         if (processInterval == null) return 0;
         int start = n > end ? 0 : end - n;
         int deltaN = 0;
 
         for (int i = start; i < end; i++) {
-            ProcessInterval iterationInterval = processorIntervals.valueAt(i);
+            ProcessInterval iterationInterval = processIntervals.valueAt(i);
             deltaN += iterationInterval.getDelta();
         }
 
@@ -88,8 +88,8 @@ public class Process {
 
     public int countTotalTicks(long border) {
         int counter = 0;
-        for (int i = 0; i < processorIntervals.size(); i++) {
-            ProcessInterval processInterval = processorIntervals.valueAt(i);
+        for (int i = 0; i < processIntervals.size(); i++) {
+            ProcessInterval processInterval = processIntervals.valueAt(i);
             if (processInterval.getDelta() > border) {
                 counter++;
             }
@@ -99,8 +99,8 @@ public class Process {
 
     public int countTotalTicks(double border) {
         int counter = 0;
-        for (int i = 0; i < processorIntervals.size(); i++) {
-            ProcessInterval processInterval = processorIntervals.valueAt(i);
+        for (int i = 0; i < processIntervals.size(); i++) {
+            ProcessInterval processInterval = processIntervals.valueAt(i);
             if (processInterval.getDelta() > border) {
                 counter++;
             }
@@ -118,15 +118,15 @@ public class Process {
         if (option == CSV_PROCESSES_ALL) {
             b.append("[").append(getName()).append("]\n");
             b.append(ProcessInterval.toCsvHeader(option));
-            for (int i = 0; i < processorIntervals.size(); i++) {
-                ProcessInterval processInterval = processorIntervals.valueAt(i);
+            for (int i = 0; i < processIntervals.size(); i++) {
+                ProcessInterval processInterval = processIntervals.valueAt(i);
                 b.append(processInterval.toCsv(option)).append('\n');
             }
         } else if (option == CSV_INTERVALS_ALL) {
             b.append("[").append(getName()).append("]\n");
             b.append(ProcessInterval.toCsvHeader(option));
-            for (int i = 0; i < processorIntervals.size(); i++) {
-                ProcessInterval processInterval = processorIntervals.valueAt(i);
+            for (int i = 0; i < processIntervals.size(); i++) {
+                ProcessInterval processInterval = processIntervals.valueAt(i);
                 b.append(processInterval.toCsv(option)).append('\n');
             }
         } else {
@@ -148,14 +148,14 @@ public class Process {
         int result;
         result = name != null ? name.hashCode() : 0;
         result = 31 * result + pid;
-        result = 31 * result + (processorIntervals != null ? processorIntervals.hashCode() : 0);
+        result = 31 * result + (processIntervals != null ? processIntervals.hashCode() : 0);
         result = 31 * result + (int) (usage ^ (usage >>> 32));
         result = 31 * result + (int) (delta ^ (delta >>> 32));
         return result;
     }
 
     public long getDelta(int intervalId) {
-        ProcessInterval processInterval = processorIntervals.get(intervalId);
+        ProcessInterval processInterval = processIntervals.get(intervalId);
         return processInterval.getDelta();
     }
 }

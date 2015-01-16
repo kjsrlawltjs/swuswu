@@ -6,12 +6,12 @@ import com.steganomobile.common.Const;
 
 import java.io.IOException;
 
-public class FileExistence extends FileImpl {
-    private static final String TAG = FileExistence.class.getSimpleName();
+public class FileExistenceSender extends FileImplSender {
+    private static final String TAG = FileExistenceSender.class.getSimpleName();
 
     @Override
-    public void sendCc(Context context, int element) {
-        super.sendCc(context, element);
+    public void onSend(Context context, int element) {
+        super.onSend(context, element);
 
         boolean result = getFile().delete();
         if (element == Const.UP_NUMBER) {

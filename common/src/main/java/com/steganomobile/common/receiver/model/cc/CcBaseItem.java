@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcType;
 
 public class CcBaseItem implements BaseColumns, Parcelable {
@@ -40,7 +40,7 @@ public class CcBaseItem implements BaseColumns, Parcelable {
     @Override
     public String toString() {
         String format = "%s\n Type: %s";
-        return String.format(format, CcMethod.NAMES[nameId], CcType.NAMES[typeId]);
+        return String.format(format, Cc.NAMES[nameId], CcType.NAMES[typeId]);
     }
 
     public int getTypeId() {

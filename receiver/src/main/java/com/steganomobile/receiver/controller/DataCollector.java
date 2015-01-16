@@ -8,8 +8,8 @@ import com.steganomobile.common.Const;
 import com.steganomobile.common.receiver.model.cc.CcMessage;
 import com.steganomobile.common.receiver.model.cc.CcReceiverItem;
 import com.steganomobile.common.receiver.model.cc.CcTime;
-import com.steganomobile.common.sender.model.CcInfo;
 import com.steganomobile.common.sender.model.CcSegment;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSync;
 import com.steganomobile.receiver.db.ReceiverDatabase;
 
@@ -38,9 +38,9 @@ public class DataCollector {
     private StringBuilder data = new StringBuilder();
     private long size;
     private long start = 0;
-    private CcInfo info;
+    private CcSenderInfo info;
 
-    public DataCollector(CcInfo info) {
+    public DataCollector(CcSenderInfo info) {
         this.info = info;
     }
 
@@ -70,7 +70,7 @@ public class DataCollector {
         } else if (info.getName().getSegment() == CcSegment.FOUR_BIT) {
             optionFourBitSegment(number);
 
-        } else if (info.getName().getSegment() == CcSegment.EIGHT_BIT) {
+        } else if (info.getName().getSegment() == CcSegment.ONE_BYTE) {
             optionEightBitSegment(number);
         }
     }
@@ -286,7 +286,7 @@ public class DataCollector {
         return counter;
     }
 
-    public CcInfo getInfo() {
+    public CcSenderInfo getInfo() {
         return info;
     }
 }

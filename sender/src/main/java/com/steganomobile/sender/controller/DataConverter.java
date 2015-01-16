@@ -18,7 +18,7 @@ public class DataConverter {
                 return optionThreeBitSegment(data.getBytes());
             case FOUR_BIT:
                 return optionFourBitSegment(data.getBytes());
-            case EIGHT_BIT:
+            case ONE_BYTE:
                 return optionEightBitSegment(data.getBytes());
             default:
                 return null;

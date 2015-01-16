@@ -5,15 +5,15 @@ import com.steganomobile.receiver.controller.DataCollector;
 
 import java.io.IOException;
 
-public class FileExistence extends FileImpl {
-    private static final String TAG = FileExistence.class.getSimpleName();
+public class FileExistenceReceiver extends FileImplReceiver {
+    private static final String TAG = FileExistenceReceiver.class.getSimpleName();
 
-    public FileExistence(DataCollector collector) {
+    public FileExistenceReceiver(DataCollector collector) {
         super(collector);
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         boolean result = getFile().delete();
         if (result) {
             getCollector().setData(Const.UP_NUMBER);

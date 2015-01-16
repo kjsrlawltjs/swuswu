@@ -2,8 +2,8 @@ package com.steganomobile.sender.controller.cc;
 
 import android.content.Context;
 
-public class MemoryLoad extends CcImpl {
-    private static final String TAG = MemoryLoad.class.getSimpleName();
+public class MemoryLoadSender extends CcImplSender {
+    private static final String TAG = MemoryLoadSender.class.getSimpleName();
 
     static {
         System.loadLibrary("stegano");
@@ -14,13 +14,13 @@ public class MemoryLoad extends CcImpl {
     public native void freeStegano();
 
     @Override
-    public void sendCc(Context context, int element) {
-        super.sendCc(context, element);
+    public void onSend(Context context, int element) {
+        super.onSend(context, element);
         allocateStegano(element + 127);
     }
 
     @Override
-    public void finishCc() {
+    public void onRestart() {
         freeStegano();
     }
 }

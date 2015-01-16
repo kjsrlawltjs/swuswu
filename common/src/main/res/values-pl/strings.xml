@@ -21,7 +21,7 @@
     <string name="text_cancel">Anuluj</string>
     <string name="text_cell_location">Położenie telefonu</string>
     <string name="text_contacts_list">Lista kontaktów</string>
-    <string name="text_listen_for_sms">Odbieraj wiadomości tekstowe</string>
+    <string name="text_listen_for_sms">Odbieranie wiadomości SMS</string>
     <string name="text_location">Położenie użytkownika</string>
     <string name="text_operator_name">Nazwa operatora</string>
     <string name="text_send">Wyślij</string>
@@ -37,9 +37,9 @@
     <string name="tittle_port">Port</string>
     <string name="tittle_interval">Międzyczas</string>
     <string name="choose_cc">Wybierz metodę</string>
-    <string name="select_cc">Wybrana metoda:</string>
-    <string name="select_iterations">Wybrana liczba iteracji testów:</string>
-    <string name="select_interval">Wybrany międzyczas:</string>
+    <string name="select_cc">Ukryty kanał:</string>
+    <string name="select_iterations">Liczba powtórzeń:</string>
+    <string name="select_interval">Czas próbkowania:</string>
     <string name="send_scenario">Wyślij scenariusz</string>
     <string name="send_message">Wyślij wiadomość</string>
     <string name="send_phone_state">Wyślij prywatne dane</string>
@@ -54,5 +54,5 @@
     <string name="set_sync">Ustaw metodę synchronizacji</string>
     <string name="summary_choose_sync">Możesz tu wybrać metodę synchronizacji pomiędzy CC</string>
     <string name="title_sync">Metoda synchronizacji</string>
-    <string name="select_sync">Wybrana metoda synchronizacji:</string>
+    <string name="select_sync">Synchronizacja: </string>
 </resources>

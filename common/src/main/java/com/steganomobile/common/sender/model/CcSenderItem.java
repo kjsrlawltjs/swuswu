@@ -16,7 +16,7 @@ public class CcSenderItem implements Parcelable {
     };
 
     private String data;
-    private CcInfo info;
+    private CcSenderInfo info;
 
     // Used to ask to send a subpart of the message for each iteration
     // for example if the message is ABCDEF and there is 3 iteration to do
@@ -25,19 +25,18 @@ public class CcSenderItem implements Parcelable {
 
     private int currentsubpart = -1; // 1 to N
 
-    public void setCurrentsubpart(int currentsubpart) {
-        this.currentsubpart = currentsubpart;
+    public CcSenderItem(String data, CcSenderInfo info) {
+        this.data = data;
+        this.info = info;
     }
 
-
-    public CcSenderItem(String data, CcInfo info) {
-        this.data = data;
+    public CcSenderItem(CcSenderInfo info) {
         this.info = info;
     }
 
     public CcSenderItem(Parcel parcel) {
         data = parcel.readString();
-        info = parcel.readParcelable(CcInfo.class.getClassLoader());
+        info = parcel.readParcelable(CcSenderInfo.class.getClassLoader());
     }
 
     public String getData() {
@@ -66,13 +65,15 @@ public class CcSenderItem implements Parcelable {
         parcel.writeParcelable(info, flags);
     }
 
-    public CcInfo getInfo() {
+    public CcSenderInfo getInfo() {
         return info;
     }
-
 
     public void setSendsubparts(int sendsubparts) {
         this.sendsubparts = sendsubparts;
     }
 
+    public void setCurrentsubpart(int currentsubpart) {
+        this.currentsubpart = currentsubpart;
+    }
 }

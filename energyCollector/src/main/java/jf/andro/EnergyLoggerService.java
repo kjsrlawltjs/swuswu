@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.steganomobile.common.Const;
 import com.steganomobile.common.Methods;
 import com.steganomobile.common.receiver.model.cc.CcReceiverItem;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -140,8 +140,8 @@ public class EnergyLoggerService extends Service {
         PowerTutorReceiver.getUIDNames();
         File file = new File(root, filename);
         clearFile(file);
-        energyFile = new File(root, "" + numberOfTests + "_" + CcMethod.FILE_NAMES[idCC] + "_" + filenameFinal);
-        infoFile = new File(root, "" + numberOfTests + "_" + CcMethod.FILE_NAMES[idCC] + "_info.csv");
+        energyFile = new File(root, "" + numberOfTests + "_" + Cc.FILE_NAMES[idCC] + "_" + filenameFinal);
+        infoFile = new File(root, "" + numberOfTests + "_" + Cc.FILE_NAMES[idCC] + "_info.csv");
         clearFile(energyFile);
         clearFile(infoFile);
 
@@ -296,7 +296,7 @@ public class EnergyLoggerService extends Service {
         ArrayList<Uri> uris = new ArrayList<Uri>();
         uris.add(Uri.fromFile(energyFile));
         uris.add(Uri.fromFile(infoFile));
-        Methods.sendEmail(this, uris, email);
+        Methods.sendEmail(this, uris);
     }
 
     private String processEnergyData() {

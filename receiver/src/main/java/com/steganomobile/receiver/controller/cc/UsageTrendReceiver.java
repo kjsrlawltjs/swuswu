@@ -6,16 +6,16 @@ import com.steganomobile.common.Const;
 import com.steganomobile.common.Methods;
 import com.steganomobile.receiver.controller.DataCollector;
 
-public class UsageTrend extends ResourcesImpl {
+public class UsageTrendReceiver extends ResourcesImplReceiver {
 
-    private static final String TAG = UsageTrend.class.getSimpleName();
+    private static final String TAG = UsageTrendReceiver.class.getSimpleName();
 
-    public UsageTrend(Context context, DataCollector collector) {
+    public UsageTrendReceiver(Context context, DataCollector collector) {
         super(context, collector);
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         long value = Methods.readPidUsage(TAG, getPid());
         long diff = value - getPreviousValueCpu();
         if (diff > 0) {

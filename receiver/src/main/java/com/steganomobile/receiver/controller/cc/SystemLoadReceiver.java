@@ -6,15 +6,15 @@ import com.steganomobile.common.Const;
 import com.steganomobile.common.Methods;
 import com.steganomobile.receiver.controller.DataCollector;
 
-public class SystemLoad extends ResourcesImpl {
-    private static final String TAG = SystemLoad.class.getSimpleName();
+public class SystemLoadReceiver extends ResourcesImplReceiver {
+    private static final String TAG = SystemLoadReceiver.class.getSimpleName();
 
-    public SystemLoad(Context context, DataCollector collector) {
+    public SystemLoadReceiver(Context context, DataCollector collector) {
         super(context, collector);
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         long usage = Methods.readPidUsage(TAG, getPid());
 //        Log.e(TAG, " " + (usage - getPreviousValueCpu()));
         long diff = usage - getPreviousValueCpu();

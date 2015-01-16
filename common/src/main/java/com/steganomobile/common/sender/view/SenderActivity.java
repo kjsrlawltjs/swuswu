@@ -24,8 +24,8 @@ import android.widget.Toast;
 
 import com.steganomobile.common.Const;
 import com.steganomobile.common.R;
-import com.steganomobile.common.sender.model.CcInfo;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
@@ -51,15 +51,15 @@ public class SenderActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             TextView myTextView = (TextView) findViewById(R.id.textViewState);
-            CcInfo ccInfo = intent.getParcelableExtra(Const.EXTRA_CC_INFO);
-            if (ccInfo.getStatus() == CcStatus.FINISH) {
+            CcSenderInfo ccSenderInfo = intent.getParcelableExtra(Const.EXTRA_CC_INFO);
+            if (ccSenderInfo.getStatus() == CcStatus.FINISH) {
                 myTextView.setText(getResources().getString(R.string.state_idle));
 
-            } else if (ccInfo.getStatus() == CcStatus.START) {
-                int nameId = ccInfo.getName().getValue();
-                if (nameId > 0 && nameId <= CcMethod.NAMES.length)
+            } else if (ccSenderInfo.getStatus() == CcStatus.START) {
+                int nameId = ccSenderInfo.getName().getValue();
+                if (nameId > 0 && nameId <= Cc.NAMES.length)
                     myTextView.setText(
-                            getResources().getString(R.string.state_sending) + " - " + CcMethod.NAMES[nameId]
+                            getResources().getString(R.string.state_sending) + " - " + Cc.NAMES[nameId]
                     );
                 data.delete(0, data.capacity());
 
@@ -154,7 +154,7 @@ public class SenderActivity extends Activity {
         Button button = (Button) findViewById(R.id.buttonChooseCc);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String text = preferences.getString(Const.PREF_KEY_METHODS, "0");
-        button.setText(getResources().getText(R.string.select_cc) + " " + CcMethod.NAMES[Integer.parseInt(text)]);
+        button.setText(getResources().getText(R.string.select_cc) + " " + Cc.NAMES[Integer.parseInt(text)]);
     }
 
     private void updateChooseSyncButton() {
@@ -225,7 +225,7 @@ public class SenderActivity extends Activity {
                 int option = getCcName(checkedId).getValue();
                 if (option != -1) {
                     Button myButton = (Button) findViewById(R.id.buttonChooseCc);
-                    myButton.setText(getResources().getText(R.string.select_cc) + " " + CcMethod.NAMES[option]);
+                    myButton.setText(getResources().getText(R.string.select_cc) + " " + Cc.NAMES[option]);
                     SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                     SharedPreferences.Editor myEditor = mySharedPreferences.edit();
                     myEditor.putString(Const.PREF_KEY_METHODS, String.valueOf(option));
@@ -234,41 +234,41 @@ public class SenderActivity extends Activity {
                 }
             }
 
-            private CcMethod getCcName(int checkedRadioButtonId) {
+            private Cc getCcName(int checkedRadioButtonId) {
                 if (checkedRadioButtonId == R.id.radioButtonVolumeMusic) {
-                    return CcMethod.VOLUME_MUSIC;
+                    return Cc.VOLUME_MUSIC;
                 } else if (checkedRadioButtonId == R.id.radioButtonVolumeRing) {
-                    return CcMethod.VOLUME_RING;
+                    return Cc.VOLUME_RING;
                 } else if (checkedRadioButtonId == R.id.radioButtonVolumeNotification) {
-                    return CcMethod.VOLUME_NOTIFICATION;
+                    return Cc.VOLUME_NOTIFICATION;
                 } else if (checkedRadioButtonId == R.id.radioButtonVolumeSystem) {
-                    return CcMethod.VOLUME_SYSTEM;
+                    return Cc.VOLUME_SYSTEM;
                 } else if (checkedRadioButtonId == R.id.radioButtonVolumeAlarm) {
-                    return CcMethod.VOLUME_ALARM;
+                    return Cc.VOLUME_ALARM;
                 } else if (checkedRadioButtonId == R.id.radioButtonVolumeVoiceCall) {
-                    return CcMethod.VOLUME_VOICE_CALL;
+                    return Cc.VOLUME_VOICE_CALL;
                 } else if (checkedRadioButtonId == R.id.radioButtonVolumeDtmf) {
-                    return CcMethod.VOLUME_DTMF;
+                    return Cc.VOLUME_DTMF;
                 } else if (checkedRadioButtonId == R.id.radioButtonFileExistence) {
-                    return CcMethod.FILE_EXISTENCE;
+                    return Cc.FILE_EXISTENCE;
                 } else if (checkedRadioButtonId == R.id.radioButtonFileSize) {
-                    return CcMethod.FILE_SIZE;
+                    return Cc.FILE_SIZE;
                 } else if (checkedRadioButtonId == R.id.radioButtonFileLock) {
-                    return CcMethod.FILE_LOCK;
+                    return Cc.FILE_LOCK;
                 } else if (checkedRadioButtonId == R.id.radioButtonTypeOfIntentObserver) {
-                    return CcMethod.CONTENT_OF_URI;
+                    return Cc.CONTENT_OF_URI;
                 } else if (checkedRadioButtonId == R.id.radioButtonTypeOfIntentReceiver) {
-                    return CcMethod.TYPE_OF_INTENT;
+                    return Cc.TYPE_OF_INTENT;
                 } else if (checkedRadioButtonId == R.id.radioButtonUsageTrend) {
-                    return CcMethod.USAGE_TREND;
+                    return Cc.USAGE_TREND;
                 } else if (checkedRadioButtonId == R.id.radioButtonSystemLoad) {
-                    return CcMethod.SYSTEM_LOAD;
+                    return Cc.SYSTEM_LOAD;
                 } else if (checkedRadioButtonId == R.id.radioButtonUnixSocket) {
-                    return CcMethod.UNIX_SOCKET_DISCOVERY;
+                    return Cc.UNIX_SOCKET_DISCOVERY;
                 } else if (checkedRadioButtonId == R.id.radioButtonMemoryLoad) {
-                    return CcMethod.MEMORY_LOAD;
+                    return Cc.MEMORY_LOAD;
                 }
-                return CcMethod.NO_VALUE;
+                return Cc.NO_VALUE;
             }
         });
 
@@ -435,7 +435,7 @@ public class SenderActivity extends Activity {
             public void onClick(View v) {
                 EditText editText = (EditText) messageDialog.findViewById(R.id.editTextMessage);
                 if (editText.getText() != null) {
-                    setType(CcType.MESSAGE);
+                    setType(CcType.PLAIN_TEXT);
                     data.append(editText.getText());
                     if (!sendAfterScreenGoesOff) {
                         sendStegano();
@@ -511,8 +511,8 @@ public class SenderActivity extends Activity {
         CcStatus status = CcStatus.START;
         CcType type = CcType.getFromInt(typeId);
         CcSync sync = CcSync.getFromInt(syncId);
-        CcMethod name = CcMethod.getFromInt(ccNameId);
-        CcInfo info = new CcInfo(status, name, iterations, type, interval, sync);
+        Cc name = Cc.getFromInt(ccNameId);
+        CcSenderInfo info = new CcSenderInfo(status, name, iterations, type, interval, sync);
         CcSenderItem item = new CcSenderItem(data.toString(), info);
 
         intent.putExtra(Const.EXTRA_ITEM_SENDER_CC, item);

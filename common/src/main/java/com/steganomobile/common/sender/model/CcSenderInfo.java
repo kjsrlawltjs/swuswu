@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 
-public class CcInfo implements Parcelable, BaseColumns {
+public class CcSenderInfo implements Parcelable, BaseColumns {
 
     public static final String INTERVAL = "interval";
     public static final String ITERATIONS = "iterations";
@@ -17,24 +17,22 @@ public class CcInfo implements Parcelable, BaseColumns {
     private int interval = NO_VALUE;
     private int port = NO_VALUE;
 
-
-
-    public static Parcelable.Creator<CcInfo> CREATOR = new Parcelable.Creator<CcInfo>() {
-        public CcInfo createFromParcel(Parcel parcel) {
-            return new CcInfo(parcel);
+    public static Parcelable.Creator<CcSenderInfo> CREATOR = new Parcelable.Creator<CcSenderInfo>() {
+        public CcSenderInfo createFromParcel(Parcel parcel) {
+            return new CcSenderInfo(parcel);
         }
 
-        public CcInfo[] newArray(int size) {
-            return new CcInfo[size];
+        public CcSenderInfo[] newArray(int size) {
+            return new CcSenderInfo[size];
         }
     };
 
     private CcType type = CcType.NO_VALUE;
-    private CcMethod name = CcMethod.NO_VALUE;
+    private Cc name = Cc.NO_VALUE;
     private CcStatus status = CcStatus.NO_VALUE;
     private CcSync sync = CcSync.NO_VALUE;
 
-    public CcInfo(CcStatus status, CcMethod name, int iterations, CcType type, int interval, CcSync sync) {
+    public CcSenderInfo(CcStatus status, Cc name, int iterations, CcType type, int interval, CcSync sync) {
         this.status = status;
         this.name = name;
         this.iterations = iterations;
@@ -44,17 +42,17 @@ public class CcInfo implements Parcelable, BaseColumns {
         this.port = NO_VALUE;
     }
 
-    public CcInfo(Parcel parcel) {
+    public CcSenderInfo(Parcel parcel) {
         interval = parcel.readInt();
         iterations = parcel.readInt();
-        name = CcMethod.getFromInt(parcel.readInt());
+        name = Cc.getFromInt(parcel.readInt());
         port = parcel.readInt();
         status = CcStatus.getFromInt(parcel.readInt());
         sync = CcSync.getFromInt(parcel.readInt());
         type = CcType.getFromInt(parcel.readInt());
     }
 
-    public CcInfo(CcStatus status, CcSync sync) {
+    public CcSenderInfo(CcStatus status, CcSync sync) {
         this.status = status;
         this.sync = sync;
     }
@@ -85,7 +83,7 @@ public class CcInfo implements Parcelable, BaseColumns {
         return status;
     }
 
-    public CcMethod getName() {
+    public Cc getName() {
         return name;
     }
 
@@ -127,7 +125,7 @@ public class CcInfo implements Parcelable, BaseColumns {
     }
 
     public String printHorizontalFormat(String sep) {
-        return sep + CcMethod.NAMES[name.getValue()] + sep + CcType.NAMES[type.getValue()]
+        return sep + Cc.NAMES[name.getValue()] + sep + CcType.NAMES[type.getValue()]
                 + sep + CcSync.NAMES[sync.getValue()] + sep + iterations + sep + interval;
     }
 
@@ -139,7 +137,7 @@ public class CcInfo implements Parcelable, BaseColumns {
         String intervalV = header ? "Interval [ms]" + sep + "%d\n" : "%d\n";
 
         return String.format(nameV + typeV + syncV + iterationsV + intervalV,
-                CcMethod.NAMES[name.getValue()], CcType.NAMES[type.getValue()],
+                Cc.NAMES[name.getValue()], CcType.NAMES[type.getValue()],
                 CcSync.NAMES[sync.getValue()], iterations, interval);
     }
 

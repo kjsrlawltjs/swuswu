@@ -2,7 +2,7 @@ package com.steganomobile.common.sender.model;
 
 public enum CcType {
     NO_VALUE(0),
-    MESSAGE(1),
+    PLAIN_TEXT(1),
     LOCATION(2),
     CELL_LOCATION(3),
     SMS(4),
@@ -14,7 +14,7 @@ public enum CcType {
 
     public static final String[] NAMES = {
             "No type",
-            "Message",
+            "Plain Text",
             "Location",
             "Cell Location",
             "SMS",

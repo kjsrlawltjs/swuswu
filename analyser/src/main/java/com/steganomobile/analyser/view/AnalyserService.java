@@ -101,9 +101,9 @@ public class AnalyserService extends Service {
             Process process = processes.valueAt(i);
             long previousUsage = 0;
             long totalDelta = 0;
-            for (int j = 0; j < process.getProcessorIntervals().size(); j++) {
-                int key = process.getProcessorIntervals().keyAt(j);
-                ProcessInterval processInterval = process.getProcessorIntervals().valueAt(j);
+            for (int j = 0; j < process.getProcessIntervals().size(); j++) {
+                int key = process.getProcessIntervals().keyAt(j);
+                ProcessInterval processInterval = process.getProcessIntervals().valueAt(j);
                 Interval interval = intervals.get(key);
                 long delta = j == 0 ? 0 : processInterval.getUsage() - previousUsage;
                 processInterval.setDelta(delta);
@@ -182,7 +182,7 @@ public class AnalyserService extends Service {
             long usage = Methods.readCpuUsage(pid);
 //            long usage = Methods.readMemoryUsage(pid);
             totalUsage += usage;
-            process.getProcessorIntervals().put(id, new ProcessInterval(process, id, usage));
+            process.getProcessIntervals().put(id, new ProcessInterval(process, id, usage));
         }
         intervals.put(id, new Interval(id, totalUsage, duration));
         id++;

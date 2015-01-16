@@ -10,24 +10,24 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.steganomobile.common.Const;
-import com.steganomobile.common.sender.model.CcInfo;
-import com.steganomobile.common.sender.model.CcMethod;
+import com.steganomobile.common.sender.model.Cc;
 import com.steganomobile.common.sender.model.CcSegment;
+import com.steganomobile.common.sender.model.CcSenderInfo;
 import com.steganomobile.common.sender.model.CcSenderItem;
 import com.steganomobile.common.sender.model.CcStatus;
 import com.steganomobile.common.sender.model.CcSync;
 import com.steganomobile.sender.controller.DataConverter;
-import com.steganomobile.sender.controller.cc.CcImpl;
-import com.steganomobile.sender.controller.cc.ContentOfUri;
-import com.steganomobile.sender.controller.cc.FileExistence;
-import com.steganomobile.sender.controller.cc.FileLock;
-import com.steganomobile.sender.controller.cc.FileSize;
-import com.steganomobile.sender.controller.cc.MemoryLoad;
-import com.steganomobile.sender.controller.cc.SystemLoad;
-import com.steganomobile.sender.controller.cc.TypeOfIntent;
-import com.steganomobile.sender.controller.cc.UnixSocketDiscovery;
-import com.steganomobile.sender.controller.cc.UsageTrend;
-import com.steganomobile.sender.controller.cc.VolumeSettings;
+import com.steganomobile.sender.controller.cc.CcSender;
+import com.steganomobile.sender.controller.cc.ContentOfUriSender;
+import com.steganomobile.sender.controller.cc.FileExistenceSender;
+import com.steganomobile.sender.controller.cc.FileLockSender;
+import com.steganomobile.sender.controller.cc.FileSizeSender;
+import com.steganomobile.sender.controller.cc.MemoryLoadSender;
+import com.steganomobile.sender.controller.cc.SystemLoadSender;
+import com.steganomobile.sender.controller.cc.TypeOfIntentSender;
+import com.steganomobile.sender.controller.cc.UnixSocketDiscoverySender;
+import com.steganomobile.sender.controller.cc.UsageTrendSender;
+import com.steganomobile.sender.controller.cc.VolumeSettingsSender;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -67,9 +67,9 @@ public class DataService extends IntentService {
         CcSenderItem item = intent.getParcelableExtra(Const.EXTRA_ITEM_SENDER_CC);
         int iterations = item.getInfo().getIterations();
 
-        if (item.getInfo().getName() == CcMethod.CONTENT_OF_URI) {
+        if (item.getInfo().getName() == Cc.CONTENT_OF_URI) {
             item.getInfo().setSync(CcSync.CONTENT_OBSERVER);
-        } else if (item.getInfo().getName() == CcMethod.TYPE_OF_INTENT) {
+        } else if (item.getInfo().getName() == Cc.TYPE_OF_INTENT) {
             item.getInfo().setSync(CcSync.BROADCAST_RECEIVER);
         }
 
@@ -144,33 +144,33 @@ public class DataService extends IntentService {
         }
     }
 
-    private void finish(CcInfo info) {
+    private void finish(CcSenderInfo info) {
         Intent statusIntent = new Intent(Const.ACTION_INFO);
 
         CcStatus status = CcStatus.FINISH;
         CcSync sync = info.getSync();
-        statusIntent.putExtra(Const.EXTRA_CC_INFO, new CcInfo(status, sync));
+        statusIntent.putExtra(Const.EXTRA_CC_INFO, new CcSenderInfo(status, sync));
         Log.i("CCDataService", "Ultimate broadcast ACTION_INFO");
         sendBroadcast(statusIntent);
     }
 
     private void send(CcSenderItem item) {
-        CcImpl cc = getMethod(item.getInfo());
+        CcSender cc = getCcSender(item.getInfo());
         CcSegment segment = item.getInfo().getName().getSegment();
         int interval = item.getInfo().getInterval();
         Log.i("CCDataService", "In sender sending the message: " + item.getData());
 
         for (byte element : DataConverter.getData(item.getData(), segment)) {
-            cc.sendCc(this, element);
-            cc.syncCc(this, item.getInfo().getSync(), element);
+            cc.onSend(this, element);
+            cc.onSync(this, item.getInfo().getSync(), element);
             waitToSend(interval);
-            cc.finishCc();
+            cc.onRestart();
             if (!running) break;
         }
-        cc.clearCc();
+        cc.onFinish();
     }
 
-    private void start(int i, CcInfo info) {
+    private void start(int i, CcSenderInfo info) {
         info.setIterations(i);
 
         Intent statusIntent = new Intent(Const.ACTION_INFO);
@@ -178,7 +178,7 @@ public class DataService extends IntentService {
         sendBroadcast(statusIntent);
     }
 
-    private CcImpl getMethod(CcInfo info) {
+    private CcSender getCcSender(CcSenderInfo info) {
         switch (info.getName()) {
             case NO_VALUE:
                 break;
@@ -189,25 +189,25 @@ public class DataService extends IntentService {
             case VOLUME_SYSTEM:
             case VOLUME_ALARM:
             case VOLUME_VOICE_CALL:
-                return new VolumeSettings(this, info.getName().getStream());
+                return new VolumeSettingsSender(this, info.getName().getStream());
             case FILE_LOCK:
-                return new FileLock();
+                return new FileLockSender();
             case FILE_SIZE:
-                return new FileSize();
+                return new FileSizeSender();
             case FILE_EXISTENCE:
-                return new FileExistence();
+                return new FileExistenceSender();
             case CONTENT_OF_URI:
-                return new ContentOfUri();
+                return new ContentOfUriSender();
             case TYPE_OF_INTENT:
-                return new TypeOfIntent();
+                return new TypeOfIntentSender();
             case UNIX_SOCKET_DISCOVERY:
-                return new UnixSocketDiscovery(info.getPort());
+                return new UnixSocketDiscoverySender(info.getPort());
             case MEMORY_LOAD:
-                return new MemoryLoad();
+                return new MemoryLoadSender();
             case SYSTEM_LOAD:
-                return new SystemLoad(info.getInterval());
+                return new SystemLoadSender(info.getInterval());
             case USAGE_TREND:
-                return new UsageTrend(info.getInterval());
+                return new UsageTrendSender(info.getInterval());
         }
         return null;
     }

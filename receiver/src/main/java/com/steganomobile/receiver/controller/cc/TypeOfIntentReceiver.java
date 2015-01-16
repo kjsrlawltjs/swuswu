@@ -3,15 +3,15 @@ package com.steganomobile.receiver.controller.cc;
 import com.steganomobile.common.Const;
 import com.steganomobile.receiver.controller.DataCollector;
 
-public class TypeOfIntent extends CcImpl {
-    private static final String TAG = TypeOfIntent.class.getSimpleName();
+public class TypeOfIntentReceiver extends CcImplReceiver {
+    private static final String TAG = TypeOfIntentReceiver.class.getSimpleName();
 
-    public TypeOfIntent(DataCollector collector) {
+    public TypeOfIntentReceiver(DataCollector collector) {
         super(collector);
     }
 
     @Override
-    public void runCc(String action) {
+    public void onReceive(String action) {
         if (Const.NO_ACTION.equals(action)) {
             return;
         }
