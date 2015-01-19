@@ -1,7 +1,5 @@
 package jf.andro;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -30,9 +28,9 @@ public class ScenarioService extends Service {
     private static String getCCDataScheduled = "";
     // If the covert channels CC should be disabled for these XP
     private static boolean idleCC = false;
-    private PowerManager.WakeLock wl;
     // The number of XP to perform
     private static int nbXP;
+    private PowerManager.WakeLock wl;
     // The id of the used Covert Channels
     private int idCC;
     private String email;
@@ -139,7 +137,6 @@ public class ScenarioService extends Service {
                                 CcType type = CcType.PLAIN_TEXT;
                                 CcSync sync = CcSync.BROADCAST_RECEIVER;
                                 CcSenderInfo info = new CcSenderInfo(CcStatus.START, method, iterations, type, interval, sync);
-
 
                                 CcSenderItem item = new CcSenderItem(data, info);
                                 item.setSendsubparts(nbXP); // Used to ask the CC sender to send a subpart of the message

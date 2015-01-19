@@ -50,7 +50,7 @@ public class DataCollector {
 
     public void setData(byte number) {
 
-        //Log.v(TAG, "Received " + number);
+        Log.v(TAG, "Received " + number);
 
         receivedElements.add(number);
 

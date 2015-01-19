@@ -37,6 +37,8 @@ public class CcSenderItem implements Parcelable {
     public CcSenderItem(Parcel parcel) {
         data = parcel.readString();
         info = parcel.readParcelable(CcSenderInfo.class.getClassLoader());
+        sendsubparts = parcel.readInt();
+        currentsubpart = parcel.readInt();
     }
 
     public String getData() {
@@ -63,6 +65,8 @@ public class CcSenderItem implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(data);
         parcel.writeParcelable(info, flags);
+        parcel.writeInt(sendsubparts);
+        parcel.writeInt(currentsubpart);
     }
 
     public CcSenderInfo getInfo() {

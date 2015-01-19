@@ -12,6 +12,10 @@ public class UnixSocketDiscoveryReceiver extends CcImplReceiver {
         super(collector);
     }
 
+    static {
+        System.loadLibrary("stegano");
+    }
+
     private static boolean isSocketOpen(int port) {
         try {
             new ServerSocket(port).close();
@@ -21,14 +25,18 @@ public class UnixSocketDiscoveryReceiver extends CcImplReceiver {
         }
     }
 
+    public native int getOpenPort(int start, int end);
+
     @Override
     public void onReceive(String action) {
         int port = getCollector().getInfo().getPort();
 
-        for (int i = port - 127; i < port + 127; i++) {
-            if (isSocketOpen(i)) {
-                getCollector().setData((byte) (i - port));
-            }
-        }
+        getCollector().setData((byte) getOpenPort(port - 128, port + 127));
+
+//        for (int i = port - 127; i < port + 127; i++) {
+//            if (isSocketOpen(i)) {
+//                getCollector().setData((byte) (i - port));
+//            }
+//        }
     }
 }

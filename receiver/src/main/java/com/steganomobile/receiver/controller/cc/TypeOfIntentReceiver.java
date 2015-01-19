@@ -17,7 +17,7 @@ public class TypeOfIntentReceiver extends CcImplReceiver {
         }
 
         if (action != null) {
-            String stringByte = action.substring(Const.SYNC_RECEIVER.length());
+            String stringByte = action.substring(Const.ACTION_TYPE_OF_INTENT.length());
             byte data = Byte.parseByte(stringByte);
             getCollector().setData(data);
         }
