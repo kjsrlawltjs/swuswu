@@ -8,9 +8,6 @@ android {
         minSdkVersion 14
         targetSdkVersion 20
 
-        ndk {
-            moduleName "stegano"
-        }
     }
 
     buildTypes {

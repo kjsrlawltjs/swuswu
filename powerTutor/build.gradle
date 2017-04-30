@@ -9,9 +9,7 @@ android {
         minSdkVersion 3
         targetSdkVersion 3
 
-        ndk {
-            moduleName "bindings"
-        }
+
     }
 
     buildTypes {
